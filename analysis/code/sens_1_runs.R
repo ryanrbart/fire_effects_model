@@ -1,24 +1,10 @@
 # Fire effects model sensitivity test - run model
-# 
 # Ryan Bart July 2016
 
-source("code/sensitivity_batch_functions.R")
-
-
-library("dplyr")
-
-
-
-
+source("analysis/code/sens_0_functions.R")
 
 # ---------------------------------------------------------------------
-
-
-# Set Directory - Yes, I know this is bad code. 
-# Possibly reconfigure RHESSys code so that directory for C and R code is root directory
-# Question is whether it makes sense to do calibrations from R - probably not
-setwd("../../scripts")
-
+# 
 
 # Parameters to search
 thresh_over = seq(3.5,3.5,length.out = 1)           # default: 5
@@ -34,10 +20,7 @@ fire_sensitivity = sensitivity_model_runs(thresh_over=thresh_over,thresh_under=t
 fire_sensitivity
 
 # save output
-write.csv(fire_sensitivity, file = "../post/fire_model_analysis/data_output/run_4.csv")
-
-# Reset directory
-setwd("../post/fire_model_analysis")
+write.csv(fire_sensitivity, file = "analysis/output/sens/run_1.csv")
 
 
 

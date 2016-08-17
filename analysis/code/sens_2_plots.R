@@ -9,7 +9,7 @@ library("ggplot2")
 
 # Investigate relation between pspread and canopy height thresholds
 
-fire_sen = read.csv(file = "data_output/fire_sensitivity.csv", header = T)
+fire_sen = read.csv(file = "analysis/output/sens/run_1.csv", header = T)
 
 ls(fire_sen)
 
@@ -23,7 +23,7 @@ ggplot(data = fire_sen) +
 
 # Investigate pspread_loss_rel parmeter
 
-fire_sen = read.csv(file = "data_output/run_2.csv", header = T)
+fire_sen = read.csv(file = "analysis/output/sens/run_2.csv", header = T)
 
 ls(fire_sen)
 
@@ -36,7 +36,7 @@ ggplot(data = fire_sen) +
 
 # Investigate vapor_loss_rel parmeter
 
-fire_sen = read.csv(file = "data_output/run_3.csv", header = T)
+fire_sen = read.csv(file = "analysis/output/sens/run_3.csv", header = T)
 
 ls(fire_sen)
 

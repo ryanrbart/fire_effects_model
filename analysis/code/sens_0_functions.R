@@ -1,5 +1,5 @@
 # Fire effects model sensitivity test - functions
-# Called by 0-sensitivity_batch_model_runs.R
+# Called by sens_1_runs.R
 # Ryan Bart July 2016
 
 
@@ -30,32 +30,32 @@ sensitivity_model_runs = function(thresh_over=5,thresh_under=3,pspread_loss_rel=
                 for (rr in seq_along(c_under)){
                   
                   # Modify def files
-                  def.awk = sprintf("awk -f ../awks/change.def.overstory_height_thresh.awk par=%f < ../defs/veg_p301_conifer_cec.def > ../defs/veg1.tmp",thresh_over[aa])
+                  def.awk = sprintf("awk -f awks/change.def.overstory_height_thresh.awk par=%f < defs/veg_p301_conifer_cec.def > defs/veg1.tmp",thresh_over[aa])
                   system(def.awk)
-                  def.awk = sprintf("awk -f ../awks/change.def.understory_height_thresh.awk par=%f < ../defs/veg1.tmp > ../defs/veg2.tmp",thresh_under[bb])
+                  def.awk = sprintf("awk -f awks/change.def.understory_height_thresh.awk par=%f < defs/veg1.tmp > defs/veg2.tmp",thresh_under[bb])
                   system(def.awk)
-                  def.awk = sprintf("awk -f ../awks/change.def.pspread_loss_rel.awk par=%f < ../defs/veg2.tmp > ../defs/veg3.tmp",pspread_loss_rel[cc])
+                  def.awk = sprintf("awk -f awks/change.def.pspread_loss_rel.awk par=%f < defs/veg2.tmp > defs/veg3.tmp",pspread_loss_rel[cc])
                   system(def.awk)
-                  def.awk = sprintf("awk -f ../awks/change.def.vapor_loss_rel.awk par=%f < ../defs/veg3.tmp > ../defs/veg4.tmp",vapor_loss_rel[dd])
+                  def.awk = sprintf("awk -f awks/change.def.vapor_loss_rel.awk par=%f < defs/veg3.tmp > defs/veg4.tmp",vapor_loss_rel[dd])
                   system(def.awk)
-                  def.awk = sprintf("awk -f ../awks/change.def.biomass_loss_rel_k1.awk par=%f < ../defs/veg4.tmp > ../defs/veg5.tmp",biomass_loss_rel_k1[ee])
+                  def.awk = sprintf("awk -f awks/change.def.biomass_loss_rel_k1.awk par=%f < defs/veg4.tmp > defs/veg5.tmp",biomass_loss_rel_k1[ee])
                   system(def.awk)
-                  def.awk = sprintf("awk -f ../awks/change.def.biomass_loss_rel_k2.awk par=%f < ../defs/veg5.tmp > ../defs/veg.tmp",biomass_loss_rel_k2[ff])
+                  def.awk = sprintf("awk -f awks/change.def.biomass_loss_rel_k2.awk par=%f < defs/veg5.tmp > defs/veg.tmp",biomass_loss_rel_k2[ff])
                   system(def.awk)
                   
                   # Modify dated sequence
-                  dseq.awk = sprintf("awk -f ../awks/change.datedseq.pspread.awk par=%f < ../clim/lowProv.pspread_template > ../clim/lowProv.pspread",pspread[mm])
+                  dseq.awk = sprintf("awk -f awks/change.datedseq.pspread.awk par=%f < clim/lowProv.pspread_template > clim/lowProv.pspread",pspread[mm])
                   system(dseq.awk)
                   
                   # Modify worldfile
-                  #  world.awk = sprintf("awk -f ../awks/change.world.c_under.awk par=%f < ../defs/veg_p301_conifer_cec.def > ../defs/veg.tmp",thresh_under[aa])
+                  #  world.awk = sprintf("awk -f awks/change.world.c_under.awk par=%f < defs/veg_p301_conifer_cec.def > defs/veg.tmp",thresh_under[aa])
                   #  system(world.awk)
                   
                   # -----------
                   # Run RHESSys
-                  happy = sprintf("/Users/ryanrbart/bin/rhessys5.20.fire_off -t ../tecfiles/tec.p301_sim -w ../worldfiles/world.p301_patch_2canopy_dated_seq -whdr ../worldfiles/world.p301_patch_2canopy_dated_seq.hdr   -r ../flowtables/flow.patch  -st 1945 10 1 1 -ed 1945 10 7 1 -pre ../out/cal5/cal5 -s 1.792761 1.566492 -sv 1.792761 1.566492 -svalt 7.896941 1.179359 -gw 0.168035 0.178753 -b -c -g -p")
+                  happy = sprintf("/Users/ryanrbart/bin/rhessys5.20.fire_off -t tecfiles/tec.p301_sim -w worldfiles/world.p301_patch_2canopy_dated_seq -whdr worldfiles/world.p301_patch_2canopy_dated_seq.hdr   -r flowtables/flow.patch  -st 1945 10 1 1 -ed 1945 10 7 1 -pre out/cal5/cal5 -s 1.792761 1.566492 -sv 1.792761 1.566492 -svalt 7.896941 1.179359 -gw 0.168035 0.178753 -b -c -g -p")
                   system(happy)
-                  out = readin_rhessys_output("../out/cal5/cal5", c=1,g=1,p=1)
+                  out = readin_rhessys_output("out/cal5/cal5", c=1,g=1,p=1)
                   
                   
                   # Derive metrics
