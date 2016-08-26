@@ -100,3 +100,61 @@ sensitivity_model_runs = function(thresh_over=5,thresh_under=3,pspread_loss_rel=
 
 
 
+
+# ---------------------------------------------------------------------
+
+
+two_canopy_cf_gf = function(cover_fraction=1,gap_fraction=1){
+  
+  scen = length(cover_fraction) * length(gap_fraction)
+
+  two_canopy_param = as.data.frame(matrix(nrow=scen, ncol=2))
+  colnames(two_canopy_param) = c("cover_fraction","gap_fraction")
+  two_canopy = vector()
+
+  count=1
+  
+  # Step though def file changes
+  for (aa in seq_along(cover_fraction)){
+    for (bb in seq_along(gap_fraction)){
+#      for (cc in seq_along(pspread_loss_rel)){
+#        for (dd in seq_along(vapor_loss_rel)){
+
+          # Modify def files
+          
+          # Modify dated sequence
+
+          # Modify worldfile
+          world.awk = sprintf("awk -f awks/change.world.cf.awk par=%f < worldfiles/world.p301_patch_2canopy > worldfiles/world1.tmp",cover_fraction[aa])
+          system(world.awk)
+          world.awk = sprintf("awk -f awks/change.world.gf.awk par=%f < worldfiles/world1.tmp > worldfiles/world2.tmp",gap_fraction[bb])
+          system(world.awk)
+          
+          # -----------
+          # Run RHESSys
+          happy = sprintf("/Users/ryanrbart/bin/rhessys5.20.fire_off -t tecfiles/tec.p301_sim -w worldfiles/world2.tmp -whdr worldfiles/world.p301_patch_2canopy.hdr   -r flowtables/flow.patch  -st 1941 10 1 1 -ed 2000 10 1 1 -pre out/cal3/cal3 -s 1.792761 1.566492 -sv 1.792761 1.566492 -svalt 7.896941 1.179359 -gw 0.168035 0.178753 -b -c -g -p")
+          system(happy)
+          out = readin_rhessys_output("out/cal3/cal3", c=1,g=1,p=1)
+          
+          
+          # Derive metrics
+          
+          two_canopy_param$cover_fraction[count] = cover_fraction[aa]
+          two_canopy_param$gap_fraction[count] = gap_fraction[bb]
+          if (count==1){
+            two_canopy = out$cd$lai
+          } else {
+            two_canopy = cbind(two_canopy, out$cd$lai)
+          }
+          count = count + 1
+
+#        }
+#      }
+    }
+  }
+  
+  return(two_canopy)
+} # End function
+
+
+
