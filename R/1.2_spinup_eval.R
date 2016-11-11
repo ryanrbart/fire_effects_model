@@ -14,7 +14,7 @@ library(ggplot2)
 OUTPUT_DIR <- "outputs"
 SPINUP_DIR <- file.path(OUTPUT_DIR, "spinup")
 
-P300_MODEL_SPINUP <- "ws_p300/out/spinup/spinup"
+P300_MODEL_SPINUP <- "ws_p300/out/p300_spinup/spinup"
 
 
 # ---------------------------------------------------------------------
@@ -33,7 +33,7 @@ cdg = separate_canopy_output(p300_spinup$cdg, 2)
 # P300 Evaluation
 
 
-p300_spinup_height <- ggplot(data = cd_2) +
+p300_spinup_height <- ggplot(data = cd) +
   geom_line(aes(x=date,y=height, linetype=as.character(names)))
 plot(p300_spinup_height)
 ggsave("p300_spinup_height",p300_spinup_height, path = SPINUP_DIR)
@@ -84,6 +84,7 @@ plot(p300_spinup_cpool)
 ggsave("p300_spinup_cpool",p300_spinup_cpool, path = SPINUP_DIR)
 
 # -------
+# Patch
 
 p300_spinup_soil1c <- ggplot(data = pdg) +
   geom_line(aes(x=date,y=soil1c))
@@ -96,7 +97,13 @@ plot(p300_spinup_litr1c)
 ggsave("p300_spinup_litr1c",p300_spinup_litr1c, path = SPINUP_DIR)
 
 
+# -------
+# Basin
 
+p300_spinup_b_lai <- ggplot(data = bdg) +
+  geom_line(aes(x=date,y=lai))
+plot(p300_spinup_b_lai)
+ggsave("p300_spinup_b_lai",p300_spinup_b_lai, path = SPINUP_DIR)
 
 
 
