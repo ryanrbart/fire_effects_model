@@ -19,7 +19,7 @@ change_parameters(par_value, awk_file, input_file, output_folder)
 p300_lowprov <- read_rhessys_met("ws_p300/clim/Grove_lowprov_clim")
 
 # Note that write_sample_clim does not currently produce a climate base file
-write_sample_clim("ws_p300/clim/Grove_lowprov_clim_spinup", p300_lowprov, seq(1942,2005),8)
+write_sample_clim("ws_p300/clim/Grove_lowprov_clim_1942_2453", p300_lowprov, seq(1942,2005),8)
 
 
 # ---------------------------------------------------------------------

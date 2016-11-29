@@ -12,4 +12,4 @@ ws_p300/defs/lu_p300.def   landuse_default_file
 ws_p300/defs/veg_p300_conifer.def   basin_default_file
 ws_p300/defs/veg_p300_shrub.tmp_final   basin_default_file
 1   num_base_stations
-ws_p300/clim/Grove_lowprov_clim_spinup.base   base_stations_file
+ws_p300/clim/Grove_lowprov_clim_1942_2453.base   base_stations_file
