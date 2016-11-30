@@ -176,13 +176,3 @@
 0.0 epv_max_fparabs
 0.0 epv_min_vwc
 0.0 n_basestations
-0.0 ns_deadcrootn_transfer
-0.0 ns_frootn
-0.0 ns_frootn_store
-0.0 ns_frootn_transfer
-0.0 ns_cwdn
-0.0 ns_retransn
-0.0 epv_wstress_days
-0.0 epv_max_fparabs
-0.0 epv_min_vwc
-0.0 n_basestations
