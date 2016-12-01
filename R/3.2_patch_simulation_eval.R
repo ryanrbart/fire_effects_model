@@ -7,14 +7,12 @@ library(ggplot2)
 
 
 # ---------------------------------------------------------------------
-# Inputs
+# Input and output paths 
 
-
+P300_PATCH_SIM <- "ws_p300/out/p300_patch_simulation/patch_sim"
 
 OUTPUT_DIR <- "outputs"
 PATCH_SIM_DIR <- file.path(OUTPUT_DIR, "patch_sim")
-
-P300_MODEL_PATCH_SIM <- "ws_p300/out/p300_patch_simulation/patch_sim"
 
 # ---------------------------------------------------------------------
 # Functions
@@ -31,14 +29,14 @@ make_basic_timeseries_plot = function(plot_name, dataframe, variable, path){
 # ---------------------------------------------------------------------
 # P300 Patch Simulation Output
 
-p300_patch_sim = readin_rhessys_output(P300_MODEL_PATCH_SIM, b=1, g=1, c=1, p=1)
+p300_patch_sim <- readin_rhessys_output(P300_PATCH_SIM, b=1, g=1, c=1, p=1)
 
-bd = p300_spinup$bd
-bdg = p300_spinup$bdg
-pd = p300_spinup$pd
-pdg = p300_spinup$pdg
-cd = separate_canopy_output(p300_spinup$cd, 2)
-cdg = separate_canopy_output(p300_spinup$cdg, 2)
+bd <- p300_patch_sim$bd
+bdg <- p300_patch_sim$bdg
+pd <- p300_patch_sim$pd
+pdg <- p300_patch_sim$pdg
+cd <- separate_canopy_output(p300_patch_sim$cd, 2)
+cdg <- separate_canopy_output(p300_patch_sim$cdg, 2)
 
 
 # ---------------------------------------------------------------------

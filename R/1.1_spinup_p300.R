@@ -36,7 +36,7 @@ parameter_change_list[[1]] <- list(c(0.1),"awks/change.def.epc.livewood_turnover
                                    "ws_p300/defs/veg_p300_shrub.def", "ws_p300/defs/veg_p300_shrub.tmp1")
 parameter_change_list[[2]] <- list(c(0.9),"awks/change.def.epc.alloc_livewoodc_woodc.awk",
                                    "ws_p300/defs/veg_p300_shrub.tmp1", "ws_p300/defs/veg_p300_shrub.tmp2")
-parameter_change_list[[3]] <- list(c(0.05),"awks/change.def.epc.branch_turnover.awk",
+parameter_change_list[[3]] <- list(c(0.1),"awks/change.def.epc.branch_turnover.awk",
                                    "ws_p300/defs/veg_p300_shrub.tmp2", "ws_p300/defs/veg_p300_shrub.tmp_final")
 
 

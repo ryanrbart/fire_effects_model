@@ -12,7 +12,7 @@ library(rhessysR)
 # RHESSys Inputs
 rhessys_version <- "bin/rhessys5.20.fire_off"
 tec_file <- "ws_p300/tecfiles/tec.p300_patch_simulation"
-world_file <- "ws_p300/worldfiles/world.p300_30m_2can_patch_9445_no_veg"
+world_file <- "ws_p300/worldfiles/world.p300_30m_2can_patch_9445"
 world_hdr_file <- "ws_p300/worldfiles/world.p300_30m_2can_1942_2453.hdr"
 flow_file <- "ws_p300/flowtables/flow.p300_30m_patch_9445"
 start_date <- "1941 10 1 1"
@@ -69,8 +69,8 @@ tec_data[7,] <- data.frame(2021, 10, 1, 1, "output_current_state", stringsAsFact
 # file location), and the location/name of rhessys output file with variable of interest.
 #output_variables <- NULL
 output_variables <- list()
-output_variables[[1]] <- list("lai", "awks/extlai.awk","patch_basin.daily")
-output_variables[[2]] <- list("et", "awks/extet.awk","patch_basin.daily")
+output_variables[[1]] <- list("lai", "awks/extlai.awk","patch_sim_basin.daily")
+output_variables[[2]] <- list("et", "awks/extet.awk","patch_sim_basin.daily")
 
 # ---------------------------------------------------------------------
 

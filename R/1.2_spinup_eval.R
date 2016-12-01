@@ -7,27 +7,24 @@ library(ggplot2)
 
 
 # ---------------------------------------------------------------------
-# Inputs
+# Input and output paths
 
-
+P300_MODEL_SPINUP <- "ws_p300/out/p300_spinup/spinup"
 
 OUTPUT_DIR <- "outputs"
 SPINUP_DIR <- file.path(OUTPUT_DIR, "spinup")
 
-P300_MODEL_SPINUP <- "ws_p300/out/p300_spinup/spinup"
-
-
 # ---------------------------------------------------------------------
 # P300 Spinup Output
 
-p300_spinup = readin_rhessys_output(P300_MODEL_SPINUP, b=1, g=1, c=1, p=1)
+p300_spinup <- readin_rhessys_output(P300_MODEL_SPINUP, b=1, g=1, c=1, p=1)
 
-bd = p300_spinup$bd
-bdg = p300_spinup$bdg
-pd = p300_spinup$pd
-pdg = p300_spinup$pdg
-cd = separate_canopy_output(p300_spinup$cd, 2)
-cdg = separate_canopy_output(p300_spinup$cdg, 2)
+bd <- p300_spinup$bd
+bdg <- p300_spinup$bdg
+pd <- p300_spinup$pd
+pdg <- p300_spinup$pdg
+cd <- separate_canopy_output(p300_spinup$cd, 2)
+cdg <- separate_canopy_output(p300_spinup$cdg, 2)
 
 # ---------------------------------------------------------------------
 # P300 Evaluation
