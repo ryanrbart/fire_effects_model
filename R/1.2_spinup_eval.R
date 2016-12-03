@@ -12,7 +12,7 @@ library(ggplot2)
 P300_MODEL_SPINUP <- "ws_p300/out/p300_spinup/spinup"
 
 OUTPUT_DIR <- "outputs"
-SPINUP_DIR <- file.path(OUTPUT_DIR, "spinup")
+SPINUP_DIR <- file.path(OUTPUT_DIR, "1_spinup")
 
 # ---------------------------------------------------------------------
 # P300 Spinup Output

@@ -12,7 +12,7 @@ library(ggplot2)
 P300_PATCH_SIM <- "ws_p300/out/p300_patch_simulation/patch_sim"
 
 OUTPUT_DIR <- "outputs"
-PATCH_SIM_DIR <- file.path(OUTPUT_DIR, "patch_sim")
+PATCH_SIM_DIR <- file.path(OUTPUT_DIR, "3_patch_sim")
 
 # ---------------------------------------------------------------------
 # Functions

@@ -84,8 +84,14 @@ dated_seq_data[[5]][1,] <- data.frame(1941, 10, 7, 1, .9)
 # file location), and the location/name of rhessys output file with variable of interest.
 #output_variables <- NULL
 output_variables <- list()
-output_variables[[1]] <- list("lai", "awks/extlai.awk","patch_fire_basin.daily")
-output_variables[[2]] <- list("et", "awks/extet.awk","patch_fire_basin.daily")
+output_variables[[1]] <- list("litter", "awks/output_var_bd_litter.awk","patch_fire_basin.daily")
+output_variables[[2]] <- list("lai", "awks/output_var_cd_lai.awk","patch_fire_stratum.daily")
+output_variables[[3]] <- list("cwdc", "awks/output_var_cdg_cwdc.awk","patch_fire_grow_stratum.daily")
+output_variables[[4]] <- list("agc", "awks/output_var_cdg_abovegroundc.awk","patch_fire_grow_stratum.daily")
+output_variables[[5]] <- list("leafc", "awks/output_var_cdg_leafc.awk","patch_fire_grow_stratum.daily")
+output_variables[[6]] <- list("live_stemc", "awks/output_var_cdg_live_stemc.awk","patch_fire_grow_stratum.daily")
+output_variables[[7]] <- list("dead_stemc", "awks/output_var_cdg_dead_stemc.awk","patch_fire_grow_stratum.daily")
+output_variables[[8]] <- list("soil1c", "awks/output_var_pdg_soil1c.awk","patch_fire_grow_patch.daily")
 
 # ---------------------------------------------------------------------
 
