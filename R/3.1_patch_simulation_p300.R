@@ -69,8 +69,8 @@ tec_data[7,] <- data.frame(2021, 10, 1, 1, "output_current_state", stringsAsFact
 # file location), and the location/name of rhessys output file with variable of interest.
 #output_variables <- NULL
 output_variables <- list()
-output_variables[[1]] <- list("lai", "awks/extlai.awk","patch_sim_basin.daily")
-output_variables[[2]] <- list("et", "awks/extet.awk","patch_sim_basin.daily")
+output_variables[[1]] <- list("lai", "awks/output_var_bd_lai.awk","patch_sim_basin.daily")
+output_variables[[2]] <- list("et", "awks/output_var_bd_et.awk","patch_sim_basin.daily")
 
 # ---------------------------------------------------------------------
 
