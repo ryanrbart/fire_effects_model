@@ -5,6 +5,8 @@
 library(rhessysR)
 library(ggplot2)
 
+theme_set(theme_grey(base_size = 18))
+
 
 # ---------------------------------------------------------------------
 # Input and output paths 
@@ -38,9 +40,11 @@ make_basic_timeseries_plot_2can = function(plot_name, dataframe, variable, path)
 p300_patch_sim <- readin_rhessys_output(P300_PATCH_SIM, b=1, g=1, c=1, p=1)
 
 bd <- p300_patch_sim$bd
+bd <- mutate(bd, litrc_new = litrc * 1000)
 bdg <- p300_patch_sim$bdg
 pd <- p300_patch_sim$pd
 pdg <- p300_patch_sim$pdg
+pdg <- mutate(pdg, soil1c_new = soil1c * 1000)
 cd <- separate_canopy_output(p300_patch_sim$cd, 2)
 cdg <- separate_canopy_output(p300_patch_sim$cdg, 2)
 
@@ -74,23 +78,30 @@ cdg2 <- cdg %>%
 
 cdg3 <- cdg2 %>%
   group_by(wy, names) %>%
-  summarize(avg_leaf_frac = mean(leaf_frac), avg_stem_frac = mean(stem_frac), avg_root_frac = mean(root_frac))
+  summarize(avg_leaf_c = mean(leafc), avg_stem_c = mean(stemc), avg_root_c = mean(rootc))
 
 x <- cdg3 %>%
-  tidyr::gather("frac_type", "c_frac", c(avg_leaf_frac, avg_stem_frac, avg_root_frac)) %>%
+  tidyr::gather("c_type", "c_frac", c(avg_leaf_c, avg_stem_c, avg_root_c)) %>%
   dplyr::filter(names == 1) %>%
   ggplot() +
-    geom_line(aes(x = wy, y = c_frac, linetype=as.character(frac_type))) +
-    geom_vline(xintercept= c(1946,1951,1961,1981,2021), color="red")
+    geom_line(aes(x = wy, y = c_frac, color=c_type), size = .8) +
+    geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.3) +
+    labs(title = "Overstory", x = "Wateryear", y = "Carbon (g/m2)") +
+    scale_color_brewer(palette = "Set2", name="Store Type", labels = c("Leaf","Root","Stem")) +
+    theme(legend.position = "bottom")
 plot(x)
 ggsave("agu16_c_frac_layer_1.pdf",plot = x, path = PATCH_SIM_DIR)
 
+
 x <- cdg3 %>%
-  tidyr::gather("frac_type", "c_frac", c(avg_leaf_frac, avg_stem_frac, avg_root_frac)) %>%
+  tidyr::gather("c_type", "c_frac", c(avg_leaf_c, avg_stem_c, avg_root_c)) %>%
   dplyr::filter(names == 2) %>%
   ggplot() +
-  geom_line(aes(x = wy, y = c_frac, linetype=as.character(frac_type))) +
-  geom_vline(xintercept= c(1946,1951,1961,1981,2021), color="red")
+  geom_line(aes(x = wy, y = c_frac, color=c_type), size = .8) +
+  geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.3) +
+  labs(title = "Understory", x = "Wateryear", y = "Carbon (g/m2)") +
+  scale_color_brewer(palette = "Set2", name="Store Type", labels = c("Leaf","Root","Stem")) +
+  theme(legend.position = "bottom")
 plot(x)
 ggsave("agu16_c_frac_layer_2.pdf",plot = x, path = PATCH_SIM_DIR)
 
@@ -100,24 +111,31 @@ x <- cd %>%
   group_by(wy, names) %>%
   summarize(avg_height = mean(height)) %>%
   ggplot() +
-    geom_line(aes(x=wy,y=avg_height, linetype=as.character(names))) +
-    geom_vline(xintercept= c(1946,1951,1961,1981,2021), color="red")
+    geom_line(aes(x=wy,y=avg_height, color=as.character(names)), size = .8) +
+    geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.3) +
+    labs(title = "Height", x = "Wateryear", y = "Height (meters)") +
+    scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Overstory","Understory")) +
+    theme(legend.position = "bottom")
 plot(x)
 ggsave("agu16_height.pdf",plot = x, path = PATCH_SIM_DIR)
 
 
 # Make litter, soil, cwdc comparison plot
+
 x <- cdg %>%
   group_by(date, wy) %>%
   summarize(cwd = sum(cwdc)) %>%
-  left_join(., select(pdg, soil1c, date), by = "date") %>%
-  left_join(., select(bd, litrc, date), by = "date") %>%
-  tidyr::gather("var_type", "patch_var", c(cwd, soil1c, litrc)) %>%
+  left_join(., select(pdg, soil1c_new, date), by = "date") %>%
+  left_join(., select(bd, litrc_new, date), by = "date") %>%
+  tidyr::gather("var_type", "patch_var", c(cwd, soil1c_new, litrc_new)) %>%
   group_by(wy, var_type) %>%
   summarize(avg_patch_var = mean(patch_var)) %>%
   ggplot() +
-    geom_line(aes(x=wy,y=avg_patch_var, linetype=as.character(var_type))) +
-    geom_vline(xintercept= c(1946,1951,1961,1981,2021), color="red")
+    geom_line(aes(x=wy,y=avg_patch_var, color=as.character(var_type)), size = .8) +
+    geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.3) +
+    labs(title = "Ground Stores", x = "Wateryear", y = "Carbon (g/m2)") +
+    scale_color_brewer(palette = "Set2", name="Store Type", labels = c("Coarse Woody Debris", "Litter", "Soil Carbon")) +
+    theme(legend.position = "bottom")
 plot(x)
 ggsave("agu16_litter_soil_cwd.pdf",plot = x, path = PATCH_SIM_DIR)
 

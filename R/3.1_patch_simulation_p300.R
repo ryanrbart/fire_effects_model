@@ -59,11 +59,13 @@ parameter_change_list[[9]] <- list(c(0.25),"awks/change.def.biomass_loss_rel_k2.
 tec_data <- data.frame(year=integer(),month=integer(),day=integer(),hour=integer(),name=character(),stringsAsFactors=FALSE)
 tec_data[1,] <- data.frame(1941, 10, 1, 1, "print_daily_on", stringsAsFactors=FALSE)
 tec_data[2,] <- data.frame(1941, 10, 1, 2, "print_daily_growth_on", stringsAsFactors=FALSE)
-tec_data[3,] <- data.frame(1946, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-tec_data[4,] <- data.frame(1951, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-tec_data[5,] <- data.frame(1961, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-tec_data[6,] <- data.frame(1981, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-tec_data[7,] <- data.frame(2021, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+tec_data[3,] <- data.frame(1947, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+tec_data[4,] <- data.frame(1954, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+tec_data[5,] <- data.frame(1962, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+tec_data[6,] <- data.frame(1972, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+tec_data[7,] <- data.frame(1982, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+tec_data[7,] <- data.frame(2002, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+tec_data[8,] <- data.frame(2022, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
 
 # List of lists containing variable of interest, location/name of awk file (relative to output
 # file location), and the location/name of rhessys output file with variable of interest.
