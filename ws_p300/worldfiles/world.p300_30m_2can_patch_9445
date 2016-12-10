@@ -54,9 +54,9 @@
 0.00000000 litter.rain_stored
 0.00264550 litter_cs.litr1c
 0.00006574 litter_ns.litr1n
-0.10686575 litter_cs.litr2c
-0.13508000 litter_cs.litr3c
-0.21910575 litter_cs.litr4c
+0.00686575 litter_cs.litr2c
+0.03508000 litter_cs.litr3c
+0.01910575 litter_cs.litr4c
 0.03241700 soil_cs.soil1c
 0.00000000 soil_ns.sminn
 0.00000000 soil_ns.nitrate

@@ -8,7 +8,7 @@ library(lubridate)
 library(tidyr)
 library(dplyr)
 
-theme_set(theme_grey(base_size = 18))
+theme_set(theme_grey(base_size = 16))
 
 
 # ---------------------------------------------------------------------
@@ -101,7 +101,7 @@ x <- ggplot(data = tmp) +
   facet_grid(.~world_file, labeller = labeller(world_file = world_file_yr)) +
   theme(legend.position = "none") +
   labs(title = "Litter Carbon", x = "Pspread", y = "Change (%)") +
-  scale_x_continuous(breaks = c(0.2, 0.5, 0.8))
+  scale_x_continuous(breaks = c(0.2, 0.8))
 plot(x)
 ggsave("p300_patch_sim_change_litrc.pdf",plot = x, path = PATCH_FIRE_DIR)
 
@@ -111,7 +111,7 @@ x <- ggplot(data = tmp) +
   facet_grid(.~world_file, labeller = labeller(world_file = world_file_yr)) +
   theme(legend.position = "none") +
   labs(title = "Soil Carbon", x = "Pspread", y = "Change (%)") +
-  scale_x_continuous(breaks = c(0.2, 0.5, 0.8))
+  scale_x_continuous(breaks = c(0.2, 0.8))
 plot(x)
 ggsave("p300_patch_sim_change_soil1c.pdf",plot = x, path = PATCH_FIRE_DIR)
 
@@ -121,7 +121,7 @@ x <- ggplot(data = tmp) +
   facet_grid(.~world_file, labeller = labeller(world_file = world_file_yr, names = canopy)) +
   theme(legend.position = "none") +
   labs(title = "Coarse Woody Debris Carbon", x = "Pspread", y = "Change (%)") +
-  scale_x_continuous(breaks = c(0.2, 0.5, 0.8))
+  scale_x_continuous(breaks = c(0.2, 0.8))
 plot(x)
 ggsave("p300_patch_sim_change_cwdc.pdf",plot = x, path = PATCH_FIRE_DIR)
 
@@ -134,7 +134,7 @@ x <- ggplot(data = tmp) +
   facet_grid(names~world_file, labeller = labeller(world_file = world_file_yr, names = canopy)) +
   theme(legend.position = "none") +
   labs(title = "Leaf Carbon", x = "Pspread", y = "Change (%)") +
-  scale_x_continuous(breaks = c(0.3, 0.7))
+  scale_x_continuous(breaks = c(0.2, 0.8))
 plot(x)
 ggsave("p300_patch_sim_change_leafc.pdf",plot = x, path = PATCH_FIRE_DIR)
 
@@ -145,7 +145,7 @@ x <- ggplot(data = tmp) +
   facet_grid(names~world_file, labeller = labeller(world_file = world_file_yr, names = canopy)) +
   theme(legend.position = "none") +
   labs(title = "Stem Carbon", x = "Pspread", y = "Change (%)") +
-  scale_x_continuous(breaks = c(0.2, 0.5, 0.8))
+  scale_x_continuous(breaks = c(0.2, 0.8))
 plot(x)
 ggsave("p300_patch_sim_change_stemc.pdf",plot = x, path = PATCH_FIRE_DIR)
 
@@ -156,7 +156,7 @@ x <- ggplot(data = tmp) +
   facet_grid(names~world_file, labeller = labeller(world_file = world_file_yr, names = canopy)) +
   theme(legend.position = "none") +
   labs(title = "Leaf Area Index", x = "Pspread", y = "Change (%)") +
-  scale_x_continuous(breaks = c(0.2, 0.5, 0.8))
+  scale_x_continuous(breaks = c(0.2, 0.8))
 plot(x)
 ggsave("p300_patch_sim_change_lai.pdf",plot = x, path = PATCH_FIRE_DIR)
 
@@ -167,7 +167,7 @@ x <- ggplot(data = tmp) +
   facet_grid(names~world_file, labeller = labeller(world_file = world_file_yr, names = canopy)) +
   theme(legend.position = "none") +
   labs(title = "Height", x = "Pspread", y = "Change (%)") +
-  scale_x_continuous(breaks = c(0.2, 0.5, 0.8))
+  scale_x_continuous(breaks = c(0.2, 0.8))
 plot(x)
 ggsave("p300_patch_sim_change_height.pdf",plot = x, path = PATCH_FIRE_DIR)
 

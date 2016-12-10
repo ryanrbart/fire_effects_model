@@ -13,5 +13,5 @@ ws_p300/clim/Grove_lowprov_clim_1942_2453   	_climate_prefix
 hja_prime_hourly 	hourly_climate_prefix
 0			number_non_critical_hourly_sequences
 ws_p300/clim/lowprov
-0
+1
 pspread
