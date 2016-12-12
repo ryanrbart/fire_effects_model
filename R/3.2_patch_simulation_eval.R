@@ -5,7 +5,7 @@
 library(rhessysR)
 library(ggplot2)
 
-theme_set(theme_grey(base_size = 18))
+theme_set(theme_bw(base_size = 18))
 
 
 # ---------------------------------------------------------------------
@@ -84,9 +84,9 @@ x <- cdg3 %>%
   tidyr::gather("c_type", "c_frac", c(avg_leaf_c, avg_stem_c, avg_root_c)) %>%
   dplyr::filter(names == 1) %>%
   ggplot() +
-    geom_line(aes(x = wy, y = c_frac, color=c_type), size = .8) +
-    geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.3) +
-    labs(title = "Overstory", x = "Wateryear", y = "Carbon (g/m2)") +
+    geom_line(aes(x = wy, y = c_frac, color=c_type), size = 1.2) +
+    geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
+    labs(title = "Conifer", x = "Wateryear", y = "Carbon (g/m2)") +
     scale_color_brewer(palette = "Set2", name="Store Type", labels = c("Leaf","Root","Stem")) +
     theme(legend.position = "bottom")
 plot(x)
@@ -97,9 +97,9 @@ x <- cdg3 %>%
   tidyr::gather("c_type", "c_frac", c(avg_leaf_c, avg_stem_c, avg_root_c)) %>%
   dplyr::filter(names == 2) %>%
   ggplot() +
-  geom_line(aes(x = wy, y = c_frac, color=c_type), size = .8) +
-  geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.3) +
-  labs(title = "Understory", x = "Wateryear", y = "Carbon (g/m2)") +
+  geom_line(aes(x = wy, y = c_frac, color=c_type), size = 1.2) +
+  geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
+  labs(title = "Shrub", x = "Wateryear", y = "Carbon (g/m2)") +
   scale_color_brewer(palette = "Set2", name="Store Type", labels = c("Leaf","Root","Stem")) +
   theme(legend.position = "bottom")
 plot(x)
@@ -111,8 +111,9 @@ x <- cd %>%
   group_by(wy, names) %>%
   summarize(avg_height = mean(height)) %>%
   ggplot() +
-    geom_line(aes(x=wy,y=avg_height, color=as.character(names)), size = .8) +
-    geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.3) +
+    geom_line(aes(x=wy,y=avg_height, color=as.character(names)), size = 1.2) +
+    geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
+    geom_hline(yintercept= c(4,7), linetype=1, size=.4, color = "olivedrab3") +
     labs(title = "Height", x = "Wateryear", y = "Height (meters)") +
     scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Overstory","Understory")) +
     theme(legend.position = "bottom")
@@ -131,8 +132,8 @@ x <- cdg %>%
   group_by(wy, var_type) %>%
   summarize(avg_patch_var = mean(patch_var)) %>%
   ggplot() +
-    geom_line(aes(x=wy,y=avg_patch_var, color=as.character(var_type)), size = .8) +
-    geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.3) +
+    geom_line(aes(x=wy,y=avg_patch_var, color=as.character(var_type)), size = 1.2) +
+    geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
     labs(title = "Ground Stores", x = "Wateryear", y = "Carbon (g/m2)") +
     scale_color_brewer(palette = "Set2", name="Store Type", labels = c("Coarse Woody Debris", "Litter", "Soil Carbon")) +
     theme(legend.position = "bottom")

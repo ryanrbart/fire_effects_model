@@ -8,7 +8,7 @@ library(lubridate)
 library(tidyr)
 library(dplyr)
 
-theme_set(theme_grey(base_size = 16))
+theme_set(theme_bw(base_size = 16))
 
 
 # ---------------------------------------------------------------------
@@ -83,21 +83,21 @@ head(p300_patch_fire_change1)
 # P300 Post-fire Change Evaluation
 
 world_file_yr <- c(
-  "ws_p300/worldfiles/world.p300_30m_2can_patch_9445.Y1947M10D1H1.state" = "5 yrs",
-  "ws_p300/worldfiles/world.p300_30m_2can_patch_9445.Y1954M10D1H1.state" = "12 yrs",
-  "ws_p300/worldfiles/world.p300_30m_2can_patch_9445.Y1962M10D1H1.state" = "20 yrs",
-  "ws_p300/worldfiles/world.p300_30m_2can_patch_9445.Y1972M10D1H1.state" = "30 yrs",
-  "ws_p300/worldfiles/world.p300_30m_2can_patch_9445.Y1982M10D1H1.state" = "40 yrs",
-  "ws_p300/worldfiles/world.p300_30m_2can_patch_9445.Y2002M10D1H1.state" = "60 yrs",
-  "ws_p300/worldfiles/world.p300_30m_2can_patch_9445.Y2022M10D1H1.state" = "80 yrs"
+  "ws_p300/worldfiles/world.p300_30m_2can_patch_9445.Y1947M10D1H1.state" = "Stand\nage:\n5 yrs",
+  "ws_p300/worldfiles/world.p300_30m_2can_patch_9445.Y1954M10D1H1.state" = "Stand\nage:\n12 yrs",
+  "ws_p300/worldfiles/world.p300_30m_2can_patch_9445.Y1962M10D1H1.state" = "Stand\nage:\n20 yrs",
+  "ws_p300/worldfiles/world.p300_30m_2can_patch_9445.Y1972M10D1H1.state" = "Stand\nage:\n30 yrs",
+  "ws_p300/worldfiles/world.p300_30m_2can_patch_9445.Y1982M10D1H1.state" = "Stand\nage:\n40 yrs",
+  "ws_p300/worldfiles/world.p300_30m_2can_patch_9445.Y2002M10D1H1.state" = "Stand\nage:\n60 yrs",
+  "ws_p300/worldfiles/world.p300_30m_2can_patch_9445.Y2022M10D1H1.state" = "Stand\nage:\n80 yrs"
 )
 
-canopy <- c("1" = "Overstory","2" = "Understory")
+canopy <- c("1" = "Conifer","2" = "Shrub")
 
 
 tmp = dplyr::filter(p300_patch_fire_change1, var == "litrc")
 x <- ggplot(data = tmp) +
-  geom_bar(stat="identity",aes(x=dated_seq_data,y=relative_change)) +
+  geom_bar(stat="identity",aes(x=dated_seq_data,y=relative_change), color="olivedrab3") +
   facet_grid(.~world_file, labeller = labeller(world_file = world_file_yr)) +
   theme(legend.position = "none") +
   labs(title = "Litter Carbon", x = "Pspread", y = "Change (%)") +
@@ -107,7 +107,7 @@ ggsave("p300_patch_sim_change_litrc.pdf",plot = x, path = PATCH_FIRE_DIR)
 
 tmp = dplyr::filter(p300_patch_fire_change1, var == "soil1c")
 x <- ggplot(data = tmp) +
-  geom_bar(stat="identity",aes(x=dated_seq_data,y=relative_change)) +
+  geom_bar(stat="identity",aes(x=dated_seq_data,y=relative_change), color="olivedrab3") +
   facet_grid(.~world_file, labeller = labeller(world_file = world_file_yr)) +
   theme(legend.position = "none") +
   labs(title = "Soil Carbon", x = "Pspread", y = "Change (%)") +
@@ -117,7 +117,7 @@ ggsave("p300_patch_sim_change_soil1c.pdf",plot = x, path = PATCH_FIRE_DIR)
 
 tmp = dplyr::filter(p300_patch_fire_change3, var == "cwdc")
 x <- ggplot(data = tmp) +
-  geom_bar(stat="identity",aes(x=dated_seq_data,y=relative_change)) +
+  geom_bar(stat="identity",aes(x=dated_seq_data,y=relative_change), color="olivedrab3") +
   facet_grid(.~world_file, labeller = labeller(world_file = world_file_yr, names = canopy)) +
   theme(legend.position = "none") +
   labs(title = "Coarse Woody Debris Carbon", x = "Pspread", y = "Change (%)") +
@@ -130,7 +130,7 @@ ggsave("p300_patch_sim_change_cwdc.pdf",plot = x, path = PATCH_FIRE_DIR)
 
 tmp = dplyr::filter(p300_patch_fire_change2,var == "leafc")
 x <- ggplot(data = tmp) +
-  geom_bar(stat="identity", aes(x=dated_seq_data,y=relative_change)) +
+  geom_bar(stat="identity", aes(x=dated_seq_data,y=relative_change), color="olivedrab3") +
   facet_grid(names~world_file, labeller = labeller(world_file = world_file_yr, names = canopy)) +
   theme(legend.position = "none") +
   labs(title = "Leaf Carbon", x = "Pspread", y = "Change (%)") +
@@ -141,7 +141,7 @@ ggsave("p300_patch_sim_change_leafc.pdf",plot = x, path = PATCH_FIRE_DIR)
 
 tmp = dplyr::filter(p300_patch_fire_change2,var == "stemc")
 x <- ggplot(data = tmp) +
-  geom_bar(stat="identity",aes(x=dated_seq_data,y=relative_change)) +
+  geom_bar(stat="identity",aes(x=dated_seq_data,y=relative_change), color="olivedrab3") +
   facet_grid(names~world_file, labeller = labeller(world_file = world_file_yr, names = canopy)) +
   theme(legend.position = "none") +
   labs(title = "Stem Carbon", x = "Pspread", y = "Change (%)") +
@@ -152,7 +152,7 @@ ggsave("p300_patch_sim_change_stemc.pdf",plot = x, path = PATCH_FIRE_DIR)
 
 tmp = dplyr::filter(p300_patch_fire_change2,var == "lai")
 x <- ggplot(data = tmp) +
-  geom_bar(stat="identity",aes(x=dated_seq_data,y=relative_change)) +
+  geom_bar(stat="identity",aes(x=dated_seq_data,y=relative_change), color="olivedrab3") +
   facet_grid(names~world_file, labeller = labeller(world_file = world_file_yr, names = canopy)) +
   theme(legend.position = "none") +
   labs(title = "Leaf Area Index", x = "Pspread", y = "Change (%)") +
@@ -163,7 +163,7 @@ ggsave("p300_patch_sim_change_lai.pdf",plot = x, path = PATCH_FIRE_DIR)
 
 tmp = dplyr::filter(p300_patch_fire_change2,var == "height")
 x <- ggplot(data = tmp) +
-  geom_bar(stat="identity",aes(x=dated_seq_data,y=relative_change)) +
+  geom_bar(stat="identity",aes(x=dated_seq_data,y=relative_change), color="olivedrab3") +
   facet_grid(names~world_file, labeller = labeller(world_file = world_file_yr, names = canopy)) +
   theme(legend.position = "none") +
   labs(title = "Height", x = "Pspread", y = "Change (%)") +
