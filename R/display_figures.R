@@ -105,8 +105,6 @@ ggsave("display_understory.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
 
 
 
-
-
 # ---------------------------------------------------------------------
 # Overstory Loss Figure
 # Relation between understory biomass loss and overstory loss
@@ -142,6 +140,7 @@ overstory_figure = function(k1, k2, title_name){
 
 x = overstory_figure(k1 = c(-10), k2 = c(0.5, 1, 1.5), title_name = "Overstory Loss")
 ggsave("display_overstory.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
+
 
 
 
