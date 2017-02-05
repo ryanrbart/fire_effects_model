@@ -112,7 +112,7 @@ ggsave("display_understory.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
 
 overstory_figure = function(k1, k2, title_name){
   
-  understory_biomass_loss <- seq(from=0,to=2, length.out = 201)
+  understory_biomass_loss <- seq(from=0,to=2, length.out = 201)   # KgC/m2
   
   tmp_func = function (understory_biomass_loss, k1, k2){
     overstory_percent_loss <- (1-1/(1+exp(-(k1*(understory_biomass_loss-k2))))*100)+100

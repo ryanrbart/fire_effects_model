@@ -11,27 +11,13 @@ theme_set(theme_bw(base_size = 18))
 # ---------------------------------------------------------------------
 # Input and output paths 
 
-P300_PATCH_SIM <- "ws_p300/out/p300_patch_simulation/patch_sim"
+P300_PATCH_SIM <- "ws_p300/out/3.1_p300_patch_simulation/patch_sim"
 
 OUTPUT_DIR <- "outputs"
 PATCH_SIM_DIR <- file.path(OUTPUT_DIR, "3_patch_sim")
 
 # ---------------------------------------------------------------------
 # Functions
-
-make_basic_timeseries_plot_1can = function(plot_name, dataframe, variable, path){
-  x <- ggplot(data = dataframe) +
-    geom_line(aes(x=date,y=variable))
-  plot(x)
-  ggsave(plot_name,plot = x, path = path)
-}
-
-make_basic_timeseries_plot_2can = function(plot_name, dataframe, variable, path){
-  x <- ggplot(data = dataframe) +
-    geom_line(aes(x=date,y=variable, linetype=as.character(names)))
-  plot(x)
-  ggsave(plot_name,plot = x, path = path)
-}
 
 
 # ---------------------------------------------------------------------
@@ -63,6 +49,8 @@ cd.wyd <- p300_patch_sim$cd.wyd
 cdg.wyd <- p300_patch_sim$cdg.wyd
 
 
+
+
 # ----
 # Simulation time-series graphics
 
@@ -80,6 +68,9 @@ cdg3 <- cdg2 %>%
   group_by(wy, names) %>%
   summarize(avg_leaf_c = mean(leafc), avg_stem_c = mean(stemc), avg_root_c = mean(rootc))
 
+# ----
+
+# Make canopy 1 comparison plot
 x <- cdg3 %>%
   tidyr::gather("c_type", "c_frac", c(avg_leaf_c, avg_stem_c, avg_root_c)) %>%
   dplyr::filter(names == 1) %>%
@@ -90,9 +81,11 @@ x <- cdg3 %>%
     scale_color_brewer(palette = "Set2", name="Store Type", labels = c("Leaf","Root","Stem")) +
     theme(legend.position = "bottom")
 plot(x)
-ggsave("agu16_c_frac_layer_1.pdf",plot = x, path = PATCH_SIM_DIR)
+ggsave("p300_c_frac_layer_1.pdf",plot = x, path = PATCH_SIM_DIR)
 
+# ----
 
+# Make canopy 2 comparison plot
 x <- cdg3 %>%
   tidyr::gather("c_type", "c_frac", c(avg_leaf_c, avg_stem_c, avg_root_c)) %>%
   dplyr::filter(names == 2) %>%
@@ -103,8 +96,9 @@ x <- cdg3 %>%
   scale_color_brewer(palette = "Set2", name="Store Type", labels = c("Leaf","Root","Stem")) +
   theme(legend.position = "bottom")
 plot(x)
-ggsave("agu16_c_frac_layer_2.pdf",plot = x, path = PATCH_SIM_DIR)
+ggsave("p300_c_frac_layer_2.pdf",plot = x, path = PATCH_SIM_DIR)
 
+# ----
 
 # Make height comparison plot
 x <- cd %>%
@@ -118,61 +112,110 @@ x <- cd %>%
     scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Overstory","Understory")) +
     theme(legend.position = "bottom")
 plot(x)
-ggsave("agu16_height.pdf",plot = x, path = PATCH_SIM_DIR)
+ggsave("p300_height.pdf",plot = x, path = PATCH_SIM_DIR)
 
+# ----
 
-# Make litter, soil, cwdc comparison plot
-
+# Make litter, soil, cwdc comparison plot (Uses single soil store)
 x <- cdg %>%
   group_by(date, wy) %>%
   summarize(cwd = sum(cwdc)) %>%
   left_join(., select(pdg, soil1c_new, date), by = "date") %>%
-  left_join(., select(pdg, soil2c_new, date), by = "date") %>%
-  left_join(., select(pdg, soil3c_new, date), by = "date") %>%
-  left_join(., select(pdg, soil4c_new, date), by = "date") %>%
   left_join(., select(bd, litrc_new, date), by = "date") %>%
-  tidyr::gather("var_type", "patch_var", c(cwd, soil1c_new, soil2c_new, soil3c_new, soil4c_new, litrc_new)) %>%
+  tidyr::gather("var_type", "patch_var", c(cwd, soil1c_new, litrc_new)) %>%
   group_by(wy, var_type) %>%
   summarize(avg_patch_var = mean(patch_var)) %>%
   ggplot() +
-    geom_line(aes(x=wy,y=avg_patch_var, color=as.character(var_type)), size = 1.2) +
-    geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
-    labs(title = "Ground Stores", x = "Wateryear", y = "Carbon (g/m2)") +
-    scale_color_brewer(palette = "Set2", name="Store Type", labels = c(cwd = "Coarse Woody Debris", 
-                                                                       litrc_new = "Litter",
-                                                                       soil1c_new = "Soil1",
-                                                                       soil2c_new = "Soil2",
-                                                                       soil3c_new = "Soil3",
-                                                                       soil4c_new = "Soil4")) +
-    theme(legend.position = "bottom") # + 
-#    coord_cartesian(ylim = c(0,1000))
+  geom_line(aes(x=wy,y=avg_patch_var, color=as.character(var_type)), size = 1.2) +
+  geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
+  labs(title = "Ground Stores", x = "Wateryear", y = "Carbon (g/m2)") +
+  scale_color_brewer(palette = "Set2", name="Store Type", labels = c(cwd = "Coarse Woody Debris", 
+                                                                     litrc_new = "Litter",
+                                                                     soil1c_new = "Soil1")) +
+  theme(legend.position = "bottom")
 plot(x)
-ggsave("agu16_litter_soil_cwd.pdf",plot = x, path = PATCH_SIM_DIR)
+ggsave("p300_litter_soil_cwd.pdf",plot = x, path = PATCH_SIM_DIR)
+
+# Make litter, soil, cwdc comparison plot (Compares all soil stores)
+# x <- cdg %>%
+#   group_by(date, wy) %>%
+#   summarize(cwd = sum(cwdc)) %>%
+#   left_join(., select(pdg, soil1c_new, date), by = "date") %>%
+#   left_join(., select(pdg, soil2c_new, date), by = "date") %>%
+#   left_join(., select(pdg, soil3c_new, date), by = "date") %>%
+#   left_join(., select(pdg, soil4c_new, date), by = "date") %>%
+#   left_join(., select(bd, litrc_new, date), by = "date") %>%
+#   tidyr::gather("var_type", "patch_var", c(cwd, soil1c_new, soil2c_new, soil3c_new, soil4c_new, litrc_new)) %>%
+#   group_by(wy, var_type) %>%
+#   summarize(avg_patch_var = mean(patch_var)) %>%
+#   ggplot() +
+#     geom_line(aes(x=wy,y=avg_patch_var, color=as.character(var_type)), size = 1.2) +
+#     geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
+#     labs(title = "Ground Stores", x = "Wateryear", y = "Carbon (g/m2)") +
+#     scale_color_brewer(palette = "Set2", name="Store Type", labels = c(cwd = "Coarse Woody Debris",
+#                                                                        litrc_new = "Litter",
+#                                                                        soil1c_new = "Soil1",
+#                                                                        soil2c_new = "Soil2",
+#                                                                        soil3c_new = "Soil3",
+#                                                                        soil4c_new = "Soil4")) +
+#     theme(legend.position = "bottom") #  +
+# #    coord_cartesian(ylim = c(0,1000))
+# plot(x)
+# ggsave("p300_litter_soil_cwd.pdf",plot = x, path = PATCH_SIM_DIR)
+
+# ----
 
 
 
-# ---------------------------------------------------------------------
-# P300 Evaluation
 
 
 
-make_basic_timeseries_plot_1can(plot_name = "p300_patch_sim_litrc.pdf", dataframe = bd, variable = bd$litrc, path = PATCH_SIM_DIR)
-
-make_basic_timeseries_plot_1can(plot_name = "p300_patch_sim_soil1c.pdf", dataframe = pdg, variable = pdg$soil1c, path = PATCH_SIM_DIR)
-
-make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_cwdc.pdf", dataframe = cdg, variable = cdg$cwdc, path = PATCH_SIM_DIR)
 
 
-make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_height.pdf", dataframe = cd, variable = cd$height, path = PATCH_SIM_DIR)
 
-make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_lai.pdf", dataframe = cd, variable = cd$lai, path = PATCH_SIM_DIR)
 
-make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_leafc.pdf", dataframe = cdg, variable = cdg$leafc, path = PATCH_SIM_DIR)
 
-make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_live_stemc.pdf", dataframe = cdg, variable = cdg$live_stemc, path = PATCH_SIM_DIR)
 
-make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_dead_stemc.pdf", dataframe = cdg, variable = cdg$dead_stemc, path = PATCH_SIM_DIR)
 
+# 
+# # ---------------------------------------------------------------------
+# # Functions
+# 
+# make_basic_timeseries_plot_1can = function(plot_name, dataframe, variable, path){
+#   x <- ggplot(data = dataframe) +
+#     geom_line(aes(x=date,y=variable))
+#   plot(x)
+#   ggsave(plot_name,plot = x, path = path)
+# }
+# 
+# make_basic_timeseries_plot_2can = function(plot_name, dataframe, variable, path){
+#   x <- ggplot(data = dataframe) +
+#     geom_line(aes(x=date,y=variable, linetype=as.character(names)))
+#   plot(x)
+#   ggsave(plot_name,plot = x, path = path)
+# }
+# 
+# # ---------------------------------------------------------------------
+# # P300 Evaluation
+# 
+# 
+# make_basic_timeseries_plot_1can(plot_name = "p300_patch_sim_litrc.pdf", dataframe = bd, variable = bd$litrc, path = PATCH_SIM_DIR)
+# 
+# make_basic_timeseries_plot_1can(plot_name = "p300_patch_sim_soil1c.pdf", dataframe = pdg, variable = pdg$soil1c, path = PATCH_SIM_DIR)
+# 
+# make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_cwdc.pdf", dataframe = cdg, variable = cdg$cwdc, path = PATCH_SIM_DIR)
+# 
+# 
+# make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_height.pdf", dataframe = cd, variable = cd$height, path = PATCH_SIM_DIR)
+# 
+# make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_lai.pdf", dataframe = cd, variable = cd$lai, path = PATCH_SIM_DIR)
+# 
+# make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_leafc.pdf", dataframe = cdg, variable = cdg$leafc, path = PATCH_SIM_DIR)
+# 
+# make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_live_stemc.pdf", dataframe = cdg, variable = cdg$live_stemc, path = PATCH_SIM_DIR)
+# 
+# make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_dead_stemc.pdf", dataframe = cdg, variable = cdg$dead_stemc, path = PATCH_SIM_DIR)
+# 
 
 
 

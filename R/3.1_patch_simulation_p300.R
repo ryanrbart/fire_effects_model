@@ -68,8 +68,8 @@ tec_data[4,] <- data.frame(1954, 10, 1, 1, "output_current_state", stringsAsFact
 tec_data[5,] <- data.frame(1962, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
 tec_data[6,] <- data.frame(1972, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
 tec_data[7,] <- data.frame(1982, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-tec_data[7,] <- data.frame(2002, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-tec_data[8,] <- data.frame(2022, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+tec_data[8,] <- data.frame(2002, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+tec_data[9,] <- data.frame(2022, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
 
 # List of lists containing variable of interest, location/name of awk file (relative to output
 # file location), and the location/name of rhessys output file with variable of interest.
