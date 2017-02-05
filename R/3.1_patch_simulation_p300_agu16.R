@@ -17,7 +17,7 @@ world_hdr_file <- "ws_p300/worldfiles/world.p300_30m_2can_1942_2453.hdr"
 flow_file <- "ws_p300/flowtables/flow.p300_30m_patch_9445"
 start_date <- "1941 10 1 1"
 end_date <- "2041 10 1 1"
-output_folder <- "ws_p300/out/3.1_p300_patch_simulation/"     # Must end with '/'
+output_folder <- "ws_p300/out/3.1_p300_patch_simulation_agu16/"     # Must end with '/'
 output_filename <- "patch_sim"
 command_options <- "-b -g -c -p"
 parameter_type <- "all_combinations"

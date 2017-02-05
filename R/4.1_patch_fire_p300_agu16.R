@@ -1,7 +1,6 @@
 # Test patch-level fire effects for P300
 # 
-# This script evaluates fire effects for landscapes simulated for 5, 10, 20, 40,
-# and 80 years.
+# This script evaluates fire effects for landscapes simulated at various time intervals.
 
 
 library(rhessysR)
@@ -23,7 +22,7 @@ world_hdr_file <- "ws_p300/worldfiles/world.p300_30m_2can_1942_2453.hdr"
 flow_file <- "ws_p300/flowtables/flow.p300_30m_patch_9445"
 start_date <- "1941 10 1 1"
 end_date <- "1941 10 15 1"
-output_folder <- "ws_p300/out/p300_patch_fire_agu16/"     # Must end with '/'
+output_folder <- "ws_p300/out/4.1_p300_patch_fire_agu16/"     # Must end with '/'
 output_filename <- "patch_fire"
 command_options <- "-b -g -c -p"
 parameter_type <- "all_combinations"
@@ -52,7 +51,7 @@ parameter_change_list[[5]] <- list(c(4),"awks/change.def.understory_height_thres
                                    "ws_p300/defs/veg_p300_shrub.tmp4", "ws_p300/defs/veg_p300_shrub.tmp5")
 parameter_change_list[[6]] <- list(c(1),"awks/change.def.pspread_loss_rel.awk",
                                    "ws_p300/defs/veg_p300_shrub.tmp5", "ws_p300/defs/veg_p300_shrub.tmp6")
-parameter_change_list[[7]] <- list(c(1),"awks/change.def.vapor_loss_rel.awk",
+paramzaeter_change_list[[7]] <- list(c(1),"awks/change.def.vapor_loss_rel.awk",
                                    "ws_p300/defs/veg_p300_shrub.tmp6", "ws_p300/defs/veg_p300_shrub.tmp7")
 parameter_change_list[[8]] <- list(c(-10),"awks/change.def.biomass_loss_rel_k1.awk",
                                    "ws_p300/defs/veg_p300_shrub.tmp7", "ws_p300/defs/veg_p300_shrub.tmp8")
@@ -144,6 +143,9 @@ run_rhessys(rhessys_version, tec_file = tec_file, world_file = world_file,
 # ---------------------------------------------------------------------
 # AGU sensitivity test
 
+# Purpose of this script was to examine the sensitivity of the fire effects
+# parameters. This was not used in final AGU16 analysis/poster.
+
 # ---------------------------------------------------------------------
 # Model inputs
 
@@ -155,8 +157,8 @@ world_hdr_file <- "ws_p300/worldfiles/world.p300_30m_2can_1942_2453.hdr"
 flow_file <- "ws_p300/flowtables/flow.p300_30m_patch_9445"
 start_date <- "1941 10 1 1"
 end_date <- "1941 10 15 1"
-output_folder <- "ws_p300/out/p300_patch_fire_agu16_sens/"     # Must end with '/'
-output_filename <- "patch_fire"
+output_folder <- "ws_p300/out/4.1_p300_patch_fire_agu16/"     # Must end with '/'
+output_filename <- "patch_fire_sens"
 command_options <- "-b -g -c -p"
 parameter_type <- "all_combinations"
 m <- c(1.792761)

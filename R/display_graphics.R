@@ -11,7 +11,7 @@ library(tidyr)
 # Input and output paths 
 
 OUTPUT_DIR <- "outputs"
-DISPLAY_FIGURES_DIR <- file.path(OUTPUT_DIR, "display_figures")
+DISPLAY_FIGURES_DIR <- file.path(OUTPUT_DIR, "display_graphics")
 
 
 # ---------------------------------------------------------------------

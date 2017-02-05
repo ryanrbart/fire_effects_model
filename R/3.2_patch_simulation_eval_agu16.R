@@ -11,27 +11,10 @@ theme_set(theme_bw(base_size = 18))
 # ---------------------------------------------------------------------
 # Input and output paths 
 
-P300_PATCH_SIM <- "ws_p300/out/p300_patch_simulation/patch_sim"
+P300_PATCH_SIM <- "ws_p300/out/p300_patch_simulation/patch_sim_agu16"
 
 OUTPUT_DIR <- "outputs"
-PATCH_SIM_DIR <- file.path(OUTPUT_DIR, "3_patch_sim")
-
-# ---------------------------------------------------------------------
-# Functions
-
-make_basic_timeseries_plot_1can = function(plot_name, dataframe, variable, path){
-  x <- ggplot(data = dataframe) +
-    geom_line(aes(x=date,y=variable))
-  plot(x)
-  ggsave(plot_name,plot = x, path = path)
-}
-
-make_basic_timeseries_plot_2can = function(plot_name, dataframe, variable, path){
-  x <- ggplot(data = dataframe) +
-    geom_line(aes(x=date,y=variable, linetype=as.character(names)))
-  plot(x)
-  ggsave(plot_name,plot = x, path = path)
-}
+PATCH_SIM_DIR <- file.path(OUTPUT_DIR, "3_patch_sim_agu16")
 
 
 # ---------------------------------------------------------------------
@@ -64,7 +47,7 @@ cdg.wyd <- p300_patch_sim$cdg.wyd
 
 
 # ----
-# Simulation time-series graphics
+# AGU 2016 graphics
 
 # Make Leaf/stem/root proportion figures
 
@@ -148,32 +131,6 @@ x <- cdg %>%
 #    coord_cartesian(ylim = c(0,1000))
 plot(x)
 ggsave("agu16_litter_soil_cwd.pdf",plot = x, path = PATCH_SIM_DIR)
-
-
-
-# ---------------------------------------------------------------------
-# P300 Evaluation
-
-
-
-make_basic_timeseries_plot_1can(plot_name = "p300_patch_sim_litrc.pdf", dataframe = bd, variable = bd$litrc, path = PATCH_SIM_DIR)
-
-make_basic_timeseries_plot_1can(plot_name = "p300_patch_sim_soil1c.pdf", dataframe = pdg, variable = pdg$soil1c, path = PATCH_SIM_DIR)
-
-make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_cwdc.pdf", dataframe = cdg, variable = cdg$cwdc, path = PATCH_SIM_DIR)
-
-
-make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_height.pdf", dataframe = cd, variable = cd$height, path = PATCH_SIM_DIR)
-
-make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_lai.pdf", dataframe = cd, variable = cd$lai, path = PATCH_SIM_DIR)
-
-make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_leafc.pdf", dataframe = cdg, variable = cdg$leafc, path = PATCH_SIM_DIR)
-
-make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_live_stemc.pdf", dataframe = cdg, variable = cdg$live_stemc, path = PATCH_SIM_DIR)
-
-make_basic_timeseries_plot_2can(plot_name = "p300_patch_sim_dead_stemc.pdf", dataframe = cdg, variable = cdg$dead_stemc, path = PATCH_SIM_DIR)
-
-
 
 
 

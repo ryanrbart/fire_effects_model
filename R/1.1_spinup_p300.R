@@ -8,14 +8,14 @@ library(rhessysR)
 # ---------------------------------------------------------------------
 # Model inputs
 
-rhessys_version <- "bin/rhessys5.19_bart"
+rhessys_version <- "bin/rhessys5.20.fire_off"
 tec_file <- "ws_p300/tecfiles/tec.p300_spinup"
 world_file <- "ws_p300/worldfiles/world.p300_30m_2can_spinup"
 world_hdr_file <- "ws_p300/worldfiles/world.p300_30m_2can_spinup.hdr"
 flow_file <- "ws_p300/flowtables/flow.p300_30m"
 start_date <- "1941 10 1 1"
 end_date <- "2091 10 1 1"
-output_folder <- "ws_p300/out/p300_spinup"
+output_folder <- "ws_p300/out/1.1_p300_spinup"
 output_filename <- "spinup"
 command_options <- "-b -g -c 1 181 9445 9445 -p 1 181 9445 9445"
 parameter_type <- "all_combinations"
@@ -38,7 +38,6 @@ parameter_change_list[[2]] <- list(c(0.9),"awks/change.def.epc.alloc_livewoodc_w
                                    "ws_p300/defs/veg_p300_shrub.tmp1", "ws_p300/defs/veg_p300_shrub.tmp2")
 parameter_change_list[[3]] <- list(c(0.1),"awks/change.def.epc.branch_turnover.awk",
                                    "ws_p300/defs/veg_p300_shrub.tmp2", "ws_p300/defs/veg_p300_shrub.tmp_final")
-
 
 # Make tec-file
 #tec_data <- NULL
