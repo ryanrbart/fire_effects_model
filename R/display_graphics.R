@@ -15,8 +15,51 @@ DISPLAY_FIGURES_DIR <- file.path(OUTPUT_DIR, "display_graphics")
 
 
 # ---------------------------------------------------------------------
-# Volatilization Figure
+# Volatilization Output Figure
+# Relation between percent canopy loss and and percent volatilization
 
+
+volitalization_figure = function(vapor_loss_parameter, title_name){
+  
+  percent_canopy_loss <- seq(from=0,to=1,length.out=101)
+  
+  tmp_func = function (percent_canopy_loss, vapor_loss_parameter){
+    if(vapor_loss_parameter == 1){
+      percent_vapor_loss <- percent_canopy_loss*100
+    }
+    else {
+      percent_vapor_loss <-  (((vapor_loss_parameter^percent_canopy_loss) - 1)/(vapor_loss_parameter-1)*100)
+    }
+  }
+  
+  percent_canopy_loss_rep <- rep(percent_canopy_loss, length(vapor_loss_parameter))
+  vapor_loss_parameter_rep <- rep(vapor_loss_parameter, each=length(percent_canopy_loss))
+  
+  happy <- percent_canopy_loss_rep %>%
+    cbind(percent_canopy_loss_rep = ., vapor_loss_parameter_rep) %>%
+    as.data.frame()
+  
+  percent_vapor_loss <- mapply(tmp_func,happy$percent_canopy_loss_rep, happy$vapor_loss_parameter_rep)
+  happy <- cbind(happy, percent_vapor_loss)
+  happy$vapor_loss_parameter_rep <- as.factor(happy$vapor_loss_parameter_rep)
+  
+  
+  x <- ggplot(data = happy) +
+    geom_line(aes(x=percent_canopy_loss_rep, y=percent_vapor_loss, linetype = vapor_loss_parameter_rep, color = vapor_loss_parameter_rep), size=1.2) +
+    theme_bw(base_size=16) +
+    labs(title = title_name, x = "Canopy Percent Loss", y = "Percent Volatilized") +
+    scale_linetype(name = "Vapor Loss\nParameter") +
+    scale_color_brewer(palette = "Greens", name = "Vapor Loss\nParameter")
+  plot(x)
+  return(x)
+}
+
+x = volitalization_figure(vapor_loss_parameter = c(0.01, 1, 100), title_name = "Volatilization")
+ggsave("display_volatilization.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
+
+
+
+# Volatilization Output Figures
 
 vaporization_figure = function(vapor_loss_parameter, title_name){
 
