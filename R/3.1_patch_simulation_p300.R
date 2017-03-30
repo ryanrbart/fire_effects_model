@@ -10,16 +10,17 @@ library(rhessysR)
 # Model inputs
 
 # RHESSys Inputs
-rhessys_version <- "bin/rhessys5.20.fire_off"
+rhessys_version <- "bin/rhessys5.20.1" # "bin/rhessys5.20.fire_off"
 tec_file <- "ws_p300/tecfiles/tec.p300_patch_simulation"
 world_file <- "ws_p300/worldfiles/world.p300_30m_2can_patch_9445"
 world_hdr_file <- "ws_p300/worldfiles/world.p300_30m_2can_1942_2453.hdr"
 flow_file <- "ws_p300/flowtables/flow.p300_30m_patch_9445"
 start_date <- "1941 10 1 1"
-end_date <- "2041 10 1 1"
+#end_date <- "1945 08 1 1"
+end_date <- "2034 05 1 1"
 output_folder <- "ws_p300/out/3.1_p300_patch_simulation/"     # Must end with '/'
-output_filename <- "patch_sim"
-command_options <- "-b -g -c -p"
+output_filename <- "patch_sim_s"
+command_options <- "-b -g -c -p -tchange 0 0"
 parameter_type <- "all_combinations"
 m <- c(1.792761)
 k <- c(1.566492)
@@ -34,28 +35,21 @@ gw2 <- c(0.178753)
 # List of lists containing parameters, awk_file, input_file, output_file
 #parameter_change_list <- NULL
 parameter_change_list <- list()
-parameter_change_list[[1]] <- list(c(0.1),"awks/change.def.epc.livewood_turnover.awk",
+parameter_change_list[[1]] <- list(c(0.5),"awks/change.def.epc.livewood_turnover.awk",
                                    "ws_p300/defs/veg_p300_shrub.def", "ws_p300/defs/veg_p300_shrub.tmp1")
-parameter_change_list[[2]] <- list(c(0.9),"awks/change.def.epc.alloc_livewoodc_woodc.awk",
+parameter_change_list[[2]] <- list(c(0.6),"awks/change.def.epc.alloc_livewoodc_woodc.awk",
                                    "ws_p300/defs/veg_p300_shrub.tmp1", "ws_p300/defs/veg_p300_shrub.tmp2")
-parameter_change_list[[3]] <- list(c(0.1),"awks/change.def.epc.branch_turnover.awk",
+parameter_change_list[[3]] <- list(c(0.002),"awks/change.def.epc.branch_turnover.awk",
                                    "ws_p300/defs/veg_p300_shrub.tmp2", "ws_p300/defs/veg_p300_shrub.tmp3")
-parameter_change_list[[4]] <- list(c(6),"awks/change.def.overstory_height_thresh.awk",
+parameter_change_list[[4]] <- list(c(0.57),"awks/change.def.epc.height_to_stem_exp.awk",
                                    "ws_p300/defs/veg_p300_shrub.tmp3", "ws_p300/defs/veg_p300_shrub.tmp4")
-parameter_change_list[[5]] <- list(c(4),"awks/change.def.understory_height_thresh.awk",
-                                   "ws_p300/defs/veg_p300_shrub.tmp4", "ws_p300/defs/veg_p300_shrub.tmp5")
-parameter_change_list[[6]] <- list(c(.2),"awks/change.def.pspread_loss_rel.awk",
-                                   "ws_p300/defs/veg_p300_shrub.tmp5", "ws_p300/defs/veg_p300_shrub.tmp6")
-parameter_change_list[[7]] <- list(c(.2),"awks/change.def.vapor_loss_rel.awk",
-                                   "ws_p300/defs/veg_p300_shrub.tmp6", "ws_p300/defs/veg_p300_shrub.tmp7")
-parameter_change_list[[8]] <- list(c(-0.05),"awks/change.def.biomass_loss_rel_k1.awk",
-                                   "ws_p300/defs/veg_p300_shrub.tmp7", "ws_p300/defs/veg_p300_shrub.tmp8")
-parameter_change_list[[9]] <- list(c(0.25),"awks/change.def.biomass_loss_rel_k2.awk",
-                                   "ws_p300/defs/veg_p300_shrub.tmp8", "ws_p300/defs/veg_p300_shrub.tmp9")
-parameter_change_list[[10]] <- list(c(0.57),"awks/change.def.epc.height_to_stem_exp.awk",
-                                   "ws_p300/defs/veg_p300_shrub.tmp9", "ws_p300/defs/veg_p300_shrub.tmp10")
-parameter_change_list[[11]] <- list(c(11.39),"awks/change.def.epc.height_to_stem_coef.awk",
-                                   "ws_p300/defs/veg_p300_shrub.tmp10", "ws_p300/defs/veg_p300_shrub.tmp_final")
+parameter_change_list[[5]] <- list(c(10.39),"awks/change.def.epc.height_to_stem_coef.awk",
+                                   "ws_p300/defs/veg_p300_shrub.tmp4", "ws_p300/defs/veg_p300_shrub.tmp_final")
+
+parameter_change_list[[6]] <- list(c(0.57),"awks/change.def.epc.height_to_stem_exp.awk",
+                                    "ws_p300/defs/veg_p300_conifer.def", "ws_p300/defs/veg_p300_conifer.tmp1")
+parameter_change_list[[7]] <- list(c(11.39),"awks/change.def.epc.height_to_stem_coef.awk",
+                                   "ws_p300/defs/veg_p300_conifer.tmp1", "ws_p300/defs/veg_p300_conifer.tmp_final")
 
 
 # Make tec-file

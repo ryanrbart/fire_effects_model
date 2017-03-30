@@ -11,7 +11,7 @@ theme_set(theme_bw(base_size = 18))
 # ---------------------------------------------------------------------
 # Input and output paths 
 
-P300_PATCH_SIM <- "ws_p300/out/3.1_p300_patch_simulation/patch_sim"
+P300_PATCH_SIM <- "ws_p300/out/3.1_p300_patch_simulation/patch_sim_d"
 
 OUTPUT_DIR <- "outputs"
 PATCH_SIM_DIR <- file.path(OUTPUT_DIR, "3_patch_sim")
@@ -24,6 +24,7 @@ PATCH_SIM_DIR <- file.path(OUTPUT_DIR, "3_patch_sim")
 # P300 Patch Simulation Output
 
 p300_patch_sim <- readin_rhessys_output(P300_PATCH_SIM, b=1, g=1, c=1, p=1)
+
 
 bd <- p300_patch_sim$bd
 bd <- mutate(bd, litrc_new = litrc * 1000)
@@ -81,7 +82,7 @@ x <- cdg3 %>%
     scale_color_brewer(palette = "Set2", name="Store Type", labels = c("Leaf","Root","Stem")) +
     theme(legend.position = "bottom")
 plot(x)
-ggsave("p300_c_frac_layer_1.pdf",plot = x, path = PATCH_SIM_DIR)
+ggsave("p300_c_frac_layer_1_3_3.pdf",plot = x, path = PATCH_SIM_DIR)
 
 # ----
 
@@ -96,7 +97,7 @@ x <- cdg3 %>%
   scale_color_brewer(palette = "Set2", name="Store Type", labels = c("Leaf","Root","Stem")) +
   theme(legend.position = "bottom")
 plot(x)
-ggsave("p300_c_frac_layer_2.pdf",plot = x, path = PATCH_SIM_DIR)
+ggsave("p300_c_frac_layer_2_3_3.pdf",plot = x, path = PATCH_SIM_DIR)
 
 # ----
 
@@ -106,13 +107,15 @@ x <- cd %>%
   summarize(avg_height = mean(height)) %>%
   ggplot() +
     geom_line(aes(x=wy,y=avg_height, color=as.character(names)), size = 1.2) +
-    geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
-    geom_hline(yintercept= c(4,7), linetype=1, size=.4, color = "olivedrab3") +
+#    geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
+#    geom_hline(yintercept= c(4,7), linetype=1, size=.4, color = "olivedrab3") +
+#    xlim(1941,1960) +
+#    ylim(0,.6) +
     labs(title = "Height", x = "Wateryear", y = "Height (meters)") +
     scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Overstory","Understory")) +
     theme(legend.position = "bottom")
 plot(x)
-ggsave("p300_height.pdf",plot = x, path = PATCH_SIM_DIR)
+ggsave("p300_height_3_3.pdf",plot = x, path = PATCH_SIM_DIR)
 
 # ----
 
@@ -134,7 +137,8 @@ x <- cdg %>%
                                                                      soil1c_new = "Soil1")) +
   theme(legend.position = "bottom")
 plot(x)
-ggsave("p300_litter_soil_cwd.pdf",plot = x, path = PATCH_SIM_DIR)
+ggsave("p300_litter_soil_cwd_3_3.pdf",plot = x, path = PATCH_SIM_DIR)
+
 
 # Make litter, soil, cwdc comparison plot (Compares all soil stores)
 # x <- cdg %>%
@@ -166,16 +170,100 @@ ggsave("p300_litter_soil_cwd.pdf",plot = x, path = PATCH_SIM_DIR)
 # ----
 
 
+# Exploration of height bug
+
+x <- cd %>%
+  group_by(wy, names) %>%
+  summarize(avg_ga = mean(ga)) %>%
+  ggplot() +
+  geom_line(aes(x=wy,y=avg_ga, color=as.character(names)), size = 1.2) +
+  geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
+  labs(title = "GA", x = "Wateryear", y = "GA") +
+  scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Overstory","Understory")) +
+  theme(legend.position = "bottom")
+plot(x)
+ggsave("p300_ga_11_11.pdf",plot = x, path = PATCH_SIM_DIR)
+
+
+x <- pd %>%
+  group_by(wy) %>%
+  summarize(avg_ga = mean(ga)) %>%
+  ggplot() +
+  geom_line(aes(x=wy,y=avg_ga), size = 1.2) +
+  geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
+  labs(title = "GA", x = "Wateryear", y = "GA") +
+  scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Overstory","Understory")) +
+  theme(legend.position = "bottom")
+plot(x)
+ggsave("p300_ga_11_11.pdf",plot = x, path = PATCH_SIM_DIR)
 
 
 
+x <- pd %>%
+  group_by(wy) %>%
+  summarize(avg_ga = mean(ga)) %>%
+  ggplot() +
+  geom_line(aes(x=wy,y=avg_ga), size = 1.2) +
+  geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
+  labs(title = "GA", x = "Wateryear", y = "GA") +
+  scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Overstory","Understory")) +
+  theme(legend.position = "bottom")
+plot(x)
 
-
-
-
-
-
-
+#x <- select(cd, wyd, names, height, lai, ga, psi, date)
+# 
+# 
+# x <- select(cd, names, lai, date)
+# lai <- tidyr::spread(x, names, lai)
+# View(lai)
+# 
+# x <- select(cd, names, height, date)
+# height <- tidyr::spread(x, names, height)
+# View(height)
+# 
+# x <- select(cd, names, psi, date)
+# psi <- tidyr::spread(x, names, psi)
+# View(psi)
+# 
+# x <- select(cd, names, evap, date)
+# evap <- tidyr::spread(x, names, evap)
+# View(evap)
+# 
+# x <- select(cd, names, trans, date)
+# trans <- tidyr::spread(x, names, trans)
+# View(trans)
+# 
+# x <- select(cd, names, ga, date)
+# ga <- tidyr::spread(x, names, ga)
+# View(ga)
+# 
+# x <- select(cd, names, psn_to_cpool, date)
+# psn_to_cpool <- tidyr::spread(x, names, psn_to_cpool)
+# View(psn_to_cpool)
+# 
+# x <- select(cdg, names, dead_stemc, date)
+# dead_stemc <- tidyr::spread(x, names, dead_stemc)
+# View(dead_stemc)
+# 
+# x <- select(cdg, names, live_stemc, date)
+# live_stemc <- tidyr::spread(x, names, live_stemc)
+# View(live_stemc)
+# 
+# x <- select(cdg, names, leafc, date)
+# leafc <- tidyr::spread(x, names, leafc)
+# View(leafc)
+# 
+# x <- select(cdg, names, frootc, date)
+# frootc <- tidyr::spread(x, names, frootc)
+# View(frootc)
+# 
+# x <- select(cdg, names, live_crootc, date)
+# live_crootc <- tidyr::spread(x, names, live_crootc)
+# View(live_crootc)
+# 
+# x <- select(cdg, names, mresp, date)
+# mresp <- tidyr::spread(x, names, mresp)
+# View(mresp)
 
 # 
 # # ---------------------------------------------------------------------

@@ -92,8 +92,8 @@ world_file_yr <- c(
   "ws_p300/worldfiles/world.p300_30m_2can_patch_9445.Y2022M10D1H1.state" = "Stand\nage:\n80 yrs"
 )
 
-canopy <- c("1" = "Conifer","2" = "Shrub")
-
+#canopy <- c("1" = "Conifer","2" = "Shrub")
+canopy <- c("1" = "Upper Canopy","2" = "Lower Canopy")
 
 tmp = dplyr::filter(p300_patch_fire_change1, var == "litrc")
 x <- ggplot(data = tmp) +
@@ -133,10 +133,11 @@ x <- ggplot(data = tmp) +
   geom_bar(stat="identity", aes(x=dated_seq_data,y=relative_change), color="olivedrab3") +
   facet_grid(names~world_file, labeller = labeller(world_file = world_file_yr, names = canopy)) +
   theme(legend.position = "none") +
-  labs(title = "Leaf Carbon", x = "Pspread", y = "Change (%)") +
+#  labs(title = "Leaf Carbon", x = "Pspread", y = "Change (%)") +
+  labs(title = "Above-ground Biomass", x = "Intensity", y = "Change (%)") +
   scale_x_continuous(breaks = c(0.2, 0.8))
 plot(x)
-ggsave("p300_patch_sim_change_leafc.pdf",plot = x, path = PATCH_FIRE_DIR)
+ggsave("p300_patch_sim_change_leafc_general.pdf",plot = x, path = PATCH_FIRE_DIR)
 
 
 tmp = dplyr::filter(p300_patch_fire_change2,var == "stemc")
