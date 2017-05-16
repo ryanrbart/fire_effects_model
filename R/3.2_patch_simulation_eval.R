@@ -4,6 +4,7 @@
 
 library(rhessysR)
 library(ggplot2)
+library(beepr)
 
 theme_set(theme_bw(base_size = 18))
 
@@ -11,7 +12,7 @@ theme_set(theme_bw(base_size = 18))
 # ---------------------------------------------------------------------
 # Input and output paths 
 
-P300_PATCH_SIM <- "ws_p300/out/3.1_p300_patch_simulation/patch_sim_d"
+P300_PATCH_SIM <- "ws_p300/out/3.1_p300_patch_simulation/patch_sim"
 
 OUTPUT_DIR <- "outputs"
 PATCH_SIM_DIR <- file.path(OUTPUT_DIR, "3_patch_sim")
@@ -78,11 +79,17 @@ x <- cdg3 %>%
   ggplot() +
     geom_line(aes(x = wy, y = c_frac, color=c_type), size = 1.2) +
     geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
-    labs(title = "Conifer", x = "Wateryear", y = "Carbon (g/m2)") +
+    labs(title = "Upper Canopy", x = "Wateryear", y = "Carbon (g/m2)") +
     scale_color_brewer(palette = "Set2", name="Store Type", labels = c("Leaf","Root","Stem")) +
     theme(legend.position = "bottom")
 plot(x)
-ggsave("p300_c_frac_layer_1_3_3.pdf",plot = x, path = PATCH_SIM_DIR)
+#ggsave("p300_c_frac_layer_1_3_3.pdf",plot = x, path = PATCH_SIM_DIR)
+
+l = length(cdg3$avg_leaf_c)
+print(paste("Leafc % = ", cdg3$avg_leaf_c[l-1]/(cdg3$avg_leaf_c[l-1]+cdg3$avg_stem_c[l-1]+cdg3$avg_root_c[l-1])))
+print(paste("Stemc % = ", cdg3$avg_stem_c[l-1]/(cdg3$avg_leaf_c[l-1]+cdg3$avg_stem_c[l-1]+cdg3$avg_root_c[l-1])))
+print(paste("Rootc % = ", cdg3$avg_root_c[l-1]/(cdg3$avg_leaf_c[l-1]+cdg3$avg_stem_c[l-1]+cdg3$avg_root_c[l-1])))
+
 
 # ----
 
@@ -93,11 +100,16 @@ x <- cdg3 %>%
   ggplot() +
   geom_line(aes(x = wy, y = c_frac, color=c_type), size = 1.2) +
   geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
-  labs(title = "Shrub", x = "Wateryear", y = "Carbon (g/m2)") +
+  labs(title = "Lower Canopy", x = "Wateryear", y = "Carbon (g/m2)") +
   scale_color_brewer(palette = "Set2", name="Store Type", labels = c("Leaf","Root","Stem")) +
   theme(legend.position = "bottom")
 plot(x)
-ggsave("p300_c_frac_layer_2_3_3.pdf",plot = x, path = PATCH_SIM_DIR)
+#ggsave("p300_c_frac_layer_2_3_3.pdf",plot = x, path = PATCH_SIM_DIR)
+
+l = length(cdg3$avg_leaf_c)
+print(paste("Leafc % = ", cdg3$avg_leaf_c[l]/(cdg3$avg_leaf_c[l]+cdg3$avg_stem_c[l]+cdg3$avg_root_c[l])))
+print(paste("Stemc % = ", cdg3$avg_stem_c[l]/(cdg3$avg_leaf_c[l]+cdg3$avg_stem_c[l]+cdg3$avg_root_c[l])))
+print(paste("Rootc % = ", cdg3$avg_root_c[l]/(cdg3$avg_leaf_c[l]+cdg3$avg_stem_c[l]+cdg3$avg_root_c[l])))
 
 # ----
 
@@ -107,15 +119,15 @@ x <- cd %>%
   summarize(avg_height = mean(height)) %>%
   ggplot() +
     geom_line(aes(x=wy,y=avg_height, color=as.character(names)), size = 1.2) +
-#    geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
-#    geom_hline(yintercept= c(4,7), linetype=1, size=.4, color = "olivedrab3") +
-#    xlim(1941,1960) +
-#    ylim(0,.6) +
+    geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
+    geom_hline(yintercept= c(4,7), linetype=1, size=.4, color = "olivedrab3") +
+#    xlim(1941,1950) +
+#    ylim(0,1) +
     labs(title = "Height", x = "Wateryear", y = "Height (meters)") +
-    scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Overstory","Understory")) +
+    scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Upper Canopy","Lower Canopy")) +
     theme(legend.position = "bottom")
 plot(x)
-ggsave("p300_height_3_3.pdf",plot = x, path = PATCH_SIM_DIR)
+#ggsave("p300_height_3_3.pdf",plot = x, path = PATCH_SIM_DIR)
 
 # ----
 
@@ -137,8 +149,9 @@ x <- cdg %>%
                                                                      soil1c_new = "Soil1")) +
   theme(legend.position = "bottom")
 plot(x)
-ggsave("p300_litter_soil_cwd_3_3.pdf",plot = x, path = PATCH_SIM_DIR)
+#ggsave("p300_litter_soil_cwd_3_3.pdf",plot = x, path = PATCH_SIM_DIR)
 
+beep(1)
 
 # Make litter, soil, cwdc comparison plot (Compares all soil stores)
 # x <- cdg %>%
@@ -170,45 +183,62 @@ ggsave("p300_litter_soil_cwd_3_3.pdf",plot = x, path = PATCH_SIM_DIR)
 # ----
 
 
-# Exploration of height bug
+# Exploration (annual)
+# 
+# x <- cdg %>%
+#   group_by(wy, names) %>%
+#   summarize(avg_ga = mean(leafc)) %>%
+#   ggplot() +
+#   geom_line(aes(x=wy,y=avg_ga, color=as.character(names)), size = 1.2) +
+#   geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
+#   labs(title = "", x = "Wateryear", y = "") +
+#   scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Overstory","Understory")) +
+#   theme(legend.position = "bottom")
+# plot(x)
+# 
+# 
+# x <- pd %>%
+#   group_by(wy) %>%
+#   summarize(avg_ga = mean(psi)) %>%
+#   ggplot() +
+#   geom_line(aes(x=wy,y=avg_ga), size = 1.2) +
+#   geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
+#   labs(title = "", x = "Wateryear", y = "") +
+#   scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Overstory","Understory")) +
+#   theme(legend.position = "bottom")
+# plot(x)
+# 
 
-x <- cd %>%
-  group_by(wy, names) %>%
-  summarize(avg_ga = mean(ga)) %>%
-  ggplot() +
-  geom_line(aes(x=wy,y=avg_ga, color=as.character(names)), size = 1.2) +
-  geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
-  labs(title = "GA", x = "Wateryear", y = "GA") +
-  scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Overstory","Understory")) +
-  theme(legend.position = "bottom")
-plot(x)
-ggsave("p300_ga_11_11.pdf",plot = x, path = PATCH_SIM_DIR)
+# Exploration (daily)
+# 
+# x <- cdg %>%
+#   ggplot() +
+#   geom_line(aes(x=date,y=leafc, color=as.character(names)), size = 1.2) +
+#   labs(title = "", x = "Date", y = "") +
+#   scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Overstory","Understory")) +
+#   theme(legend.position = "bottom")
+# plot(x)
+
+# 
+# x <- pd %>%
+#   ggplot() +
+#   geom_line(aes(x=date,y=lai), size = 1.2) +
+#   labs(title = "", x = "Date", y = "") +
+# #  scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Overstory","Understory")) +
+#   theme(legend.position = "bottom")
+# plot(x)
+# 
+# 
+# 
+# 
 
 
-x <- pd %>%
-  group_by(wy) %>%
-  summarize(avg_ga = mean(ga)) %>%
-  ggplot() +
-  geom_line(aes(x=wy,y=avg_ga), size = 1.2) +
-  geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
-  labs(title = "GA", x = "Wateryear", y = "GA") +
-  scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Overstory","Understory")) +
-  theme(legend.position = "bottom")
-plot(x)
-ggsave("p300_ga_11_11.pdf",plot = x, path = PATCH_SIM_DIR)
 
 
 
-x <- pd %>%
-  group_by(wy) %>%
-  summarize(avg_ga = mean(ga)) %>%
-  ggplot() +
-  geom_line(aes(x=wy,y=avg_ga), size = 1.2) +
-  geom_vline(xintercept= c(1947,1954,1962,1972,1982,2002,2022), linetype=2, size=.4) +
-  labs(title = "GA", x = "Wateryear", y = "GA") +
-  scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Overstory","Understory")) +
-  theme(legend.position = "bottom")
-plot(x)
+
+# --------
+
 
 #x <- select(cd, wyd, names, height, lai, ga, psi, date)
 # 

@@ -88,7 +88,7 @@ x <- cdg_total %>%
   group_by(wy, names, run_type) %>%
   summarize(avg_leafc = mean(leafc)) %>% 
   ggplot() +
-    geom_line(aes(x = wy, y = avg_leafc, color=names, linetype=run_type)) +
+    geom_line(aes(x = wy, y = avg_leafc, color=run_type, linetype=names)) +
 #    xlim(1941,1952) +
 #    ylim(0,5) +
     labs(title = "Leaf Carbon", x = "Wateryear", y = "Carbon (g/m2)")
@@ -99,7 +99,7 @@ x <- cdg_total %>%
   group_by(wy, names, run_type) %>%
   summarize(avg_live_stemc = mean(live_stemc)) %>% 
   ggplot() +
-  geom_line(aes(x = wy, y = avg_live_stemc, color=names, linetype=run_type)) +
+  geom_line(aes(x = wy, y = avg_live_stemc, color=run_type, linetype=names)) +
   xlim(1941,1952) +
   ylim(0,5) +
   labs(title = "Live Stem Carbon", x = "Wateryear", y = "Carbon (g/m2)")
@@ -109,7 +109,7 @@ x <- cdg_total %>%
   group_by(wy, names, run_type) %>%
   summarize(avg_dead_stemc = mean(dead_stemc)) %>% 
   ggplot() +
-  geom_line(aes(x = wy, y = avg_dead_stemc, color=names, linetype=run_type)) +
+  geom_line(aes(x = wy, y = avg_dead_stemc, color=run_type, linetype=names)) +
   xlim(1941,1952) +
   ylim(0,5) +
   labs(title = "Dead Stem Carbon", x = "Wateryear", y = "Carbon (g/m2)")
@@ -119,9 +119,9 @@ x <- cd_total %>%
   group_by(wy, names, run_type) %>%
   summarize(avg_height = mean(height)) %>% 
   ggplot() +
-  geom_line(aes(x = wy, y = avg_height, color=names, linetype=run_type)) +
-  xlim(1941,1952) +
-  ylim(0,5) +
+  geom_line(aes(x = wy, y = avg_height, color=run_type, linetype=names)) +
+#  xlim(1941,1952) +
+#  ylim(0,5) +
   labs(title = "Height", x = "Wateryear", y = "Height (m)")
 plot(x)
 
@@ -130,7 +130,7 @@ x <- cd_total %>%
   group_by(wy, names, run_type) %>%
   summarize(avg_psn_to_cpool = mean(psn_to_cpool)) %>% 
   ggplot() +
-  geom_line(aes(x = wy, y = avg_psn_to_cpool, color=names, linetype=run_type)) +
+  geom_line(aes(x = wy, y = avg_psn_to_cpool, color=run_type, linetype=names)) +
   xlim(1941,1952) +
   ylim(0,5) +
   labs(title = "psn_to_cpool", x = "Wateryear", y = "Carbon (g/m2)")
@@ -142,7 +142,7 @@ x <- cdg_total %>%
   group_by(wy, names, run_type) %>%
   summarize(avg_frootc = mean(frootc)) %>% 
   ggplot() +
-  geom_line(aes(x = wy, y = avg_frootc, color=names, linetype=run_type)) +
+  geom_line(aes(x = wy, y = avg_frootc, color=run_type, linetype=names)) +
   xlim(1941,1952) +
   ylim(0,5) +
   labs(title = "Fine Root Carbon", x = "Wateryear", y = "Carbon (g/m2)")
@@ -153,7 +153,7 @@ x <- cdg_total %>%
   group_by(wy, names, run_type) %>%
   summarize(avg_dead_crootc = mean(dead_crootc)) %>% 
   ggplot() +
-  geom_line(aes(x = wy, y = avg_dead_crootc, color=names, linetype=run_type)) +
+  geom_line(aes(x = wy, y = avg_dead_crootc, color=run_type, linetype=names)) +
   xlim(1941,1952) +
   ylim(0,5) +
   labs(title = "Dead Coarse Root Carbon", x = "Wateryear", y = "Carbon (g/m2)")
@@ -164,7 +164,7 @@ x <- cd_total %>%
   group_by(wy, names, run_type) %>%
   summarize(avg_rootzone.S = mean(rootzone.S)) %>% 
   ggplot() +
-  geom_line(aes(x = wy, y = avg_rootzone.S, color=names, linetype=run_type)) +
+  geom_line(aes(x = wy, y = avg_rootzone.S, color=run_type, linetype=names)) +
 #  xlim(1941,1982) +
 #  ylim(0,5) +
   labs(title = "rootzone.S", x = "Wateryear", y = "")
@@ -174,7 +174,7 @@ x <- cd_total %>%
   group_by(wy, names, run_type) %>%
   summarize(avg_psi = mean(psi)) %>% 
   ggplot() +
-  geom_line(aes(x = wy, y = avg_psi, color=names, linetype=run_type)) +
+  geom_line(aes(x = wy, y = avg_psi, color=run_type, linetype=names)) +
 #  xlim(1941,1982) +
   #  ylim(0,5) +
   labs(title = "psi", x = "Wateryear", y = "")
@@ -184,7 +184,7 @@ x <- cd_total %>%
   group_by(wy, names, run_type) %>%
   summarize(avg_trans = mean(trans)) %>% 
   ggplot() +
-  geom_line(aes(x = wy, y = avg_trans, color=names, linetype=run_type)) +
+  geom_line(aes(x = wy, y = avg_trans, color=run_type, linetype=names)) +
  #   xlim(1941,1982) +
   #  ylim(0,5) +
   labs(title = "trans", x = "Wateryear", y = "")
@@ -194,7 +194,7 @@ x <- cd_total %>%
   group_by(wy, names, run_type) %>%
   summarize(avg_evap = mean(evap)) %>% 
   ggplot() +
-  geom_line(aes(x = wy, y = avg_evap, color=names, linetype=run_type)) +
+  geom_line(aes(x = wy, y = avg_evap, color=run_type, linetype=names)) +
   #  xlim(1941,1982) +
   #  ylim(0,5) +
   labs(title = "evap", x = "Wateryear", y = "")
@@ -204,7 +204,7 @@ x <- cd_total %>%
   group_by(wy, names, run_type) %>%
   summarize(avg_ga = mean(ga)) %>% 
   ggplot() +
-  geom_line(aes(x = wy, y = avg_ga, color=names, linetype=run_type)) +
+  geom_line(aes(x = wy, y = avg_ga, color=run_type, linetype=names)) +
   #  xlim(1941,1982) +
   #  ylim(0,5) +
   labs(title = "ga", x = "Wateryear", y = "")
@@ -214,7 +214,7 @@ x <- cd_total %>%
   group_by(wy, names, run_type) %>%
   summarize(avg_gs = mean(gs)) %>% 
   ggplot() +
-  geom_line(aes(x = wy, y = avg_gs, color=names, linetype=run_type)) +
+  geom_line(aes(x = wy, y = avg_gs, color=run_type, linetype=names)) +
   #  xlim(1941,1982) +
   #  ylim(0,5) +
   labs(title = "gs", x = "Wateryear", y = "")
@@ -248,7 +248,7 @@ x <- pd_total %>%
   summarize(avg_ga = mean(ga)) %>% 
   ggplot() +
   geom_line(aes(x = wy, y = avg_ga, linetype=run_type)) +
-  #  xlim(1941,1982) +
+#    xlim(2021,2034) +
   #  ylim(0,5) +
   labs(title = "ga", x = "Wateryear", y = "")
 plot(x)
@@ -259,7 +259,7 @@ plot(x)
 
 
 x <-  ggplot(cdg_total) +
-  geom_line(aes(x = date, y = leafc, color=names, linetype=run_type)) +
+  geom_line(aes(x = date, y = leafc, color=run_type, linetype=names)) +
   xlim(as.Date(c('4/1/1944', '5/1/1944'), format="%m/%d/%Y")) +
   ylim(0,3) +
   labs(title = "Leaf Carbon", x = "Wateryear", y = "Carbon (g/m2)")
@@ -267,42 +267,42 @@ plot(x)
 #ggsave("p300_c_frac_layer_1_3_3.pdf",plot = x, path = PATCH_SIM_DIR)
 
 x <-  ggplot(cd_total) +
-  geom_line(aes(x = date, y = height, color=names, linetype=run_type)) +
-  xlim(as.Date(c('4/1/1944', '5/1/1944'), format="%m/%d/%Y")) +
-  ylim(0,.1) +
+  geom_line(aes(x = date, y = height, color=run_type, linetype=names)) +
+#  xlim(as.Date(c('4/1/1945', '5/1/1945'), format="%m/%d/%Y")) +
+  ylim(0,1) +
   labs(title = "height", x = "Wateryear", y = "")
 plot(x)
 
 x <-  ggplot(cd_total) +
-  geom_line(aes(x = date, y = trans, color=names, linetype=run_type)) +
+  geom_line(aes(x = date, y = trans, color=run_type, linetype=names)) +
   xlim(as.Date(c('4/1/1944', '5/1/1944'), format="%m/%d/%Y")) +
   ylim(0,0.025) +
   labs(title = "trans", x = "Wateryear", y = "")
 plot(x)
 
 x <-  ggplot(cd_total) +
-  geom_line(aes(x = date, y = psi, color=names, linetype=run_type)) +
-  xlim(as.Date(c('4/1/1944', '5/1/1944'), format="%m/%d/%Y")) +
+  geom_line(aes(x = date, y = psi, color=run_type, linetype=names)) +
+#  xlim(as.Date(c('4/1/1942', '5/1/1994'), format="%m/%d/%Y")) +
 #  ylim(0,10) +
   labs(title = "PSI", x = "Wateryear", y = "")
 plot(x)
 
 x <-  ggplot(cd_total) +
-  geom_line(aes(x = date, y = m_LWP, color=names, linetype=run_type)) +
+  geom_line(aes(x = date, y = m_LWP, color=run_type, linetype=names)) +
   xlim(as.Date(c('4/1/1944', '5/1/1944'), format="%m/%d/%Y")) +
   #  ylim(0,10) +
   labs(title = "m_LWP", x = "Wateryear", y = "")
 plot(x)
 
 x <-  ggplot(cd_total) +
-  geom_line(aes(x = date, y = gs, color=names, linetype=run_type)) +
+  geom_line(aes(x = date, y = gs, color=run_type, linetype=names)) +
   xlim(as.Date(c('4/1/1944', '5/1/1944'), format="%m/%d/%Y")) +
     ylim(0,1) +
   labs(title = "gs", x = "Wateryear", y = "")
 plot(x)
 
 x <-  ggplot(cd_total) +
-  geom_line(aes(x = date, y = psn_to_cpool, color=names, linetype=run_type)) +
+  geom_line(aes(x = date, y = psn_to_cpool, color=run_type, linetype=names)) +
   xlim(as.Date(c('4/1/1944', '5/1/1944'), format="%m/%d/%Y")) +
   ylim(0,0.06) +
   labs(title = "PSN", x = "Wateryear", y = "")
@@ -310,15 +310,15 @@ plot(x)
 
 
 x <-  ggplot(cdg_total) +
-  geom_line(aes(x = date, y = root_depth, color=names, linetype=run_type)) +
+  geom_line(aes(x = date, y = root_depth, color=run_type, linetype=names)) +
 #  xlim(as.Date(c('4/1/1944', '5/1/1944'), format="%m/%d/%Y")) +
-  ylim(0,10) +
+#  ylim(0,10) +
   labs(title = "root_depth", x = "Wateryear", y = "mm")
 plot(x)
 
 
 x <-  ggplot(cd_total) +
-  geom_line(aes(x = date, y = rootzone.S, color=names, linetype=run_type)) +
+  geom_line(aes(x = date, y = rootzone.S, color=run_type, linetype=names)) +
   xlim(as.Date(c('4/1/1944', '5/1/1944'), format="%m/%d/%Y")) +
   ylim(0,1) +
   labs(title = "rootzone.S", x = "Wateryear", y = "")
@@ -326,14 +326,14 @@ plot(x)
 
 
 x <-  ggplot(cdg_total) +
-  geom_line(aes(x = date, y = mresp, color=names, linetype=run_type)) +
+  geom_line(aes(x = date, y = mresp, color=run_type, linetype=names)) +
   xlim(as.Date(c('4/1/1944', '5/1/1944'), format="%m/%d/%Y")) +
   ylim(0,0.025) +
   labs(title = "mresp", x = "Wateryear", y = "")
 plot(x)
 
 x <-  ggplot(cd_total) +
-  geom_line(aes(x = date, y = ga, color=names, linetype=run_type)) +
+  geom_line(aes(x = date, y = ga, color=run_type, linetype=names)) +
   xlim(as.Date(c('4/1/1944', '5/1/1944'), format="%m/%d/%Y")) +
 #  ylim(0,.5) +
   labs(title = "ga", x = "Wateryear", y = "")
@@ -377,7 +377,7 @@ x <-  ggplot(pd_total) +
 plot(x)
 
 x <-  ggplot(cd_total) +
-  geom_line(aes(x = date, y = ga, color=names, linetype=run_type)) +
+  geom_line(aes(x = date, y = ga, color=run_type, linetype=names)) +
   xlim(as.Date(c('4/1/1944', '8/1/1945'), format="%m/%d/%Y")) +
   ylim(0,10) +
   labs(title = "", x = "Wateryear", y = "")
