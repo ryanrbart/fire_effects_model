@@ -2,17 +2,7 @@
 #
 # Contains scripts for producing display figures
 
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-
-
-# ---------------------------------------------------------------------
-# Input and output paths 
-
-OUTPUT_DIR <- "outputs"
-DISPLAY_FIGURES_DIR <- file.path(OUTPUT_DIR, "display_graphics")
-
+source("R/0.1_utilities")
 
 # ---------------------------------------------------------------------
 # Consumption Output Figure
