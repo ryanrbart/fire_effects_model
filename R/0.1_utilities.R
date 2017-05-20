@@ -28,6 +28,7 @@ PARAMETER_FILE_p300_2.1<- file.path(INPUT_DIR_p300_2.1, "patch_sim_parameter_set
 # R Outputs
 OUTPUT_DIR <- "outputs"
 OUTPUT_DIR_1 <- file.path(OUTPUT_DIR, "1_patch_sim")
+OUTPUT_DIR_2 <- file.path(OUTPUT_DIR, "2_patch_sim")
 
 # ---
 # Display Figures
