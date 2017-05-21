@@ -2,7 +2,7 @@
 #
 # Contains scripts for producing display figures
 
-source("R/0.1_utilities")
+source("R/0.1_utilities.R")
 
 # ---------------------------------------------------------------------
 # Consumption Output Figure

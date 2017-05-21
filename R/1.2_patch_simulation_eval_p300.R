@@ -57,7 +57,7 @@ p300_patch_height_sum <- p300_patch_height %>%
 
 
 # ---------------------------------------------------------------------
-# Time-series graphics for Upper Canopy, Lower Canopy, Ground Stores and Height
+# Figures: Time-series for Upper Canopy, Lower Canopy, Ground Stores and Height
 
 # Canopy 1 comparison plot
 x <- p300_patch_canopy_sum %>%
@@ -147,7 +147,9 @@ max_height = p300_patch_height_sum %>%
 
 ps <- read.csv(PARAMETER_FILE_p300_1.1, header = TRUE)
 
+ps_1_top <- ps[9,]
 
+write.csv(ps_1_top, file.path(OUTPUT_DIR_1, "1_selected_ps.csv"), row.names = FALSE)
 
 
 

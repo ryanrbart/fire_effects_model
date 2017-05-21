@@ -4,7 +4,7 @@
 # vegetation. A copy of the landscape (worldfile) is exported at various time 
 # intervals for patch level fire analysis.
 
-source("R/0.1_utilities")
+source("R/0.1_utilities.R")
 
 # ---------------------------------------------------------------------
 # Model inputs
