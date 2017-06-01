@@ -29,7 +29,7 @@ m_v <- c(1.792761)
 k_v <- c(1.566492)
 pa <- c(.5, 7.896941)
 po <- c(.5, 1.179359)
-gw1 <- c(0.1068035, .3)
+gw1 <- c(0.1668035)
 gw2 <- c(0.178753)
 
 # List of lists containing parameters, awk_file, input_file, output_file
