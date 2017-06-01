@@ -153,10 +153,12 @@ max_height = p300_patch_height_sum %>%
 
 ps <- read.csv(PARAMETER_FILE_p300_1.1, header = TRUE)
 
+# Select the parameter set that most consistently produces the rank median
+# values of overstory height and litter across the stand ages. The selection 
+# also emphasizes lower levels of rank median variance between the stand 
+# ages, but only half as much as the actual values.
 
-# Rank median across all parameter sets and objective targets (e.g leafc, stemc, litter)
-
-# Process height ranks
+# Process height ranks (Produces for each parameter set, the mean and sd of rank values across stand ages)
 rank_height <- p300_patch_height_sum %>% 
   dplyr::filter(wy %in% stand_age_vect) %>% 
   dplyr::filter(canopy_layer == 1) %>% 
@@ -164,14 +166,15 @@ rank_height <- p300_patch_height_sum %>%
   dplyr::mutate(rank = dense_rank(avg_value)) %>% 
   dplyr::group_by(run) %>% 
   dplyr::summarise(mean_rank = mean(rank), sd_rank = sd(rank))
-  
+
+# Relative to the other parameter sets, ranks which parameter set is closest to the median rank of each target.
 center_pos <- (length(rank_height$mean_rank)+1)/2
 rank_height$mean_rank_rank <- abs(rank_height$mean_rank-center_pos)
 rank_h <- rank_height %>% 
   dplyr::mutate(h_mean_rank = dense_rank(mean_rank_rank), h_sd_rank = dense_rank(sd_rank)) %>% 
   select(run, h_mean_rank, h_sd_rank)
 
-# Process litter ranks
+# Process litter ranks  (Produces for each parameter set, the mean and sd of rank values across stand ages)
 rank_litter <- p300_patch_ground_sum %>% 
   dplyr::filter(var_type %in% "litrc") %>% 
   dplyr::filter(wy %in% stand_age_vect) %>% 
@@ -180,31 +183,33 @@ rank_litter <- p300_patch_ground_sum %>%
   dplyr::group_by(run) %>% 
   dplyr::summarise(mean_rank = mean(rank), sd_rank = sd(rank))
 
+# Relative to the other parameter sets, ranks which parameter set is closest to the median rank of each target.
 center_pos <- (length(rank_litter$mean_rank)+1)/2
 rank_litter$mean_rank_rank <- abs(rank_litter$mean_rank-center_pos)
 rank_l <- rank_litter %>% 
   dplyr::mutate(l_mean_rank = dense_rank(mean_rank_rank), l_sd_rank = dense_rank(sd_rank)) %>% 
   select(run, l_mean_rank, l_sd_rank)
 
-# Combine ranks
+# Bind ranks for all targets and produce weighted 'total rank' 
 rank_final <- rank_h %>% 
   dplyr::left_join(rank_l, by = "run")
 rank_final$total <- rank_final$h_mean_rank + 0.5*rank_final$h_sd_rank + rank_final$l_mean_rank + 0.5*rank_final$l_sd_rank
 rank_final <- mutate(rank_final, total_rank = dense_rank(total))
 print(rank_final)
 
-# Unconcatenate 'run'
+# Unconcatenate 'run' variable and order the results
 run_split <- unlist(strsplit(rank_final$run, "V"))
 run_number <- as.numeric(run_split[seq(2, length(run_split), 2)])
-
 rank_final$run_number <- run_number
 rank_final2 <- arrange(rank_final, run_number)
 
 # Determine row of selected parameter set
 ps_row <- which(rank_final2$total_rank == 1)
 
+# Select best parameter set
 ps_selected_1 <- ps[ps_row,]
 
+#Write output
 write.csv(ps_selected_1, file.path(OUTPUT_DIR_1, "1_selected_ps.csv"), row.names = FALSE)
 
 
