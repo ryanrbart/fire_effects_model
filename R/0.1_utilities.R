@@ -4,11 +4,12 @@
 
 # ---------------------------------------------------------------------
 # Libraries
-library(rhessysR)
+library(RHESSysIOinR)
 library(ggplot2)
 library(tidyr)
 library(dplyr)
 library(lubridate)
+library(sensitivity)
 library(beepr)
 
 
@@ -22,7 +23,8 @@ PARAMETER_FILE_p300_1.1<- file.path(RHESSYS_DIR_p300_1.1, "patch_sim_parameter_s
 
 RHESSYS_DIR_p300_2.1 <- "ws_p300/out/2.1_p300_patch_fire"
 ALLSIM_DIR_p300_2.1 <- file.path(RHESSYS_DIR_p300_2.1, "allsim")
-PARAMETER_FILE_p300_2.1<- file.path(RHESSYS_DIR_p300_2.1, "patch_sim_parameter_sets.csv")
+PARAMETER_FILE_p300_2.1_SIM <- file.path(RHESSYS_DIR_p300_2.1, "patch_sim_parameter_sets.csv")
+PARAMETER_FILE_p300_2.1_FIRE <- file.path(RHESSYS_DIR_p300_2.1, "patch_fire_parameter_sets.csv")
 
 # ---
 # R Outputs
