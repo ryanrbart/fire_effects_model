@@ -19,12 +19,12 @@ library(beepr)
 # RHESSys outputs
 RHESSYS_DIR_p300_1.1 <- "ws_p300/out/1.1_p300_patch_simulation"
 ALLSIM_DIR_p300_1.1 <- file.path(RHESSYS_DIR_p300_1.1, "allsim")
-PARAMETER_FILE_p300_1.1<- file.path(RHESSYS_DIR_p300_1.1, "patch_sim_parameter_sets.csv")
+PARAMETER_FILE_p300_1.1<- file.path(RHESSYS_DIR_p300_1.1, "patch_sim_parameter_sets.txt")
 
 RHESSYS_DIR_p300_2.1 <- "ws_p300/out/2.1_p300_patch_fire"
 ALLSIM_DIR_p300_2.1 <- file.path(RHESSYS_DIR_p300_2.1, "allsim")
-PARAMETER_FILE_p300_2.1_SIM <- file.path(RHESSYS_DIR_p300_2.1, "patch_sim_parameter_sets.csv")
-PARAMETER_FILE_p300_2.1_FIRE <- file.path(RHESSYS_DIR_p300_2.1, "patch_fire_parameter_sets.csv")
+PARAMETER_FILE_p300_2.1_SIM <- file.path(RHESSYS_DIR_p300_2.1, "patch_sim_parameter_sets.txt")
+PARAMETER_FILE_p300_2.1_FIRE <- file.path(RHESSYS_DIR_p300_2.1, "patch_fire_parameter_sets.txt")
 
 # ---
 # R Outputs
