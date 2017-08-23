@@ -10,44 +10,44 @@ theme_set(theme_bw(base_size = 11))
 # P300 Patch Simulation data processing
 
 
-p300_patch_canopy <- readin_rhessys_output2(var_names = c("leafc", "stemc", "rootc"),
-                                           path = ALLSIM_DIR_p300_1.1,
-                                           initial_date = ymd("1941-10-01"),
-                                           parameter_file = PARAMETER_FILE_p300_1.1,
-                                           num_canopies = 2)
+p300_patch_canopy <- readin_rhessys_output_cal(var_names = c("leafc", "stemc", "rootc"),
+                                               path = ALLSIM_DIR_p300_1.1,
+                                               initial_date = ymd("1941-10-01"),
+                                               parameter_file = PARAMETER_FILE_p300_1.1,
+                                               num_canopies = 2)
 p300_patch_canopy$wy <- y_to_wy(lubridate::year(p300_patch_canopy$dates),lubridate::month(p300_patch_canopy$dates))
 p300_patch_canopy_sum <- p300_patch_canopy %>%
   group_by(wy, canopy_layer, run, var_type) %>%
   summarize(avg_value = mean(value))
 rm(p300_patch_canopy)
 
-p300_patch_ground <- readin_rhessys_output2(var_names = c("litrc", "soil1c"),
-                                           path = ALLSIM_DIR_p300_1.1,
-                                           initial_date = ymd("1941-10-01"),
-                                           parameter_file = PARAMETER_FILE_p300_1.1,
-                                           num_canopies = 1)
+p300_patch_ground <- readin_rhessys_output_cal(var_names = c("litrc", "soil1c"),
+                                               path = ALLSIM_DIR_p300_1.1,
+                                               initial_date = ymd("1941-10-01"),
+                                               parameter_file = PARAMETER_FILE_p300_1.1,
+                                               num_canopies = 1)
 p300_patch_ground$wy <- y_to_wy(lubridate::year(p300_patch_ground$dates),lubridate::month(p300_patch_ground$dates))
 p300_patch_ground_sum <- p300_patch_ground %>%
   group_by(wy, run, var_type) %>%
   summarize(avg_value = mean(value)*1000)     # Ground stores are originally in Kg/m2
 rm(p300_patch_ground)
 
-p300_patch_cwdc <- readin_rhessys_output2(var_names = c("cwdc"),
-                                           path = ALLSIM_DIR_p300_1.1,
-                                           initial_date = ymd("1941-10-01"),
-                                           parameter_file = PARAMETER_FILE_p300_1.1,
-                                           num_canopies = 2)
+p300_patch_cwdc <- readin_rhessys_output_cal(var_names = c("cwdc"),
+                                             path = ALLSIM_DIR_p300_1.1,
+                                             initial_date = ymd("1941-10-01"),
+                                             parameter_file = PARAMETER_FILE_p300_1.1,
+                                             num_canopies = 2)
 p300_patch_cwdc$wy <- y_to_wy(lubridate::year(p300_patch_cwdc$dates),lubridate::month(p300_patch_cwdc$dates))
 p300_patch_cwdc_sum <- p300_patch_cwdc %>%
   group_by(wy, canopy_layer, run, var_type) %>%
   summarize(avg_value = mean(value))
 rm(p300_patch_cwdc)
 
-p300_patch_height <- readin_rhessys_output2(var_names = c("height"),
-                                            path = ALLSIM_DIR_p300_1.1,
-                                            initial_date = ymd("1941-10-01"),
-                                            parameter_file = PARAMETER_FILE_p300_1.1,
-                                            num_canopies = 2)
+p300_patch_height <- readin_rhessys_output_cal(var_names = c("height"),
+                                               path = ALLSIM_DIR_p300_1.1,
+                                               initial_date = ymd("1941-10-01"),
+                                               parameter_file = PARAMETER_FILE_p300_1.1,
+                                               num_canopies = 2)
 p300_patch_height$wy <- y_to_wy(lubridate::year(p300_patch_height$dates),lubridate::month(p300_patch_height$dates))
 p300_patch_height_sum <- p300_patch_height %>%
   group_by(wy, canopy_layer, run, var_type) %>%
@@ -150,11 +150,10 @@ max_height = p300_patch_height_sum %>%
 
 # ---------------------------------------------------------------------
 # Identify parameter set for simulation with 2.1_patch_fire
-
-ps <- read.csv(PARAMETER_FILE_p300_1.1, header = TRUE)
+ps <- read_table2(PARAMETER_FILE_p300_1.1)
 
 # Select the parameter set that most consistently produces the rank median
-# values of overstory height and litter across the stand ages. The selection 
+# value of overstory height and litter across the stand ages. The selection 
 # also emphasizes lower levels of rank median variance between the stand 
 # ages, but only half as much as the actual values.
 
@@ -205,12 +204,13 @@ rank_final2 <- arrange(rank_final, run_number)
 
 # Determine row of selected parameter set
 ps_row <- which(rank_final2$total_rank == 1)
+ps_row <- ps_row[1]   # Optional: If tie, select the first ps
 
 # Select best parameter set
 ps_selected_1 <- ps[ps_row,]
 
 #Write output
-write.csv(ps_selected_1, file.path(OUTPUT_DIR_1, "1_selected_ps.csv"), row.names = FALSE)
+write.table(ps_selected_1, file.path(OUTPUT_DIR_1, "1_selected_ps.txt"), row.names = FALSE, quote=FALSE)
 
 
 
