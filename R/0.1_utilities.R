@@ -5,6 +5,7 @@
 # ---------------------------------------------------------------------
 # Libraries
 library(RHESSysIOinR)
+library(readr)
 library(ggplot2)
 library(tidyr)
 library(dplyr)
