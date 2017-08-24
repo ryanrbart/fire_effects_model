@@ -56,24 +56,10 @@ input_def_list <- list(
   list(input_hdr_list$stratum_def[2], "epc.branch_turnover", c(0.02)),
   list(input_hdr_list$stratum_def[2], "epc.height_to_stem_exp", c(0.57)),
   list(input_hdr_list$stratum_def[2], "epc.height_to_stem_coef", c(4.0)),
-  # Lower canopy fire parameters
-  list(input_hdr_list$stratum_def[2], "overstory_height_thresh", c(7)),
-  list(input_hdr_list$stratum_def[2], "understory_height_thresh", c(4)),
-  list(input_hdr_list$stratum_def[2], "pspread_loss_rel", c(1)),
-  list(input_hdr_list$stratum_def[2], "vapor_loss_rel", c(1)),
-  list(input_hdr_list$stratum_def[2], "biomass_loss_rel_k1", c(-10)),
-  list(input_hdr_list$stratum_def[2], "biomass_loss_rel_k2", c(1)),
   # -----
   # Upper canopy parameters
   list(input_hdr_list$stratum_def[1], "epc.height_to_stem_exp", c(0.57)),
-  list(input_hdr_list$stratum_def[1], "epc.height_to_stem_coef", c(11.39)),
-  # Upper canopy fire parameters
-  list(input_hdr_list$stratum_def[1], "overstory_height_thresh", c(7)),
-  list(input_hdr_list$stratum_def[1], "understory_height_thresh", c(4)),
-  list(input_hdr_list$stratum_def[1], "pspread_loss_rel", c(1)),
-  list(input_hdr_list$stratum_def[1], "vapor_loss_rel", c(1)),
-  list(input_hdr_list$stratum_def[1], "biomass_loss_rel_k1", c(-10)),
-  list(input_hdr_list$stratum_def[1], "biomass_loss_rel_k2", c(1))
+  list(input_hdr_list$stratum_def[1], "epc.height_to_stem_coef", c(11.39))
 )
 
 # Standard sub-surface parameters
