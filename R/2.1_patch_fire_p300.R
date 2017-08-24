@@ -43,7 +43,7 @@ input_hdr_list$base_stations <- c("ws_p300/clim/Grove_lowprov_clim_1942_2453.bas
 
 
 # Define path to a pre-selected df containing parameter sets
-input_preexisting_table <- file.path(OUTPUT_DIR_1, "1_selected_ps.txt")
+input_preexisting_table <- file.path(OUTPUT_DIR_1, "1_selected_ps.csv")
 
 
 # Def file parameter changes
@@ -138,7 +138,7 @@ beep(1)
 # ---------------------------------------------------------------------
 # Import parameter sets
 
-ps <- read_table2(file.path(OUTPUT_DIR_1, "1_selected_ps.txt"))
+ps <- read_csv(file.path(OUTPUT_DIR_1, "1_selected_ps.csv"))
 
 # ---------------------------------------------------------------------
 # Model inputs

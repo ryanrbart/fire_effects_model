@@ -150,7 +150,7 @@ max_height = p300_patch_height_sum %>%
 
 # ---------------------------------------------------------------------
 # Identify parameter set for simulation with 2.1_patch_fire
-ps <- read_table2(PARAMETER_FILE_p300_1.1)
+ps <- read_csv(PARAMETER_FILE_p300_1.1)
 
 # Select the parameter set that most consistently produces the rank median
 # value of overstory height and litter across the stand ages. The selection 
@@ -210,7 +210,7 @@ ps_row <- ps_row[1]   # Optional: If tie, select the first ps
 ps_selected_1 <- ps[ps_row,]
 
 #Write output
-write.table(ps_selected_1, file.path(OUTPUT_DIR_1, "1_selected_ps.txt"), row.names = FALSE, quote=FALSE)
+write.csv(ps_selected_1, file.path(OUTPUT_DIR_1, "1_selected_ps.csv"), row.names = FALSE, quote=FALSE)
 
 
 
