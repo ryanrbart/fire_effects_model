@@ -38,6 +38,28 @@ RHESSYS_ALLSIM_DIR_2.1_P300_STAND3 <- file.path(RHESSYS_OUT_DIR_2.1_P300_STAND3,
 RHESSYS_OUT_DIR_2.1_P300_STAND4 <- file.path(RHESSYS_OUT_DIR_2.1_P300, "stand4")
 RHESSYS_ALLSIM_DIR_2.1_P300_STAND4 <- file.path(RHESSYS_OUT_DIR_2.1_P300_STAND4, "allsim")
 
+# ---
+
+# RHESSys outputs
+RHESSYS_OUT_DIR_1.1_RS <- "ws_rs/out/1.1_rs_patch_simulation"
+RHESSYS_ALLSIM_DIR_1.1_RS <- file.path(RHESSYS_OUT_DIR_1.1_RS, "allsim")
+RHESSYS_PAR_FILE_1.1_RS <- file.path(RHESSYS_OUT_DIR_1.1_RS, "patch_sim_parameter_sets.csv")
+
+RHESSYS_OUT_DIR_1.3_RS <- "ws_rs/out/1.3_rs_patch_simulation"
+RHESSYS_PAR_FILE_1.3_RS <- file.path(RHESSYS_OUT_DIR_1.3_RS, "patch_sim_parameter_sets.csv")
+
+RHESSYS_OUT_DIR_2.1_RS <- "ws_rs/out/2.1_rs_patch_sens"
+RHESSYS_PAR_SOBOL_2.1_RS <- file.path(RHESSYS_OUT_DIR_2.1_RS, "patch_fire_par_sobol.csv")
+RHESSYS_OUT_DIR_2.1_RS_STAND1 <- file.path(RHESSYS_OUT_DIR_2.1_RS, "stand1")
+RHESSYS_ALLSIM_DIR_2.1_RS_STAND1 <- file.path(RHESSYS_OUT_DIR_2.1_RS_STAND1, "allsim")
+RHESSYS_OUT_DIR_2.1_RS_STAND2 <- file.path(RHESSYS_OUT_DIR_2.1_RS, "stand2")
+RHESSYS_ALLSIM_DIR_2.1_RS_STAND2 <- file.path(RHESSYS_OUT_DIR_2.1_RS_STAND2, "allsim")
+RHESSYS_OUT_DIR_2.1_RS_STAND3 <- file.path(RHESSYS_OUT_DIR_2.1_RS, "stand3")
+RHESSYS_ALLSIM_DIR_2.1_RS_STAND3 <- file.path(RHESSYS_OUT_DIR_2.1_RS_STAND3, "allsim")
+RHESSYS_OUT_DIR_2.1_RS_STAND4 <- file.path(RHESSYS_OUT_DIR_2.1_RS, "stand4")
+RHESSYS_ALLSIM_DIR_2.1_RS_STAND4 <- file.path(RHESSYS_OUT_DIR_2.1_RS_STAND4, "allsim")
+
+# ---
 
 
 # RHESSYS_OUT_DIR_2.1_P300 <- "ws_p300/out/2.1_p300_patch_sens1"
