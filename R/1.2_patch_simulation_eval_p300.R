@@ -11,9 +11,9 @@ theme_set(theme_bw(base_size = 11))
 
 
 p300_patch_canopy <- readin_rhessys_output_cal(var_names = c("leafc", "stemc", "rootc"),
-                                               path = ALLSIM_DIR_1.1_P300,
+                                               path = RHESSYS_ALLSIM_DIR_1.1_P300,
                                                initial_date = ymd("1941-10-01"),
-                                               parameter_file = PARAMETER_FILE_1.1_P300,
+                                               parameter_file = RHESSYS_PAR_FILE_1.1_P300,
                                                num_canopies = 2)
 p300_patch_canopy$wy <- y_to_wy(lubridate::year(p300_patch_canopy$dates),lubridate::month(p300_patch_canopy$dates))
 p300_patch_canopy_sum <- p300_patch_canopy %>%
@@ -22,9 +22,9 @@ p300_patch_canopy_sum <- p300_patch_canopy %>%
 rm(p300_patch_canopy)
 
 p300_patch_ground <- readin_rhessys_output_cal(var_names = c("litrc", "soil1c"),
-                                               path = ALLSIM_DIR_1.1_P300,
+                                               path = RHESSYS_ALLSIM_DIR_1.1_P300,
                                                initial_date = ymd("1941-10-01"),
-                                               parameter_file = PARAMETER_FILE_1.1_P300,
+                                               parameter_file = RHESSYS_PAR_FILE_1.1_P300,
                                                num_canopies = 1)
 p300_patch_ground$wy <- y_to_wy(lubridate::year(p300_patch_ground$dates),lubridate::month(p300_patch_ground$dates))
 p300_patch_ground_sum <- p300_patch_ground %>%
@@ -33,9 +33,9 @@ p300_patch_ground_sum <- p300_patch_ground %>%
 rm(p300_patch_ground)
 
 p300_patch_cwdc <- readin_rhessys_output_cal(var_names = c("cwdc"),
-                                             path = ALLSIM_DIR_1.1_P300,
+                                             path = RHESSYS_ALLSIM_DIR_1.1_P300,
                                              initial_date = ymd("1941-10-01"),
-                                             parameter_file = PARAMETER_FILE_1.1_P300,
+                                             parameter_file = RHESSYS_PAR_FILE_1.1_P300,
                                              num_canopies = 2)
 p300_patch_cwdc$wy <- y_to_wy(lubridate::year(p300_patch_cwdc$dates),lubridate::month(p300_patch_cwdc$dates))
 p300_patch_cwdc_sum <- p300_patch_cwdc %>%
@@ -44,9 +44,9 @@ p300_patch_cwdc_sum <- p300_patch_cwdc %>%
 rm(p300_patch_cwdc)
 
 p300_patch_height <- readin_rhessys_output_cal(var_names = c("height"),
-                                               path = ALLSIM_DIR_1.1_P300,
+                                               path = RHESSYS_ALLSIM_DIR_1.1_P300,
                                                initial_date = ymd("1941-10-01"),
-                                               parameter_file = PARAMETER_FILE_1.1_P300,
+                                               parameter_file = RHESSYS_PAR_FILE_1.1_P300,
                                                num_canopies = 2)
 p300_patch_height$wy <- y_to_wy(lubridate::year(p300_patch_height$dates),lubridate::month(p300_patch_height$dates))
 p300_patch_height_sum <- p300_patch_height %>%
@@ -150,7 +150,7 @@ max_height = p300_patch_height_sum %>%
 
 # ---------------------------------------------------------------------
 # Identify parameter set for simulation with 1.3_patch_fire
-ps <- read_csv(PARAMETER_FILE_P300_1.3)
+ps <- read_csv(RHESSYS_PAR_FILE_1.1_P300)
 
 # Select the parameter set that most consistently produces the rank median
 # value of overstory height and litter across the stand ages. The selection 

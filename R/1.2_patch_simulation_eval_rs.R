@@ -7,57 +7,57 @@ source("R/0.1_utilities.R")
 theme_set(theme_bw(base_size = 11))
 
 # ---------------------------------------------------------------------
-# P300 Patch Simulation data processing
+# RS Patch Simulation data processing
 
 
-p300_patch_canopy <- readin_rhessys_output_cal(var_names = c("leafc", "stemc", "rootc"),
-                                               path = ALLSIM_DIR_1.1_RS,
+rs_patch_canopy <- readin_rhessys_output_cal(var_names = c("leafc", "stemc", "rootc"),
+                                               path = RHESSYS_ALLSIM_DIR_1.1_RS,
                                                initial_date = ymd("1941-10-01"),
-                                               parameter_file = PARAMETER_FILE_1.1_RS,
-                                               num_canopies = 2)
-p300_patch_canopy$wy <- y_to_wy(lubridate::year(p300_patch_canopy$dates),lubridate::month(p300_patch_canopy$dates))
-p300_patch_canopy_sum <- p300_patch_canopy %>%
+                                               parameter_file = RHESSYS_PAR_FILE_1.1_RS,
+                                               num_canopies = 1)
+rs_patch_canopy$wy <- y_to_wy(lubridate::year(rs_patch_canopy$dates),lubridate::month(rs_patch_canopy$dates))
+rs_patch_canopy_sum <- rs_patch_canopy %>%
   group_by(wy, canopy_layer, run, var_type) %>%
   summarize(avg_value = mean(value))
-rm(p300_patch_canopy)
+rm(rs_patch_canopy)
 
-p300_patch_ground <- readin_rhessys_output_cal(var_names = c("litrc", "soil1c"),
-                                               path = ALLSIM_DIR_1.1_RS,
+rs_patch_ground <- readin_rhessys_output_cal(var_names = c("litrc", "soil1c"),
+                                               path = RHESSYS_ALLSIM_DIR_1.1_RS,
                                                initial_date = ymd("1941-10-01"),
-                                               parameter_file = PARAMETER_FILE_1.1_RS,
+                                               parameter_file = RHESSYS_PAR_FILE_1.1_RS,
                                                num_canopies = 1)
-p300_patch_ground$wy <- y_to_wy(lubridate::year(p300_patch_ground$dates),lubridate::month(p300_patch_ground$dates))
-p300_patch_ground_sum <- p300_patch_ground %>%
+rs_patch_ground$wy <- y_to_wy(lubridate::year(rs_patch_ground$dates),lubridate::month(rs_patch_ground$dates))
+rs_patch_ground_sum <- rs_patch_ground %>%
   group_by(wy, run, var_type) %>%
   summarize(avg_value = mean(value)*1000)     # Ground stores are originally in Kg/m2
-rm(p300_patch_ground)
+rm(rs_patch_ground)
 
-p300_patch_cwdc <- readin_rhessys_output_cal(var_names = c("cwdc"),
-                                             path = ALLSIM_DIR_1.1_RS,
+rs_patch_cwdc <- readin_rhessys_output_cal(var_names = c("cwdc"),
+                                             path = RHESSYS_ALLSIM_DIR_1.1_RS,
                                              initial_date = ymd("1941-10-01"),
-                                             parameter_file = PARAMETER_FILE_1.1_RS,
-                                             num_canopies = 2)
-p300_patch_cwdc$wy <- y_to_wy(lubridate::year(p300_patch_cwdc$dates),lubridate::month(p300_patch_cwdc$dates))
-p300_patch_cwdc_sum <- p300_patch_cwdc %>%
+                                             parameter_file = RHESSYS_PAR_FILE_1.1_RS,
+                                             num_canopies = 1)
+rs_patch_cwdc$wy <- y_to_wy(lubridate::year(rs_patch_cwdc$dates),lubridate::month(rs_patch_cwdc$dates))
+rs_patch_cwdc_sum <- rs_patch_cwdc %>%
   group_by(wy, canopy_layer, run, var_type) %>%
   summarize(avg_value = mean(value))
-rm(p300_patch_cwdc)
+rm(rs_patch_cwdc)
 
-p300_patch_height <- readin_rhessys_output_cal(var_names = c("height"),
-                                               path = ALLSIM_DIR_1.1_RS,
+rs_patch_height <- readin_rhessys_output_cal(var_names = c("height"),
+                                               path = RHESSYS_ALLSIM_DIR_1.1_RS,
                                                initial_date = ymd("1941-10-01"),
-                                               parameter_file = PARAMETER_FILE_1.1_RS,
-                                               num_canopies = 2)
-p300_patch_height$wy <- y_to_wy(lubridate::year(p300_patch_height$dates),lubridate::month(p300_patch_height$dates))
-p300_patch_height_sum <- p300_patch_height %>%
+                                               parameter_file = RHESSYS_PAR_FILE_1.1_RS,
+                                               num_canopies = 1)
+rs_patch_height$wy <- y_to_wy(lubridate::year(rs_patch_height$dates),lubridate::month(rs_patch_height$dates))
+rs_patch_height_sum <- rs_patch_height %>%
   group_by(wy, canopy_layer, run, var_type) %>%
   summarize(avg_value = mean(value))
-rm(p300_patch_height)
+rm(rs_patch_height)
 
-#tail(p300_patch_canopy)
-#tail(p300_patch_ground)
-#tail(p300_patch_cwdc)
-#tail(p300_patch_height)
+#tail(rs_patch_canopy)
+#tail(rs_patch_ground)
+#tail(rs_patch_cwdc)
+#tail(rs_patch_height)
 
 
 # ---------------------------------------------------------------------
@@ -66,7 +66,7 @@ rm(p300_patch_height)
 stand_age_vect <- c(1947,1954,1962,1972,1982,2002,2022)
 
 # Canopy 1 comparison plot
-x <- p300_patch_canopy_sum %>%
+x <- rs_patch_canopy_sum %>%
   dplyr::filter(canopy_layer == 1) %>%
   ggplot() +
   geom_line(aes(x = wy, y = avg_value, color=var_type), size = 1.2) +
@@ -76,13 +76,13 @@ x <- p300_patch_canopy_sum %>%
   theme(legend.position = "bottom") +
   facet_wrap(~run)
 plot(x)
-ggsave("ts_p300_upper_canopy.pdf",plot = x, path = OUTPUT_DIR_1)
+ggsave("ts_rs_upper_canopy.pdf",plot = x, path = OUTPUT_DIR_1)
 
 
 # ----
 
 # Canopy 2 comparison plot
-x <- p300_patch_canopy_sum %>%
+x <- rs_patch_canopy_sum %>%
   dplyr::filter(canopy_layer == 2) %>%
   ggplot() +
   geom_line(aes(x = wy, y = avg_value, color=var_type), size = 1.2) +
@@ -92,13 +92,13 @@ x <- p300_patch_canopy_sum %>%
   theme(legend.position = "bottom") +
   facet_wrap(~run)
 plot(x)
-ggsave("ts_p300_lower_canopy.pdf",plot = x, path = OUTPUT_DIR_1)
+ggsave("ts_rs_lower_canopy.pdf",plot = x, path = OUTPUT_DIR_1)
 
 
 # ----
 
 # Height comparison plot
-x <- p300_patch_height_sum %>%
+x <- rs_patch_height_sum %>%
   ggplot() +
   geom_line(aes(x=wy,y=avg_value, color=as.character(canopy_layer)), size = 1.2) +
   geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
@@ -110,22 +110,16 @@ x <- p300_patch_height_sum %>%
   theme(legend.position = "bottom") +
   facet_wrap(~run)
 plot(x)
-ggsave("ts_p300_height.pdf",plot = x, path = OUTPUT_DIR_1)
+ggsave("ts_rs_height.pdf",plot = x, path = OUTPUT_DIR_1)
 
-# Shrub maximum height
-max_height = p300_patch_height_sum %>%
-  dplyr::filter(canopy_layer == 2) %>% 
-  group_by(run) %>%
-  summarize(height = max(avg_value))
-#plot(max_height$height)
 
 # ----
 
 # Litter, soil, cwdc comparison plot (Uses single soil store)
-x <- p300_patch_cwdc_sum %>%
+x <- rs_patch_cwdc_sum %>%
   group_by(wy, run, var_type) %>%
   summarize(avg_value = sum(avg_value)) %>%     # Collapse cwdc from multiple canopies to a single patch total
-  dplyr::bind_rows(p300_patch_ground_sum) %>%
+  dplyr::bind_rows(rs_patch_ground_sum) %>%
   ggplot() +
   geom_line(aes(x=wy,y=avg_value, color=as.character(var_type)), size = 1.2) +
   geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
@@ -134,14 +128,14 @@ x <- p300_patch_cwdc_sum %>%
   theme(legend.position = "bottom") +
   facet_wrap(~run)
 plot(x)
-ggsave("ts_p300_ground.pdf",plot = x, path = OUTPUT_DIR_1)
+ggsave("ts_rs_ground.pdf",plot = x, path = OUTPUT_DIR_1)
 
 # ---
 # Extra Data checks
 
 # Check Lower Canopy maximum height
-max_height = p300_patch_height_sum %>%
-  dplyr::filter(canopy_layer == 2) %>% 
+max_height = rs_patch_height_sum %>%
+  dplyr::filter(canopy_layer == 1) %>% 
   group_by(run) %>%
   summarize(height = max(avg_value))
 #plot(max_height$height)
@@ -150,7 +144,7 @@ max_height = p300_patch_height_sum %>%
 
 # ---------------------------------------------------------------------
 # Identify parameter set for simulation with 1.3_patch_fire
-ps <- read_csv(PARAMETER_FILE_P300_1.3)
+ps <- read_csv(RHESSYS_PAR_FILE_1.1_RS)
 
 # Select the parameter set that most consistently produces the rank median
 # value of overstory height and litter across the stand ages. The selection 
@@ -158,7 +152,7 @@ ps <- read_csv(PARAMETER_FILE_P300_1.3)
 # ages, but only half as much as the actual values.
 
 # Process height ranks (Produces for each parameter set, the mean and sd of rank values across stand ages)
-rank_height <- p300_patch_height_sum %>% 
+rank_height <- rs_patch_height_sum %>% 
   dplyr::filter(wy %in% stand_age_vect) %>% 
   dplyr::filter(canopy_layer == 1) %>% 
   dplyr::group_by(wy) %>% 
@@ -174,7 +168,7 @@ rank_h <- rank_height %>%
   select(run, h_mean_rank, h_sd_rank)
 
 # Process litter ranks  (Produces for each parameter set, the mean and sd of rank values across stand ages)
-rank_litter <- p300_patch_ground_sum %>% 
+rank_litter <- rs_patch_ground_sum %>% 
   dplyr::filter(var_type %in% "litrc") %>% 
   dplyr::filter(wy %in% stand_age_vect) %>% 
   dplyr::group_by(wy) %>% 
@@ -210,7 +204,7 @@ ps_row <- ps_row[1]   # Optional: If tie, select the first ps
 ps_selected_1 <- ps[ps_row,]
 
 #Write output
-write.csv(ps_selected_1, OUTPUT_DIR_1_P300_TOP_PS, row.names = FALSE, quote=FALSE)
+write.csv(ps_selected_1, OUTPUT_DIR_1_RS_TOP_PS, row.names = FALSE, quote=FALSE)
 
 
 # ---
