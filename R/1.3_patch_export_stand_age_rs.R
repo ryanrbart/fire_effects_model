@@ -84,7 +84,7 @@ input_clim_base_list[[1]][[5]][2,] <- data.frame(c1=0, c2="number_non_critical_h
 # Make a list of dated sequence data.frames (file name, year, month, day, hour, value)
 # input_dated_seq_list <- NULL
 input_dated_seq_list = list()
-input_dated_seq_list[[1]] <- data.frame(name="misreal",type="pspread",year=1941,month=10,day=7,hour=1,value=0.95,stringsAsFactors=FALSE)
+input_dated_seq_list[[1]] <- data.frame(name="misreal",type="pspread",year=1988,month=10,day=7,hour=1,value=0.95,stringsAsFactors=FALSE)
 
 
 

@@ -38,6 +38,11 @@ RHESSYS_ALLSIM_DIR_2.1_P300_STAND3 <- file.path(RHESSYS_OUT_DIR_2.1_P300_STAND3,
 RHESSYS_OUT_DIR_2.1_P300_STAND4 <- file.path(RHESSYS_OUT_DIR_2.1_P300, "stand4")
 RHESSYS_ALLSIM_DIR_2.1_P300_STAND4 <- file.path(RHESSYS_OUT_DIR_2.1_P300_STAND4, "allsim")
 
+RHESSYS_OUT_DIR_3.1_P300 <- "ws_p300/out/3.1_p300_patch_fire"
+RHESSYS_ALLSIM_DIR_3.1_P300 <- file.path(RHESSYS_OUT_DIR_3.1_P300, "allsim")
+RHESSYS_PAR_FILE_3.1_P300 <- file.path(RHESSYS_OUT_DIR_3.1_P300, "patch_fire_parameter_sets.csv")
+RHESSYS_ALL_OPTION_3.1_P300 <- file.path(RHESSYS_OUT_DIR_3.1_P300, "patch_fire_all_options.csv")
+
 # ---
 
 # RHESSys outputs
@@ -59,6 +64,11 @@ RHESSYS_ALLSIM_DIR_2.1_RS_STAND3 <- file.path(RHESSYS_OUT_DIR_2.1_RS_STAND3, "al
 RHESSYS_OUT_DIR_2.1_RS_STAND4 <- file.path(RHESSYS_OUT_DIR_2.1_RS, "stand4")
 RHESSYS_ALLSIM_DIR_2.1_RS_STAND4 <- file.path(RHESSYS_OUT_DIR_2.1_RS_STAND4, "allsim")
 
+RHESSYS_OUT_DIR_3.1_RS <- "ws_rs/out/3.1_rs_patch_fire"
+RHESSYS_ALLSIM_DIR_3.1_RS <- file.path(RHESSYS_OUT_DIR_3.1_RS, "allsim")
+RHESSYS_PAR_FILE_3.1_RS <- file.path(RHESSYS_OUT_DIR_3.1_RS, "patch_fire_parameter_sets.csv")
+RHESSYS_ALL_OPTION_3.1_RS <- file.path(RHESSYS_OUT_DIR_3.1_RS, "patch_fire_all_options.csv")
+
 # ---
 
 
@@ -67,12 +77,7 @@ RHESSYS_ALLSIM_DIR_2.1_RS_STAND4 <- file.path(RHESSYS_OUT_DIR_2.1_RS_STAND4, "al
 # RHESSYS_PAR_FILE_2.1_P300 <- file.path(RHESSYS_OUT_DIR_2.1_P300, "patch_fire_parameter_sets.csv")
 # RHESSYS_ALL_OPTION_2.1_P300 <- file.path(RHESSYS_OUT_DIR_2.1_P300, "patch_fire_all_options.csv")
 # RHESSYS_PAR_SOBOL_2.1_P300 <- file.path(RHESSYS_OUT_DIR_2.1_P300, "patch_fire_par_sobol.csv")
-# 
-# 
-# RHESSYS_OUT_DIR_P300_3.1 <- "ws_p300/out/3.1_p300_patch_fire"
-# RHESSYS_ALLSIM_DIR_P300_3.1 <- file.path(RHESSYS_DIR_p300_3.1, "allsim")
-# RHESSYS_PARAMETER_FILE_P300_3.1_SIM <- file.path(RHESSYS_DIR_p300_3.1, "patch_sim_parameter_sets.csv")
-# RHESSYS_PARAMETER_FILE_P300_3.1_FIRE <- file.path(RHESSYS_DIR_p300_3.1, "patch_fire_all_options.csv")
+
 
 # ---
 # R Outputs
@@ -87,6 +92,8 @@ OUTPUT_DIR_1_HJA_TOP_PS <- file.path(OUTPUT_DIR_1, "1_hja_selected_ps.csv")
 OUTPUT_DIR_2 <- file.path(OUTPUT_DIR, "2_patch_sens")
 
 OUTPUT_DIR_3 <- file.path(OUTPUT_DIR, "3_patch_fire")
+# OUTPUT_DIR_3_P300_FIRE <- file.path(OUTPUT_DIR_3, "")
+# OUTPUT_DIR_3_RS_FIRE <- file.path(OUTPUT_DIR_3, "")
 
 
 # ---
