@@ -10,7 +10,7 @@ source("R/0.1_utilities.R")
 # ---------------------------------------------------------------------
 # Assemble Parameter Sets for Sobol Sensitivity Test (Sobol)
 
-n_sim <- 200
+n_sim <- 50
 
 input_sobol <- list()
 input_sobol <- lapply(seq(1,2), function(x){
@@ -31,13 +31,15 @@ input_sobol <- lapply(seq(1,2), function(x){
   input_sobol[[x]] <- bind_cols(tmp1,tmp2,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,tmp9,tmp10,tmp_pspread)
 })
 
-sobol_model <- sobolmartinez(model = NULL, X1 = input_sobol[[1]], X2 = input_sobol[[2]], order = 1, nboot = 200)   # runs=n_sim*(p+1)
+# Produce empty model so that non-R model (RHESSys) can be used.
+sobol_model <- sobolmartinez(model = NULL, X1 = input_sobol[[1]], X2 = input_sobol[[2]], order = 1, nboot = 200)   # runs=n_sim*(p+2)
 #sobol_model <- sobol2002(model = NULL, X1 = input_sobol[[1]], X2 = input_sobol[[2]])  # runs=n_sim*(p+2)
 
+# Export the parameter sets to be used in the sobol model.
 write.csv(sobol_model$X, RHESSYS_PAR_SOBOL_2.1_P300, row.names = FALSE, quote=FALSE)
 
 n_runs <- length(sobol_model$X[,1])
-output_init <- c(1,rep(0,(n_runs-1)))
+output_init <- c(1,rep(0,(n_runs-1)))   # Used for output_initiation argument in run_rhessys 
 
 
 # ---------------------------------------------------------------------
@@ -102,7 +104,7 @@ input_def_list <- list(
   list(input_hdr_list$stratum_def[1], "epc.height_to_stem_coef", c(ps$`ws_p300/defs/veg_p300_conifer.def:epc.height_to_stem_coef`))
 )
   # -----
-  # Patch fire parameters (assigned below)
+  # Patch fire parameters (assigned below as model steps through SOBOL parameter sets)
   # list(input_hdr_list$soil_def[1], "overstory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:overstory_height_thresh`[aa]),
   # list(input_hdr_list$soil_def[1], "understory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:understory_height_thresh`[aa]),
   # # Lower canopy fire parameters
@@ -207,6 +209,7 @@ stand_ages <- c("ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y1947M10D1H1.
                 "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y2022M10D1H1.state")
 
 # ---------------------------------------------------------------------
+# Sobol Sensitivity Analysis for Stand 1
 
 # Step through Sobol parameter sets
 system.time(
@@ -254,7 +257,7 @@ system.time(
 beep(1)
 
 # ---------------------------------------------------------------------
-
+# Sobol Sensitivity Analysis for Stand 2
 
 # Step through Sobol parameter sets
 system.time(
@@ -302,7 +305,7 @@ system.time(
 beep(1)
 
 # ---------------------------------------------------------------------
-
+# Sobol Sensitivity Analysis for Stand 3
 
 # Step through Sobol parameter sets
 system.time(

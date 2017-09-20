@@ -14,9 +14,9 @@ theme_set(theme_bw(base_size = 11))
 
 
 p300_patch_canopy <- readin_rhessys_output_cal(var_names = c("leafc", "stemc", "rootc"),
-                                               path = ALLSIM_DIR_p300_2.1.1,
+                                               path = RHESSYS_ALLSIM_DIR_2.1_P300_STAND1,
                                                initial_date = ymd("1941-10-01"),
-                                               parameter_file = PARAMETER_FILE_p300_2.1.1_SOBOL,
+                                               parameter_file = RHESSYS_PAR_SOBOL_2.1_P300,
                                                num_canopies = 2)
 p300_patch_canopy_diff <- p300_patch_canopy %>%
   dplyr::filter(dates == ymd("1941-10-03") | dates == ymd("1941-10-11")) %>%
@@ -26,9 +26,9 @@ rm(p300_patch_canopy)
 
 
 p300_patch_ground <- readin_rhessys_output_cal(var_names = c("litrc", "soil1c"),
-                                               path = ALLSIM_DIR_p300_2.1.1,
+                                               path = RHESSYS_ALLSIM_DIR_2.1_P300_STAND1,
                                                initial_date = ymd("1941-10-01"),
-                                               parameter_file = PARAMETER_FILE_p300_2.1.1_SOBOL,
+                                               parameter_file = RHESSYS_PAR_SOBOL_2.1_P300,
                                                num_canopies = 1)
 p300_patch_ground$value <- as.double(p300_patch_ground$value)
 p300_patch_ground_diff <- p300_patch_ground %>%
@@ -39,9 +39,9 @@ rm(p300_patch_ground)
 
 
 p300_patch_cwdc <- readin_rhessys_output_cal(var_names = c("cwdc"),
-                                             path = ALLSIM_DIR_p300_2.1.1,
+                                             path = RHESSYS_ALLSIM_DIR_2.1_P300_STAND1,
                                              initial_date = ymd("1941-10-01"),
-                                             parameter_file = PARAMETER_FILE_p300_2.1.1_SOBOL,
+                                             parameter_file = RHESSYS_PAR_SOBOL_2.1_P300,
                                              num_canopies = 2)
 p300_patch_cwdc_diff <- p300_patch_cwdc %>%
   group_by(run, dates, var_type) %>%
@@ -53,9 +53,9 @@ rm(p300_patch_cwdc)
 
 
 p300_patch_height <- readin_rhessys_output_cal(var_names = c("height"),
-                                               path = ALLSIM_DIR_p300_2.1.1,
+                                               path = RHESSYS_ALLSIM_DIR_2.1_P300_STAND1,
                                                initial_date = ymd("1941-10-01"),
-                                               parameter_file = PARAMETER_FILE_p300_2.1.1_SOBOL,
+                                               parameter_file = RHESSYS_PAR_SOBOL_2.1_P300,
                                                num_canopies = 2)
 p300_patch_height_diff <- p300_patch_height %>%
   dplyr::filter(dates == ymd("1941-10-03") | dates == ymd("1941-10-11")) %>%
