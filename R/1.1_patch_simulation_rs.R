@@ -61,12 +61,12 @@ input_def_list <- list(
 # input_standard_par_list <- NULL
 input_standard_par_list <- list(
   m = c(1.792761,3),
-  k = c(1.566492),
+  k = c(1.566492,3),
   m_v = c(1.792761),
   k_v = c(1.566492),
   pa = c(7.896941),
   po = c(1.179359),
-  gw1 = c(0.1668035),
+  gw1 = c(0.1668035,0.3),
   gw2 = c(0.178753)
 )
 

@@ -157,7 +157,8 @@ ps <- read_csv(RHESSYS_PAR_FILE_1.1_P300)
 # also emphasizes lower levels of rank median variance between the stand 
 # ages, but only half as much as the actual values.
 
-# Process height ranks (Produces for each parameter set, the mean and sd of rank values across stand ages)
+
+# Process upper canopy height ranks (Produces for each parameter set, the mean and sd of rank values across stand ages)
 rank_height <- p300_patch_height_sum %>% 
   dplyr::filter(wy %in% stand_age_vect) %>% 
   dplyr::filter(canopy_layer == 1) %>% 
@@ -169,10 +170,29 @@ rank_height <- p300_patch_height_sum %>%
 # Relative to the other parameter sets, ranks which parameter set is closest to the median rank of each target.
 center_pos <- (length(rank_height$mean_rank)+1)/2
 rank_height$mean_rank_rank <- abs(rank_height$mean_rank-center_pos)
-rank_h <- rank_height %>% 
-  dplyr::mutate(h_mean_rank = dense_rank(mean_rank_rank), h_sd_rank = dense_rank(sd_rank)) %>% 
-  select(run, h_mean_rank, h_sd_rank)
+rank_h1 <- rank_height %>% 
+  dplyr::mutate(h1_mean_rank = dense_rank(mean_rank_rank), h1_sd_rank = dense_rank(sd_rank)) %>% 
+  select(run, h1_mean_rank, h1_sd_rank)
 
+# ----
+# Process lower canopy height ranks (Produces for each parameter set, the mean and sd of rank values across stand ages)
+rank_height <- p300_patch_height_sum %>% 
+  dplyr::filter(wy %in% stand_age_vect) %>% 
+  dplyr::filter(canopy_layer == 2) %>% 
+  dplyr::group_by(wy) %>% 
+  dplyr::mutate(rank = dense_rank(avg_value)) %>% 
+  dplyr::group_by(run) %>% 
+  dplyr::summarise(mean_rank = mean(rank), sd_rank = sd(rank))
+
+# Relative to the other parameter sets, ranks which parameter set is closest to the median rank of each target.
+center_pos <- (length(rank_height$mean_rank)+1)/2
+rank_height$mean_rank_rank <- abs(rank_height$mean_rank-center_pos)
+rank_h2 <- rank_height %>% 
+  dplyr::mutate(h2_mean_rank = dense_rank(mean_rank_rank), h2_sd_rank = dense_rank(sd_rank)) %>% 
+  select(run, h2_mean_rank, h2_sd_rank)
+
+
+# ----
 # Process litter ranks  (Produces for each parameter set, the mean and sd of rank values across stand ages)
 rank_litter <- p300_patch_ground_sum %>% 
   dplyr::filter(var_type %in% "litrc") %>% 
@@ -189,15 +209,19 @@ rank_l <- rank_litter %>%
   dplyr::mutate(l_mean_rank = dense_rank(mean_rank_rank), l_sd_rank = dense_rank(sd_rank)) %>% 
   select(run, l_mean_rank, l_sd_rank)
 
+# ----
 # Bind ranks for all targets and produce weighted 'total rank' 
-rank_final <- rank_h %>% 
+rank_final <- rank_h1 %>% 
+  dplyr::left_join(rank_h2, by = "run") %>% 
   dplyr::left_join(rank_l, by = "run")
-rank_final$total <- rank_final$h_mean_rank + 0.5*rank_final$h_sd_rank + rank_final$l_mean_rank + 0.5*rank_final$l_sd_rank
+rank_final$total <- rank_final$h1_mean_rank + 0.5*rank_final$h1_sd_rank +
+  rank_final$h2_mean_rank + 0.5*rank_final$h2_sd_rank +
+  rank_final$l_mean_rank + 0.5*rank_final$l_sd_rank
 rank_final <- mutate(rank_final, total_rank = dense_rank(total))
 print(rank_final)
 
-# Unconcatenate 'run' variable and order the results
-run_split <- unlist(strsplit(rank_final$run, "V"))
+# # Unconcatenate 'run' variable and order the results
+run_split <- unlist(strsplit(rank_final$run, "X"))
 run_number <- as.numeric(run_split[seq(2, length(run_split), 2)])
 rank_final$run_number <- run_number
 rank_final2 <- arrange(rank_final, run_number)

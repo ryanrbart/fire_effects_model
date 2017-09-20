@@ -146,10 +146,10 @@ max_height = rs_patch_height_sum %>%
 # Identify parameter set for simulation with 1.3_patch_fire
 ps <- read_csv(RHESSYS_PAR_FILE_1.1_RS)
 
-# Select the parameter set that most consistently produces the rank median
-# value of overstory height and litter across the stand ages. The selection 
-# also emphasizes lower levels of rank median variance between the stand 
-# ages, but only half as much as the actual values.
+# Select the parameter set that most consistently produces the rank median value
+# of upper canopy height and litter across the stand ages. The selection also
+# emphasizes lower levels of rank median variance between the stand ages, but
+# only half as much as the actual values.
 
 # Process height ranks (Produces for each parameter set, the mean and sd of rank values across stand ages)
 rank_height <- rs_patch_height_sum %>% 
@@ -191,7 +191,7 @@ rank_final <- mutate(rank_final, total_rank = dense_rank(total))
 print(rank_final)
 
 # Unconcatenate 'run' variable and order the results
-run_split <- unlist(strsplit(rank_final$run, "V"))
+run_split <- unlist(strsplit(rank_final$run, "X"))
 run_number <- as.numeric(run_split[seq(2, length(run_split), 2)])
 rank_final$run_number <- run_number
 rank_final2 <- arrange(rank_final, run_number)
