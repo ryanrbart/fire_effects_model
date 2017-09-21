@@ -10,7 +10,7 @@ source("R/0.1_utilities.R")
 # ---------------------------------------------------------------------
 # Assemble Parameter Sets for Sobol Sensitivity Test (Sobol)
 
-n_sim <- 50
+n_sim <- 500
 
 input_sobol <- list()
 input_sobol <- lapply(seq(1,2), function(x){
@@ -250,7 +250,8 @@ system.time(
                 output_variables = output_variables,
                 output_initiation = output_init[aa])
     
-    print(paste("Simulation 1: Run #", aa, "of", nrow(sobol_model$X)))
+    print("-------")
+    print(paste("Simulation: Run #", aa, "of", nrow(sobol_model$X)))
   }
 )
 
@@ -297,8 +298,9 @@ system.time(
                 input_tec_data = input_tec_data,
                 output_variables = output_variables,
                 output_initiation = output_init[aa])
-    
-    print(paste("Simulation 1: Run #", aa, "of", nrow(sobol_model$X)))
+
+    print("-------")    
+    print(paste("Simulation: Run #", aa, "of", nrow(sobol_model$X)))
   }
 )
 
@@ -346,7 +348,8 @@ system.time(
                 output_variables = output_variables,
                 output_initiation = output_init[aa])
     
-    print(paste("Simulation 1: Run #", aa, "of", nrow(sobol_model$X)))
+    print("-------")
+    print(paste("Simulation: Run #", aa, "of", nrow(sobol_model$X)))
   }
 )
 

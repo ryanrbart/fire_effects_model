@@ -2,7 +2,7 @@
 # Some code for patching bad runs
 
 # Read in allsim file
-var_names <- c("leafc")
+var_names <- c("height")
 path <- RHESSYS_ALLSIM_DIR_2.1_P300_STAND1
 
 x <- read_tsv(file.path(path, var_names), skip = 2, col_names = FALSE,
@@ -40,6 +40,12 @@ happy2[happy2$run == na_rows[8],]
 View(happy3)
 # Happy 3 may be used for patching
 
+
+
+
+# Test to see if sobol models produce equivalent data structures
+(sobol_model1$X$`ws_p300/defs/veg_p300_shrub.def:biomass_loss_rel_k2` == 
+    sobol_model2$X$`ws_p300/defs/veg_p300_shrub.def:biomass_loss_rel_k2`)[FALSE]
 
 
 
