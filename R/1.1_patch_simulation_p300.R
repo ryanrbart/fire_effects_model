@@ -9,7 +9,7 @@ source("R/0.1_utilities.R")
 # Model inputs
 
 # Processing options
-parameter_method <- "all_combinations"
+parameter_method <- "lhc"
 
 
 # RHESSys Inputs
@@ -40,39 +40,50 @@ input_hdr_list$base_stations <- c("ws_p300/clim/Grove_lowprov_clim_1942_2453.bas
 # Define path to a pre-selected df containing parameter sets
 input_preexisting_table <- NULL
 
+n_sim = 50
 
 # Def file parameter changes
 # List of lists containing def_file, parameter and parameters values
 #input_def_list <- NULL
 input_def_list <- list(
   # Lower canopy parameters
-  list(input_hdr_list$stratum_def[2], "epc.leaf_turnover", c(0.4)),
-  list(input_hdr_list$stratum_def[2], "epc.livewood_turnover", c(0.1)),
-  list(input_hdr_list$stratum_def[2], "epc.alloc_frootc_leafc", c(1.4)),
-  list(input_hdr_list$stratum_def[2], "epc.alloc_crootc_stemc", c(0.4)),
-  list(input_hdr_list$stratum_def[2], "epc.alloc_stemc_leafc", c(0.2)),
-  list(input_hdr_list$stratum_def[2], "epc.alloc_livewoodc_woodc", c(0.9)),
-  list(input_hdr_list$stratum_def[2], "epc.branch_turnover", c(0.02)),
-  list(input_hdr_list$stratum_def[2], "epc.height_to_stem_exp", c(0.57)),
-  list(input_hdr_list$stratum_def[2], "epc.height_to_stem_coef", c(4.0)),
+  list(input_hdr_list$stratum_def[2], "epc.leaf_turnover", c(0.4, 0.4, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.livewood_turnover", c(0.1, 0.1, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.alloc_frootc_leafc", c(1.4, 1.4, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.alloc_crootc_stemc", c(0.4, 0.4, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.alloc_stemc_leafc", c(0.2, 0.2, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.alloc_livewoodc_woodc", c(0.9, 0.9, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.branch_turnover", c(0.02, 0.02, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.height_to_stem_exp", c(0.57, 0.57, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.height_to_stem_coef", c(4.0, 4.0, n_sim)),
   # -----
   # Upper canopy parameters
-  list(input_hdr_list$stratum_def[1], "epc.height_to_stem_exp", c(0.57)),
-  list(input_hdr_list$stratum_def[1], "epc.height_to_stem_coef", c(11.39))
+  list(input_hdr_list$stratum_def[1], "epc.height_to_stem_exp", c(0.57, 0.57, n_sim)),
+  list(input_hdr_list$stratum_def[1], "epc.height_to_stem_coef", c(11.39, 11.39, n_sim))
 )
 
 # Standard sub-surface parameters
 # input_standard_par_list <- NULL
 input_standard_par_list <- list(
-  m = c(1.792761,2),
-  k = c(1.566492),
-  m_v = c(1.792761),
-  k_v = c(1.566492),
-  pa = c(7.896941),
-  po = c(1.179359),
-  gw1 = c(0.1668035,.3,.5),
-  gw2 = c(0.178753)
+  m = c(2, 2, n_sim),
+  k = c(2, 2, n_sim),
+  m_v = c(2, 2, n_sim),
+  k_v = c(2, 2, n_sim),
+  pa = c(1, 10, n_sim),
+  po = c(0.3, 1.2, n_sim),
+  gw1 = c(0.001, 0.4, n_sim),
+  gw2 = c(0.2, 0.2, n_sim)
 )
+# input_standard_par_list <- list(
+#   m = c(1.792761,2),
+#   k = c(1.566492),
+#   m_v = c(1.792761),
+#   k_v = c(1.566492),
+#   pa = c(7.896941),
+#   po = c(1.179359),
+#   gw1 = c(0.1668035),
+#   gw2 = c(0.178753)
+# )
 
 
 # Make climate base station file
