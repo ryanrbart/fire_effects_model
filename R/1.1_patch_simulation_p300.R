@@ -40,26 +40,36 @@ input_hdr_list$base_stations <- c("ws_p300/clim/Grove_lowprov_clim_1942_2453.bas
 # Define path to a pre-selected df containing parameter sets
 input_preexisting_table <- NULL
 
-n_sim = 50
+n_sim = 100
 
 # Def file parameter changes
 # List of lists containing def_file, parameter and parameters values
 #input_def_list <- NULL
 input_def_list <- list(
-  # Lower canopy parameters
-  list(input_hdr_list$stratum_def[2], "epc.leaf_turnover", c(0.4, 0.4, n_sim)),
-  list(input_hdr_list$stratum_def[2], "epc.livewood_turnover", c(0.1, 0.1, n_sim)),
-  list(input_hdr_list$stratum_def[2], "epc.alloc_frootc_leafc", c(1.4, 1.4, n_sim)),
-  list(input_hdr_list$stratum_def[2], "epc.alloc_crootc_stemc", c(0.4, 0.4, n_sim)),
-  list(input_hdr_list$stratum_def[2], "epc.alloc_stemc_leafc", c(0.2, 0.2, n_sim)),
-  list(input_hdr_list$stratum_def[2], "epc.alloc_livewoodc_woodc", c(0.9, 0.9, n_sim)),
-  list(input_hdr_list$stratum_def[2], "epc.branch_turnover", c(0.02, 0.02, n_sim)),
-  list(input_hdr_list$stratum_def[2], "epc.height_to_stem_exp", c(0.57, 0.57, n_sim)),
-  list(input_hdr_list$stratum_def[2], "epc.height_to_stem_coef", c(4.0, 4.0, n_sim)),
+  # Patch parameters
+  list(input_hdr_list$soil_def, "soil_depth", c(3.0, 5.0, n_sim)),
+
   # -----
   # Upper canopy parameters
-  list(input_hdr_list$stratum_def[1], "epc.height_to_stem_exp", c(0.57, 0.57, n_sim)),
-  list(input_hdr_list$stratum_def[1], "epc.height_to_stem_coef", c(11.39, 11.39, n_sim))
+  list(input_hdr_list$stratum_def[1], "epc.alloc_frootc_leafc", c(1.4, 1.4, n_sim)),
+  list(input_hdr_list$stratum_def[1], "epc.alloc_crootc_stemc", c(0.25, 0.35, n_sim)),
+  list(input_hdr_list$stratum_def[1], "epc.alloc_stemc_leafc", c(0.2, 0.2, n_sim)),
+  list(input_hdr_list$stratum_def[1], "epc.alloc_livewoodc_woodc", c(0.5, 0.7, n_sim)),
+  list(input_hdr_list$stratum_def[1], "epc.leaf_turnover", c(0.25, 0.35, n_sim)),
+  list(input_hdr_list$stratum_def[1], "epc.livewood_turnover", c(0.4, 0.6, n_sim)),
+  list(input_hdr_list$stratum_def[1], "epc.branch_turnover", c(0.001, 0.003, n_sim)),
+  list(input_hdr_list$stratum_def[1], "epc.height_to_stem_coef", c(10, 12, n_sim)),
+
+  # -----
+  # Lower canopy parameters
+  list(input_hdr_list$stratum_def[2], "epc.alloc_frootc_leafc", c(1.4, 1.4, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.alloc_crootc_stemc", c(0.35, 0.45, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.alloc_stemc_leafc", c(0.2, 0.2, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.alloc_livewoodc_woodc", c(0.8, 0.95, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.leaf_turnover", c(0.35, 0.45, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.livewood_turnover", c(0.05, 0.2, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.branch_turnover", c(0.01, 0.03, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.height_to_stem_coef", c(3.0, 4.0, n_sim))
 )
 
 # Standard sub-surface parameters
@@ -133,18 +143,18 @@ input_tec_data[2,] <- data.frame(1941, 10, 1, 2, "print_daily_growth_on", string
 # file location), and the location/name of rhessys output file with variable of interest.
 # output_variables <- NULL
 output_variables <- data.frame(variable=character(),awk_path=character(),out_file=character(),stringsAsFactors=FALSE)
-output_variables[1,] <- data.frame("lai", "awks/output_var_bd_lai.awk","patch_sim_basin.daily",stringsAsFactors=FALSE)
-output_variables[2,] <- data.frame("leafc", "awks/output_var_cdg_leafc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
-output_variables[3,] <- data.frame("stemc", "awks/output_var_cdg_stemc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
-output_variables[4,] <- data.frame("live_stemc", "awks/output_var_cdg_live_stemc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
-output_variables[5,] <- data.frame("dead_stemc", "awks/output_var_cdg_dead_stemc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
-output_variables[6,] <- data.frame("rootc", "awks/output_var_cdg_rootc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
+#output_variables[1,] <- data.frame("lai", "awks/output_var_bd_lai.awk","patch_sim_basin.daily",stringsAsFactors=FALSE)
+#output_variables[2,] <- data.frame("leafc", "awks/output_var_cdg_leafc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
+#output_variables[3,] <- data.frame("stemc", "awks/output_var_cdg_stemc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
+#output_variables[4,] <- data.frame("live_stemc", "awks/output_var_cdg_live_stemc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
+#output_variables[5,] <- data.frame("dead_stemc", "awks/output_var_cdg_dead_stemc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
+#output_variables[6,] <- data.frame("rootc", "awks/output_var_cdg_rootc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
 
-output_variables[7,] <- data.frame("litrc", "awks/output_var_bd_litrc.awk","patch_sim_basin.daily",stringsAsFactors=FALSE)
-output_variables[8,] <- data.frame("cwdc", "awks/output_var_cdg_cwdc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
-output_variables[9,] <- data.frame("soil1c", "awks/output_var_pdg_soil1c.awk","patch_sim_grow_patch.daily",stringsAsFactors=FALSE)
+output_variables[1,] <- data.frame("litrc", "awks/output_var_bd_litrc.awk","patch_sim_basin.daily",stringsAsFactors=FALSE)
+#output_variables[8,] <- data.frame("cwdc", "awks/output_var_cdg_cwdc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
+#output_variables[9,] <- data.frame("soil1c", "awks/output_var_pdg_soil1c.awk","patch_sim_grow_patch.daily",stringsAsFactors=FALSE)
 
-output_variables[10,] <- data.frame("height", "awks/output_var_cd_height.awk","patch_sim_stratum.daily",stringsAsFactors=FALSE)
+output_variables[2,] <- data.frame("height", "awks/output_var_cd_height.awk","patch_sim_stratum.daily",stringsAsFactors=FALSE)
 
 
 # ---------------------------------------------------------------------

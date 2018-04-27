@@ -9,19 +9,7 @@ theme_set(theme_bw(base_size = 11))
 # ---------------------------------------------------------------------
 # P300 Patch Simulation data processing
 
-
-p300_patch_canopy <- readin_rhessys_output_cal(var_names = c("leafc", "stemc", "rootc"),
-                                               path = RHESSYS_ALLSIM_DIR_1.1_P300,
-                                               initial_date = ymd("1941-10-01"),
-                                               parameter_file = RHESSYS_PAR_FILE_1.1_P300,
-                                               num_canopies = 2)
-p300_patch_canopy$wy <- y_to_wy(lubridate::year(p300_patch_canopy$dates),lubridate::month(p300_patch_canopy$dates))
-p300_patch_canopy_sum <- p300_patch_canopy %>%
-  group_by(wy, canopy_layer, run, var_type) %>%
-  summarize(avg_value = mean(value))
-rm(p300_patch_canopy)
-
-p300_patch_ground <- readin_rhessys_output_cal(var_names = c("litrc","soil1c"),
+p300_patch_ground <- readin_rhessys_output_cal(var_names = c("litrc"),
                                                path = RHESSYS_ALLSIM_DIR_1.1_P300,
                                                initial_date = ymd("1941-10-01"),
                                                parameter_file = RHESSYS_PAR_FILE_1.1_P300,
@@ -33,16 +21,6 @@ p300_patch_ground_sum <- p300_patch_ground %>%
   summarize(avg_value = mean(value)*1000)     # Ground stores are originally in Kg/m2
 rm(p300_patch_ground)
 
-p300_patch_cwdc <- readin_rhessys_output_cal(var_names = c("cwdc"),
-                                             path = RHESSYS_ALLSIM_DIR_1.1_P300,
-                                             initial_date = ymd("1941-10-01"),
-                                             parameter_file = RHESSYS_PAR_FILE_1.1_P300,
-                                             num_canopies = 2)
-p300_patch_cwdc$wy <- y_to_wy(lubridate::year(p300_patch_cwdc$dates),lubridate::month(p300_patch_cwdc$dates))
-p300_patch_cwdc_sum <- p300_patch_cwdc %>%
-  group_by(wy, canopy_layer, run, var_type) %>%
-  summarize(avg_value = mean(value))
-rm(p300_patch_cwdc)
 
 p300_patch_height <- readin_rhessys_output_cal(var_names = c("height"),
                                                path = RHESSYS_ALLSIM_DIR_1.1_P300,
@@ -52,114 +30,24 @@ p300_patch_height <- readin_rhessys_output_cal(var_names = c("height"),
 p300_patch_height$wy <- y_to_wy(lubridate::year(p300_patch_height$dates),lubridate::month(p300_patch_height$dates))
 p300_patch_height_sum <- p300_patch_height %>%
   group_by(wy, canopy_layer, run, var_type) %>%
-  summarize(avg_value = mean(value))
+  summarize(avg_value = mean(as.numeric(value)))
 rm(p300_patch_height)
 
-#tail(p300_patch_canopy)
 #tail(p300_patch_ground)
-#tail(p300_patch_cwdc)
 #tail(p300_patch_height)
 
 
 # ---------------------------------------------------------------------
-# Figures: Time-series for Upper Canopy, Lower Canopy, Ground Stores and Height
-
-# Caution: The following figures facet every instance parameter set: Readability
-# is negligable when runs > 10.
-
-stand_age_vect <- c(1947,1954,1962,1972,1982,2002,2022)
-
-# # Canopy 1 comparison plot
-# x <- p300_patch_canopy_sum %>%
-#   dplyr::filter(canopy_layer == 1) %>%
-#   ggplot() +
-#   geom_line(aes(x = wy, y = avg_value, color=var_type), size = 1.2) +
-#   geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
-#   labs(title = "Upper Canopy", x = "Wateryear", y = "Carbon (g/m2)") +
-#   scale_color_brewer(palette = "Set2", name="Store Type", labels = c("Leaf","Root","Stem")) +
-#   theme(legend.position = "bottom") +
-#   facet_wrap(~run)
-# plot(x)
-# ggsave("ts_p300_upper_canopy.pdf",plot = x, path = OUTPUT_DIR_1)
-# 
-# 
-# # ----
-# 
-# # Canopy 2 comparison plot
-# x <- p300_patch_canopy_sum %>%
-#   dplyr::filter(canopy_layer == 2) %>%
-#   ggplot() +
-#   geom_line(aes(x = wy, y = avg_value, color=var_type), size = 1.2) +
-#   geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
-#   labs(title = "Lower Canopy", x = "Wateryear", y = "Carbon (g/m2)") +
-#   scale_color_brewer(palette = "Set2", name="Store Type", labels = c("Leaf","Root","Stem")) +
-#   theme(legend.position = "bottom") +
-#   facet_wrap(~run)
-# plot(x)
-# ggsave("ts_p300_lower_canopy.pdf",plot = x, path = OUTPUT_DIR_1)
-# 
-# 
-# # ----
-# 
-# Height comparison plot
-x <- p300_patch_height_sum %>%
-  ggplot() +
-  geom_line(aes(x=wy,y=avg_value, color=as.character(canopy_layer)), size = 1.2) +
-  geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
-  geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
-  #    xlim(1941,1950) +
-  #    ylim(0,1) +
-  labs(title = "Height", x = "Wateryear", y = "Height (meters)") +
-  scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Upper Canopy","Lower Canopy")) +
-  theme(legend.position = "bottom") +
-  facet_wrap(~run)
-plot(x)
-ggsave("ts_p300_height.pdf",plot = x, path = OUTPUT_DIR_1)
-# 
-# # Shrub maximum height
-# max_height = p300_patch_height_sum %>%
-#   dplyr::filter(canopy_layer == 2) %>% 
-#   group_by(run) %>%
-#   summarize(height = max(avg_value))
-# #plot(max_height$height)
-# 
-# # ----
-# 
-# # Litter, soil, cwdc comparison plot (Uses single soil store)
-# x <- p300_patch_cwdc_sum %>%
-#   group_by(wy, run, var_type) %>%
-#   summarize(avg_value = sum(avg_value)) %>%     # Collapse cwdc from multiple canopies to a single patch total
-#   dplyr::bind_rows(p300_patch_ground_sum) %>%
-#   ggplot() +
-#   geom_line(aes(x=wy,y=avg_value, color=as.character(var_type)), size = 1.2) +
-#   geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
-#   labs(title = "GroundStores", x = "Wateryear", y = "Carbon (g/m2)") +
-#   scale_color_brewer(palette = "Set2", name="Store Type", labels = c(cwdc = "Coarse Woody Debris", litrc  = "Litter", soil1c = "Soil")) +
-#   theme(legend.position = "bottom") +
-#   facet_wrap(~run)
-# plot(x)
-# ggsave("ts_p300_ground.pdf",plot = x, path = OUTPUT_DIR_1)
-# 
-# # ---
-# # Extra Data checks
-# 
-# # Check Lower Canopy maximum height
-# max_height = p300_patch_height_sum %>%
-#   dplyr::filter(canopy_layer == 2) %>% 
-#   group_by(run) %>%
-#   summarize(height = max(avg_value))
-# #plot(max_height$height)
-
-
-
-# ---------------------------------------------------------------------
 # Identify parameter set for simulation with 1.3_patch_fire
-ps <- read_csv(RHESSYS_PAR_FILE_1.1_P300)
 
 # Select the parameter set that most consistently produces the rank median
-# value of overstory height and litter across the stand ages. The selection 
-# also emphasizes lower levels of rank median variance between the stand 
-# ages, but only half as much as the actual values.
+# value of overstory height and litter across the stand ages.
+
+# Import parameter set file
+ps <- read_csv(RHESSYS_PAR_FILE_1.1_P300)
+
+# Set Stand Ages
+stand_age_vect <- c(1947,1954,1962,1972,1982,2002,2022)
 
 
 # Process upper canopy height ranks (Produces for each parameter set, the mean and sd of rank values across stand ages)
@@ -213,7 +101,7 @@ rank_l <- rank_litter %>%
   dplyr::mutate(l_mean_rank = dense_rank(mean_rank_rank), l_sd_rank = dense_rank(sd_rank)) %>% 
   select(run, l_mean_rank, l_sd_rank)
 
-# ----
+# ---------------------
 # Bind ranks for all targets and produce weighted 'total rank' 
 rank_final <- rank_h1 %>% 
   dplyr::left_join(rank_h2, by = "run") %>% 
@@ -242,5 +130,65 @@ write.csv(ps_selected_1, OUTPUT_DIR_1_P300_TOP_PS, row.names = FALSE, quote=FALS
 
 # ---
 beep()
+
+
+# ---------------------------------------------------------------------
+# Figures: Time-series for Height and Litter
+
+
+this_one <- rank_final2[ps_row,]$run
+
+# ----
+ 
+# Height plot
+x <- p300_patch_height_sum %>%
+  dplyr::filter(run==this_one) %>% 
+  ggplot() +
+  geom_line(aes(x=wy,y=avg_value, color=as.factor(canopy_layer), group=as.factor(canopy_layer)), size = 1.2) +
+  geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
+  geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
+  labs(title = "Height", x = "Wateryear", y = "Height (meters)") +
+  scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Upper Canopy","Lower Canopy")) +
+  theme(legend.position = "bottom")
+plot(x)
+#ggsave("ts_p300_height.pdf",plot = x, path = OUTPUT_DIR_1)
+ 
+# Shrub maximum height (by run)
+max_height = p300_patch_height_sum %>%
+  dplyr::filter(canopy_layer == 2) %>%
+  group_by(run) %>%
+  summarize(height = max(avg_value))
+plot(max_height$height)
+
+# Tree maximum height (by run)
+max_height = p300_patch_height_sum %>%
+  dplyr::filter(canopy_layer == 1) %>%
+  group_by(run) %>%
+  summarize(height = max(avg_value))
+plot(max_height$height)
+
+# ----
+ 
+# Litter  plot
+x <- p300_patch_ground_sum %>%
+  dplyr::filter(run==this_one) %>% 
+  ggplot() +
+  geom_line(aes(x=wy,y=avg_value, group=1), size = 1.2) +
+  geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
+  labs(title = "GroundStores", x = "Wateryear", y = "Carbon (g/m2)") +
+  scale_color_brewer(palette = "Set2", name="Store Type", labels = c(cwdc = "Coarse Woody Debris", litrc  = "Litter", soil1c = "Soil")) +
+  theme(legend.position = "bottom")
+plot(x)
+# ggsave("ts_p300_ground.pdf",plot = x, path = OUTPUT_DIR_1)
+ 
+# ---
+# Extra Data checks
+ 
+# Maximum litter variability
+max_litter = p300_patch_ground_sum %>%
+  group_by(run) %>%
+  summarize(litter = max(avg_value))
+plot(max_litter$litter)
+
 
 
