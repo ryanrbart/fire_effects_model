@@ -19,7 +19,7 @@ library(KScorrect)
 # ---------------------------------------------------------------------
 # Files and Directories
 
-# RHESSys outputs
+# P300 RHESSys outputs
 RHESSYS_OUT_DIR_1.1_P300 <- "ws_p300/out/1.1_p300_patch_simulation"
 RHESSYS_ALLSIM_DIR_1.1_P300 <- file.path(RHESSYS_OUT_DIR_1.1_P300, "allsim")
 RHESSYS_PAR_FILE_1.1_P300 <- file.path(RHESSYS_OUT_DIR_1.1_P300, "patch_sim_parameter_sets.csv")
@@ -29,6 +29,7 @@ RHESSYS_PAR_FILE_1.3_P300 <- file.path(RHESSYS_OUT_DIR_1.3_P300, "patch_sim_para
 
 RHESSYS_OUT_DIR_2.1_P300 <- "ws_p300/out/2.1_p300_patch_sens"
 RHESSYS_PAR_SOBOL_2.1_P300 <- file.path(RHESSYS_OUT_DIR_2.1_P300, "patch_fire_par_sobol.csv")
+RHESSYS_PAR_SOBOL_MODEL_2.1_P300 <- file.path(RHESSYS_OUT_DIR_2.1_P300, "patch_fire_par_sobol.rds")
 RHESSYS_OUT_DIR_2.1_P300_STAND1 <- file.path(RHESSYS_OUT_DIR_2.1_P300, "stand1")
 RHESSYS_ALLSIM_DIR_2.1_P300_STAND1 <- file.path(RHESSYS_OUT_DIR_2.1_P300_STAND1, "allsim")
 RHESSYS_OUT_DIR_2.1_P300_STAND2 <- file.path(RHESSYS_OUT_DIR_2.1_P300, "stand2")
@@ -45,7 +46,7 @@ RHESSYS_ALL_OPTION_3.1_P300 <- file.path(RHESSYS_OUT_DIR_3.1_P300, "patch_fire_a
 
 # ---
 
-# RHESSys outputs
+# Rattelsnake RHESSys outputs
 RHESSYS_OUT_DIR_1.1_RS <- "ws_rs/out/1.1_rs_patch_simulation"
 RHESSYS_ALLSIM_DIR_1.1_RS <- file.path(RHESSYS_OUT_DIR_1.1_RS, "allsim")
 RHESSYS_PAR_FILE_1.1_RS <- file.path(RHESSYS_OUT_DIR_1.1_RS, "patch_sim_parameter_sets.csv")
@@ -68,6 +69,32 @@ RHESSYS_OUT_DIR_3.1_RS <- "ws_rs/out/3.1_rs_patch_fire"
 RHESSYS_ALLSIM_DIR_3.1_RS <- file.path(RHESSYS_OUT_DIR_3.1_RS, "allsim")
 RHESSYS_PAR_FILE_3.1_RS <- file.path(RHESSYS_OUT_DIR_3.1_RS, "patch_fire_parameter_sets.csv")
 RHESSYS_ALL_OPTION_3.1_RS <- file.path(RHESSYS_OUT_DIR_3.1_RS, "patch_fire_all_options.csv")
+
+# ---
+
+# HJA RHESSys outputs
+RHESSYS_OUT_DIR_1.1_HJA <- "ws_hja/out/1.1_hja_patch_simulation"
+RHESSYS_ALLSIM_DIR_1.1_HJA <- file.path(RHESSYS_OUT_DIR_1.1_HJA, "allsim")
+RHESSYS_PAR_FILE_1.1_HJA <- file.path(RHESSYS_OUT_DIR_1.1_HJA, "patch_sim_parameter_sets.csv")
+
+RHESSYS_OUT_DIR_1.3_HJA <- "ws_hja/out/1.3_hja_patch_simulation"
+RHESSYS_PAR_FILE_1.3_HJA <- file.path(RHESSYS_OUT_DIR_1.3_HJA, "patch_sim_parameter_sets.csv")
+
+RHESSYS_OUT_DIR_2.1_HJA <- "ws_hja/out/2.1_hja_patch_sens"
+RHESSYS_PAR_SOBOL_2.1_HJA <- file.path(RHESSYS_OUT_DIR_2.1_HJA, "patch_fire_par_sobol.csv")
+RHESSYS_OUT_DIR_2.1_HJA_STAND1 <- file.path(RHESSYS_OUT_DIR_2.1_HJA, "stand1")
+RHESSYS_ALLSIM_DIR_2.1_HJA_STAND1 <- file.path(RHESSYS_OUT_DIR_2.1_HJA_STAND1, "allsim")
+RHESSYS_OUT_DIR_2.1_HJA_STAND2 <- file.path(RHESSYS_OUT_DIR_2.1_HJA, "stand2")
+RHESSYS_ALLSIM_DIR_2.1_HJA_STAND2 <- file.path(RHESSYS_OUT_DIR_2.1_HJA_STAND2, "allsim")
+RHESSYS_OUT_DIR_2.1_HJA_STAND3 <- file.path(RHESSYS_OUT_DIR_2.1_HJA, "stand3")
+RHESSYS_ALLSIM_DIR_2.1_HJA_STAND3 <- file.path(RHESSYS_OUT_DIR_2.1_HJA_STAND3, "allsim")
+RHESSYS_OUT_DIR_2.1_HJA_STAND4 <- file.path(RHESSYS_OUT_DIR_2.1_HJA, "stand4")
+RHESSYS_ALLSIM_DIR_2.1_HJA_STAND4 <- file.path(RHESSYS_OUT_DIR_2.1_HJA_STAND4, "allsim")
+
+RHESSYS_OUT_DIR_3.1_HJA <- "ws_hja/out/3.1_hja_patch_fire"
+RHESSYS_ALLSIM_DIR_3.1_HJA <- file.path(RHESSYS_OUT_DIR_3.1_HJA, "allsim")
+RHESSYS_PAR_FILE_3.1_HJA <- file.path(RHESSYS_OUT_DIR_3.1_HJA, "patch_fire_parameter_sets.csv")
+RHESSYS_ALL_OPTION_3.1_HJA <- file.path(RHESSYS_OUT_DIR_3.1_HJA, "patch_fire_all_options.csv")
 
 # ---
 
