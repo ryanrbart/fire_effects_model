@@ -84,16 +84,6 @@ input_standard_par_list <- list(
   gw1 = c(0.001, 0.4, n_sim),
   gw2 = c(0.2, 0.2, n_sim)
 )
-# input_standard_par_list <- list(
-#   m = c(1.792761,2),
-#   k = c(1.566492),
-#   m_v = c(1.792761),
-#   k_v = c(1.566492),
-#   pa = c(7.896941),
-#   po = c(1.179359),
-#   gw1 = c(0.1668035),
-#   gw2 = c(0.178753)
-# )
 
 
 # Make climate base station file
@@ -143,17 +133,7 @@ input_tec_data[2,] <- data.frame(1941, 10, 1, 2, "print_daily_growth_on", string
 # file location), and the location/name of rhessys output file with variable of interest.
 # output_variables <- NULL
 output_variables <- data.frame(variable=character(),awk_path=character(),out_file=character(),stringsAsFactors=FALSE)
-#output_variables[1,] <- data.frame("lai", "awks/output_var_bd_lai.awk","patch_sim_basin.daily",stringsAsFactors=FALSE)
-#output_variables[2,] <- data.frame("leafc", "awks/output_var_cdg_leafc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
-#output_variables[3,] <- data.frame("stemc", "awks/output_var_cdg_stemc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
-#output_variables[4,] <- data.frame("live_stemc", "awks/output_var_cdg_live_stemc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
-#output_variables[5,] <- data.frame("dead_stemc", "awks/output_var_cdg_dead_stemc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
-#output_variables[6,] <- data.frame("rootc", "awks/output_var_cdg_rootc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
-
 output_variables[1,] <- data.frame("litrc", "awks/output_var_bd_litrc.awk","patch_sim_basin.daily",stringsAsFactors=FALSE)
-#output_variables[8,] <- data.frame("cwdc", "awks/output_var_cdg_cwdc.awk","patch_sim_grow_stratum.daily",stringsAsFactors=FALSE)
-#output_variables[9,] <- data.frame("soil1c", "awks/output_var_pdg_soil1c.awk","patch_sim_grow_patch.daily",stringsAsFactors=FALSE)
-
 output_variables[2,] <- data.frame("height", "awks/output_var_cd_height.awk","patch_sim_stratum.daily",stringsAsFactors=FALSE)
 
 
