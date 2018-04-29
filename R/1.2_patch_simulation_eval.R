@@ -14,7 +14,8 @@ patch_simulation_eval <- function(num_canopies,
                                   initial_date,
                                   parameter_file,
                                   stand_age_vect,
-                                  top_par_output){
+                                  top_par_output,
+                                  watershed){
   
   # Import parameter set file
   ps <- read_csv(parameter_file)
@@ -161,11 +162,11 @@ patch_simulation_eval <- function(num_canopies,
               aes(x=wy,y=avg_value, linetype=as.factor(canopy_layer), group=as.factor(canopy_layer)), color="black",size = 1.2) +
     geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
     geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
-    labs(title = "Height", x = "Wateryear", y = "Height (meters)") +
+    labs(title = paste("Height - ", watershed, sep=""), x = "Wateryear", y = "Height (meters)") +
     scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Upper Canopy","Lower Canopy")) +
     theme(legend.position = "bottom")
   plot(x)  
-  #ggsave("ts_p300_height.pdf",plot = x, path = OUTPUT_DIR_1)
+  ggsave(paste("ts_height_",watershed,".pdf",sep=""), plot = x, path = OUTPUT_DIR_1)
 
   # Height - understory plot
   x <- ggplot() +
@@ -173,24 +174,9 @@ patch_simulation_eval <- function(num_canopies,
               aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "gray80") +
     geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
     geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
-    labs(title = "Height - Understory", x = "Wateryear", y = "Height (meters)")
+    labs(title = paste("Height - Understory - ", watershed, sep=""), x = "Wateryear", y = "Height (meters)")
   plot(x)  
-  #ggsave("ts_p300_height.pdf",plot = x, path = OUTPUT_DIR_1)
-  
-  if (num_canopies == 2){
-    # Shrub maximum height (by run)
-    max_height = p300_patch_height_sum %>%
-      dplyr::filter(canopy_layer == 2) %>%
-      group_by(run) %>%
-      summarize(height = max(avg_value))
-    plot(max_height$height)
-  }
-  # Tree maximum height (by run)
-  max_height = p300_patch_height_sum %>%
-    dplyr::filter(canopy_layer == 1) %>%
-    group_by(run) %>%
-    summarize(height = max(avg_value))
-  plot(max_height$height)
+  ggsave(paste("ts_height_understory_",watershed,".pdf",sep=""), plot = x, path = OUTPUT_DIR_1)
   
   # ----
   
@@ -201,19 +187,10 @@ patch_simulation_eval <- function(num_canopies,
     geom_line(data=dplyr::filter(p300_patch_ground_sum, run==this_one),
               aes(x=wy,y=avg_value, group=1), color="black",size = 1.2) +
     geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
-    labs(title = "Litter Store", x = "Wateryear", y = "Carbon (g/m2)")
+    labs(title = paste("Litter Store - ", watershed, sep=""), x = "Wateryear", y = "Carbon (g/m2)")
   plot(x)
-  # ggsave("ts_p300_ground.pdf",plot = x, path = OUTPUT_DIR_1)
+  ggsave(paste("ts_litter_",watershed,".pdf",sep=""), plot = x, path = OUTPUT_DIR_1)
   
-  # ---
-  # Extra Data checks
-  
-  # Maximum litter variability
-  max_litter = p300_patch_ground_sum %>%
-    group_by(run) %>%
-    summarize(litter = max(avg_value))
-  plot(max_litter$litter)
-
   # ---
   beep()
 }
@@ -228,7 +205,8 @@ patch_simulation_eval(num_canopies = 1,
                       initial_date = "1988-10-01",
                       parameter_file = RHESSYS_PAR_FILE_1.1_RS,
                       stand_age_vect = c(1994,2001,2009,2019,2029,2049,2069),
-                      top_par_output = OUTPUT_DIR_1_RS_TOP_PS)
+                      top_par_output = OUTPUT_DIR_1_RS_TOP_PS,
+                      watershed = "RS")
 
 # P300
 patch_simulation_eval(num_canopies = 2,
@@ -236,7 +214,8 @@ patch_simulation_eval(num_canopies = 2,
                       initial_date = "1941-10-01",
                       parameter_file = RHESSYS_PAR_FILE_1.1_P300,
                       stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
-                      top_par_output = OUTPUT_DIR_1_P300_TOP_PS)
+                      top_par_output = OUTPUT_DIR_1_P300_TOP_PS,
+                      watershed = "P300")
 
 # HJA
 patch_simulation_eval(num_canopies = 2,
@@ -244,14 +223,16 @@ patch_simulation_eval(num_canopies = 2,
                       initial_date = "1957-10-01",
                       parameter_file = RHESSYS_PAR_FILE_1.1_HJA,
                       stand_age_vect = c(1967,1977,1997,2027,2057,2097,2147),
-                      top_par_output = OUTPUT_DIR_1_HJA_TOP_PS)
+                      top_par_output = OUTPUT_DIR_1_HJA_TOP_PS,
+                      watershed = "HJA")
 
 # SF
 patch_simulation_eval(num_canopies = 2,
                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_SF,
-                      initial_date = "",
+                      initial_date = "1941-10-01",
                       parameter_file = RHESSYS_PAR_FILE_1.1_SF,
                       stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
-                      top_par_output = OUTPUT_DIR_1_SF_TOP_PS)
+                      top_par_output = OUTPUT_DIR_1_SF_TOP_PS,
+                      watershed = "SF")
 
 
