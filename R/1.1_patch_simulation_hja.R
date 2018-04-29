@@ -17,7 +17,7 @@ input_rhessys <- list()
 input_rhessys$rhessys_version <- "bin/rhessys5.20.1_self_thinning"    # Code for self thinning
 input_rhessys$tec_file <- "ws_hja/tecfiles/hja_patch_simulation.tec"
 input_rhessys$world_file <- "ws_hja/worldfiles/hja_2can_patch_6018_ts.world"  # Worldfile for not using dated sequence. hja_2can_patch_6018.world is for dated sequence. 
-input_rhessys$world_hdr_prefix <- "hja_2can_patch_6018"
+input_rhessys$world_hdr_prefix <- "1.1"
 input_rhessys$flow_file <- "ws_hja/flowtables/hja_patch_6018.flow"
 input_rhessys$start_date <- "1957 10 1 1"
 input_rhessys$end_date <- "2157 10 1 1"
@@ -40,7 +40,7 @@ input_hdr_list$base_stations <- c("ws_hja/clim/cs2met_450yr.base")
 # Define path to a pre-selected df containing parameter sets
 input_preexisting_table <- NULL
 
-n_sim = 6
+n_sim = 30
 
 # Def file parameter changes
 # List of lists containing def_file, parameter and parameters values

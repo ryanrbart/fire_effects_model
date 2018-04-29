@@ -17,7 +17,7 @@ input_rhessys <- list()
 input_rhessys$rhessys_version <- "bin/rhessys5.20.1"
 input_rhessys$tec_file <- "ws_p300/tecfiles/p300_patch_simulation.tec"
 input_rhessys$world_file <- "ws_p300/worldfiles/p300_30m_2can_patch_9445.world"
-input_rhessys$world_hdr_prefix <- "p300_30m_2can_patch_9445"
+input_rhessys$world_hdr_prefix <- "1.1"
 input_rhessys$flow_file <- "ws_p300/flowtables/p300_30m_patch_9445.flow"
 input_rhessys$start_date <- "1941 10 1 1"
 input_rhessys$end_date <- "2041 10 1 1"
@@ -40,7 +40,7 @@ input_hdr_list$base_stations <- c("ws_p300/clim/Grove_lowprov_clim_1942_2453.bas
 # Define path to a pre-selected df containing parameter sets
 input_preexisting_table <- NULL
 
-n_sim = 100
+n_sim = 30
 
 # Def file parameter changes
 # List of lists containing def_file, parameter and parameters values
