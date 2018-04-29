@@ -18,7 +18,7 @@ input_rhessys <- list()
 input_rhessys$rhessys_version <- "bin/rhessys5.20.1"
 input_rhessys$tec_file <- "ws_rs/tecfiles/rs_patch_simulation.tec"
 input_rhessys$world_file <- "ws_rs/worldfiles/rs_30m_1can_patch_40537.world"
-input_rhessys$world_hdr_prefix <- "rs_30m_1can_patch_40537"
+input_rhessys$world_hdr_prefix <- "1.3"
 input_rhessys$flow_file <- "ws_rs/flowtables/rs_30m_patch_40537.flow"
 input_rhessys$start_date <- "1988 10 1 1"
 input_rhessys$end_date <- "2088 10 1 1"
