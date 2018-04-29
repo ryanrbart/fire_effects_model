@@ -1,6 +1,6 @@
 # Utilities for fire effects analysis
 # Includes files/directories and functions
- 
+
 
 # ---------------------------------------------------------------------
 # Libraries
@@ -97,6 +97,33 @@ RHESSYS_PAR_FILE_3.1_HJA <- file.path(RHESSYS_OUT_DIR_3.1_HJA, "patch_fire_param
 RHESSYS_ALL_OPTION_3.1_HJA <- file.path(RHESSYS_OUT_DIR_3.1_HJA, "patch_fire_all_options.csv")
 
 # ---
+
+# SF RHESSys outputs
+RHESSYS_OUT_DIR_1.1_SF <- "ws_sf/out/1.1_sf_patch_simulation"
+RHESSYS_ALLSIM_DIR_1.1_SF <- file.path(RHESSYS_OUT_DIR_1.1_SF, "allsim")
+RHESSYS_PAR_FILE_1.1_SF <- file.path(RHESSYS_OUT_DIR_1.1_SF, "patch_sim_parameter_sets.csv")
+
+RHESSYS_OUT_DIR_1.3_SF <- "ws_sf/out/1.3_sf_patch_simulation"
+RHESSYS_PAR_FILE_1.3_SF <- file.path(RHESSYS_OUT_DIR_1.3_SF, "patch_sim_parameter_sets.csv")
+
+RHESSYS_OUT_DIR_2.1_SF <- "ws_sf/out/2.1_sf_patch_sens"
+RHESSYS_PAR_SOBOL_2.1_SF <- file.path(RHESSYS_OUT_DIR_2.1_SF, "patch_fire_par_sobol.csv")
+RHESSYS_OUT_DIR_2.1_SF_STAND1 <- file.path(RHESSYS_OUT_DIR_2.1_SF, "stand1")
+RHESSYS_ALLSIM_DIR_2.1_SF_STAND1 <- file.path(RHESSYS_OUT_DIR_2.1_SF_STAND1, "allsim")
+RHESSYS_OUT_DIR_2.1_SF_STAND2 <- file.path(RHESSYS_OUT_DIR_2.1_SF, "stand2")
+RHESSYS_ALLSIM_DIR_2.1_SF_STAND2 <- file.path(RHESSYS_OUT_DIR_2.1_SF_STAND2, "allsim")
+RHESSYS_OUT_DIR_2.1_SF_STAND3 <- file.path(RHESSYS_OUT_DIR_2.1_SF, "stand3")
+RHESSYS_ALLSIM_DIR_2.1_SF_STAND3 <- file.path(RHESSYS_OUT_DIR_2.1_SF_STAND3, "allsim")
+RHESSYS_OUT_DIR_2.1_SF_STAND4 <- file.path(RHESSYS_OUT_DIR_2.1_SF, "stand4")
+RHESSYS_ALLSIM_DIR_2.1_SF_STAND4 <- file.path(RHESSYS_OUT_DIR_2.1_SF_STAND4, "allsim")
+
+RHESSYS_OUT_DIR_3.1_SF <- "ws_sf/out/3.1_sf_patch_fire"
+RHESSYS_ALLSIM_DIR_3.1_SF <- file.path(RHESSYS_OUT_DIR_3.1_SF, "allsim")
+RHESSYS_PAR_FILE_3.1_SF <- file.path(RHESSYS_OUT_DIR_3.1_SF, "patch_fire_parameter_sets.csv")
+RHESSYS_ALL_OPTION_3.1_SF <- file.path(RHESSYS_OUT_DIR_3.1_SF, "patch_fire_all_options.csv")
+
+# ---
+
 
 
 # RHESSYS_OUT_DIR_2.1_P300 <- "ws_p300/out/2.1_p300_patch_sens1"

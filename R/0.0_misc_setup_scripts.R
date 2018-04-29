@@ -23,6 +23,15 @@ write_sample_clim("ws_p300/clim/Grove_lowprov_clim_1942_2453", p300_lowprov, seq
 
 
 # ---------------------------------------------------------------------
+# Extend Santa Fe timeseries
+
+happy <- read_rhessys_met("ws_sf/clim/snoelktr50")
+
+# Note that write_sample_clim does not currently produce a climate base file
+write_sample_clim("ws_sf/clim/snoelktr50_1942_2477", clim=happy, 
+                  samplewyrs = seq(1942,2008), reps=8, startwyr = 1942)
+
+# ---------------------------------------------------------------------
 
 
 
