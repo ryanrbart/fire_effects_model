@@ -4,9 +4,11 @@
 
 source("R/0.1_utilities.R")
 
+theme_set(theme_bw(base_size = 18))
+
 # ---------------------------------------------------------------------
 # Consumption Output Figure
-# Relation between percent canopy mortality and and percent consuption
+# Relation between percent canopy mortality and percent consumption
 
 
 consumption_figure = function(consumption_parameter, title_name){
@@ -36,10 +38,10 @@ consumption_figure = function(consumption_parameter, title_name){
   
   x <- ggplot(data = happy) +
     geom_line(aes(x=percent_canopy_mortality_rep, y=percent_mortality, linetype = consumption_parameter_rep, color = consumption_parameter_rep), size=1.2) +
-    theme_bw(base_size=16) +
-    labs(title = title_name, x = "Canopy Mortality (%)", y = "Proportion of Mortality Consumed") +
-    scale_linetype(name = "Consumption\nParameter") +
-    scale_color_brewer(palette = "Greens", name = "Consumption\nParameter")
+    #theme_bw(base_size=21) +
+    labs(title = title_name, x = "Proportion Mortality", y = "Proportion of Mortality Consumed") +
+    scale_linetype(name = "Consumption\nParameter\n(k2)") +
+    scale_color_brewer(palette = "Dark2", name = "Consumption\nParameter\n(k2)")
   plot(x)
   return(x)
 }
@@ -75,8 +77,8 @@ consumption_output_figure = function(consumption_parameter, title_name){
   
   x <- ggplot(data = happy) +
     geom_line(aes(x=., y=Percent, linetype = carbon_pool, color = carbon_pool), size=1.2) +
-    theme_bw(base_size=16) +
-    labs(title = title_name, x = "Percent Canopy Mortality", y = "Percent of Canopy Carbon") +
+    #theme_bw(base_size=16) +
+    labs(title = title_name, x = "Canopy Mortality (%)", y = "Percent of Canopy Carbon") +
     scale_linetype(name = "Carbon Pool", labels=c("Litter","Consumed")) +
     scale_color_brewer(palette = "Dark2", name = "Carbon Pool", labels=c("Litter","Consumed"))
   plot(x)
@@ -124,11 +126,11 @@ understory_figure = function(pspread_mortality_parameter, title_name){
   
   x <- ggplot(data = happy) +
     geom_line(aes(x=pspread_rep, y=percent_mortality, linetype = pspread_mortality_parameter_rep, color = pspread_mortality_parameter_rep), size=1.2) +
-    theme_bw(base_size=16) +
-#    labs(title = title_name, x = "Pspread", y = "Understory Percent Mortality") +
-    labs(title = title_name, x = "Intensity", y = "Understory Percent Mortality") +
-    scale_linetype(name = "Pspread\nParameter") +
-    scale_color_brewer(palette = "Greens", name = "Pspread\nParameter")
+    #theme_bw(base_size=16) +
+#    labs(title = title_name, x = "Pspread", y = "Understory Mortality (%)") +
+    labs(title = title_name, x = expression(Intensity~(i[u])), y = "Proportion Mortality") +
+    scale_linetype(name = "Understory\nMortality\nParameter\n(k1)") +
+    scale_color_brewer(palette = "Dark2", name = "Understory\nMortality\nParameter\n(k1)")
   plot(x)
   return(x)
 }
@@ -146,7 +148,7 @@ ggsave("display_understory.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
 
 overstory_figure = function(k1, k2, title_name){
   
-  understory_biomass_mortality <- seq(from=0,to=2, length.out = 201)   # KgC/m2
+  understory_biomass_mortality <- seq(from=0,to=2000, length.out = 201)   # gC/m2
   
   tmp_func = function (understory_biomass_mortality, k1, k2){
     overstory_percent_mortality <- (1-1/(1+exp(-(k1*(understory_biomass_mortality-k2))))*100)+100
@@ -164,15 +166,15 @@ overstory_figure = function(k1, k2, title_name){
 
   x <- ggplot(data = happy) +
     geom_line(aes(x=understory_biomass_mortality_rep, y=overstory_percent_mortality, linetype = k1_rep, color = k2_rep), size=1.2) +
-    theme_bw(base_size=16) +
-    labs(title = title_name, x = "Understory & Litter Losses (Kg/m2)", y = "Overstory Percent Mortality") +
-    scale_linetype(name = "k1\nParameter") +
-    scale_color_brewer(palette = "Dark2", name = "k2\nParameter")
+    #theme_bw(base_size=16) +
+    labs(title = title_name, x = expression(Understory~"&"~Litter~Consumption~(gC/m^2)), y = "Proportion Mortality") +
+    scale_linetype(name = "Slope\nParameter\n(k3)") +
+    scale_color_brewer(palette = "Dark2", name = "Centerpoint\nParameter\n(k4)")
   plot(x)
   return(x)
 }
 
-x <- overstory_figure(k1 = c(-5, -10, -50), k2 = c(0.5, 1.5), title_name = "Overstory Mortality")
+x <- overstory_figure(k1 = c(-0.005, -0.01, -0.05), k2 = c(500, 1500), title_name = "Overstory Mortality")
 ggsave("display_overstory.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
 
 
