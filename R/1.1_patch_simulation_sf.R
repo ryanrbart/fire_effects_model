@@ -67,8 +67,8 @@ input_def_list <- list(
   list(input_hdr_list$stratum_def[2], "epc.alloc_stemc_leafc", c(0.2, 0.2, n_sim)),
   list(input_hdr_list$stratum_def[2], "epc.alloc_livewoodc_woodc", c(0.8, 0.95, n_sim)),
   list(input_hdr_list$stratum_def[2], "epc.leaf_turnover", c(0.35, 0.45, n_sim)),
-  list(input_hdr_list$stratum_def[2], "epc.livewood_turnover", c(0.05, 0.2, n_sim)),
-  list(input_hdr_list$stratum_def[2], "epc.branch_turnover", c(0.01, 0.03, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.livewood_turnover", c(0.15, 0.3, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.branch_turnover", c(0.008, 0.02, n_sim)),
   list(input_hdr_list$stratum_def[2], "epc.height_to_stem_coef", c(3.0, 4.0, n_sim))
 )
 

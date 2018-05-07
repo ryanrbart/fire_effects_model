@@ -199,14 +199,14 @@ patch_simulation_eval <- function(num_canopies,
 # Call patch simulation evaluation function
 
 
-# RS
-patch_simulation_eval(num_canopies = 1,
-                      allsim_path = RHESSYS_ALLSIM_DIR_1.1_RS,
-                      initial_date = "1988-10-01",
-                      parameter_file = RHESSYS_PAR_FILE_1.1_RS,
-                      stand_age_vect = c(1994,2001,2009,2019,2029,2049,2069),
-                      top_par_output = OUTPUT_DIR_1_RS_TOP_PS,
-                      watershed = "RS")
+# HJA
+patch_simulation_eval(num_canopies = 2,
+                      allsim_path = RHESSYS_ALLSIM_DIR_1.1_HJA,
+                      initial_date = "1957-10-01",
+                      parameter_file = RHESSYS_PAR_FILE_1.1_HJA,
+                      stand_age_vect = c(1967,1977,1997,2027,2057,2097,2147),
+                      top_par_output = OUTPUT_DIR_1_HJA_TOP_PS,
+                      watershed = "HJA")
 
 # P300
 patch_simulation_eval(num_canopies = 2,
@@ -217,14 +217,14 @@ patch_simulation_eval(num_canopies = 2,
                       top_par_output = OUTPUT_DIR_1_P300_TOP_PS,
                       watershed = "P300")
 
-# HJA
-patch_simulation_eval(num_canopies = 2,
-                      allsim_path = RHESSYS_ALLSIM_DIR_1.1_HJA,
-                      initial_date = "1957-10-01",
-                      parameter_file = RHESSYS_PAR_FILE_1.1_HJA,
-                      stand_age_vect = c(1967,1977,1997,2027,2057,2097,2147),
-                      top_par_output = OUTPUT_DIR_1_HJA_TOP_PS,
-                      watershed = "HJA")
+# RS
+patch_simulation_eval(num_canopies = 1,
+                      allsim_path = RHESSYS_ALLSIM_DIR_1.1_RS,
+                      initial_date = "1988-10-01",
+                      parameter_file = RHESSYS_PAR_FILE_1.1_RS,
+                      stand_age_vect = c(1994,2001,2009,2019,2029,2049,2069),
+                      top_par_output = OUTPUT_DIR_1_RS_TOP_PS,
+                      watershed = "RS")
 
 # SF
 patch_simulation_eval(num_canopies = 2,

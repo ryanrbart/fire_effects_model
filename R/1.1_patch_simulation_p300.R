@@ -53,7 +53,7 @@ input_def_list <- list(
   # Upper canopy parameters
   list(input_hdr_list$stratum_def[1], "epc.alloc_frootc_leafc", c(1.4, 1.4, n_sim)),
   list(input_hdr_list$stratum_def[1], "epc.alloc_crootc_stemc", c(0.25, 0.35, n_sim)),
-  list(input_hdr_list$stratum_def[1], "epc.alloc_stemc_leafc", c(0.2, 0.2, n_sim)),
+  list(input_hdr_list$stratum_def[1], "epc.alloc_stemc_leafc", c(0.4, 0.4, n_sim)),
   list(input_hdr_list$stratum_def[1], "epc.alloc_livewoodc_woodc", c(0.5, 0.7, n_sim)),
   list(input_hdr_list$stratum_def[1], "epc.leaf_turnover", c(0.25, 0.35, n_sim)),
   list(input_hdr_list$stratum_def[1], "epc.livewood_turnover", c(0.4, 0.6, n_sim)),
