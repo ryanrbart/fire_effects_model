@@ -206,7 +206,7 @@ patch_simulation_eval(num_canopies = 2,
                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_HJA,
                       initial_date = "1957-10-01",
                       parameter_file = RHESSYS_PAR_FILE_1.1_HJA,
-                      stand_age_vect = c(1967,1977,1997,2027,2057,2097,2147),
+                      stand_age_vect = c(1968,1978,1998,2028,2058,2098,2148),
                       top_par_output = OUTPUT_DIR_1_HJA_TOP_PS,
                       watershed = "HJA")
 

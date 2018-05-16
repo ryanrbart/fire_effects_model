@@ -22,7 +22,7 @@ input_rhessys$world_hdr_prefix <- "1.3"
 input_rhessys$flow_file <- "ws_sf/flowtables/sf_patch_2777.flow"
 input_rhessys$start_date <- "1941 10 1 1"
 input_rhessys$end_date <- "2041 10 1 1"
-input_rhessys$output_folder <- "ws_sf/out/1.1_sf_patch_simulation"
+input_rhessys$output_folder <- "ws_sf/out/1.3_sf_patch_simulation"
 input_rhessys$output_filename <- "patch_sim"
 input_rhessys$command_options <- c("-b -g -c -p -tchange 0 0")
 
