@@ -40,7 +40,7 @@ input_hdr_list$base_stations <- c("ws_hja/clim/cs2met_450yr.base")
 # Define path to a pre-selected df containing parameter sets
 input_preexisting_table <- NULL
 
-n_sim = 30
+n_sim = 250
 
 # Def file parameter changes
 # List of lists containing def_file, parameter and parameters values
@@ -69,7 +69,7 @@ input_def_list <- list(
   list(input_hdr_list$stratum_def[2], "epc.leaf_turnover", c(0.2, 0.4, n_sim)),
   list(input_hdr_list$stratum_def[2], "epc.livewood_turnover", c(0.05, 0.2, n_sim)),
   list(input_hdr_list$stratum_def[2], "epc.branch_turnover", c(0.01, 0.03, n_sim)),
-  list(input_hdr_list$stratum_def[2], "epc.height_to_stem_coef", c(4.0, 5.0, n_sim))
+  list(input_hdr_list$stratum_def[2], "epc.height_to_stem_coef", c(3.0, 4.0, n_sim))
 )
 
 # Standard sub-surface parameters

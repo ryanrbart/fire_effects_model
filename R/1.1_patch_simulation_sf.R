@@ -40,7 +40,7 @@ input_hdr_list$base_stations <- c("ws_sf/clim/snoelktr50_1942_2477.base")
 # Define path to a pre-selected df containing parameter sets
 input_preexisting_table <- NULL
 
-n_sim = 30
+n_sim = 250
 
 # Def file parameter changes
 # List of lists containing def_file, parameter and parameters values

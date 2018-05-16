@@ -172,6 +172,8 @@ patch_simulation_eval <- function(num_canopies,
   x <- ggplot() +
     geom_line(data=dplyr::filter(p300_patch_height_sum, canopy_layer==2),
               aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "gray80") +
+    geom_line(data=dplyr::filter(p300_patch_height_sum, run==this_one, canopy_layer==2),
+              aes(x=wy,y=avg_value, linetype=as.factor(canopy_layer), group=as.factor(canopy_layer)), color="black",size = 1.2) +
     geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
     geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
     labs(title = paste("Height - Understory - ", watershed, sep=""), x = "Wateryear", y = "Height (meters)")
