@@ -24,34 +24,34 @@ patch_simulation_eval <- function(num_canopies,
   stand_age_vect <- stand_age_vect
   
   # ---------------------------------------------------------------------
-  # P300 Patch Simulation data processing
+  # Patch Simulation data processing
   
-  p300_patch_ground <- readin_rhessys_output_cal(var_names = c("litrc"),
+  patch_ground <- readin_rhessys_output_cal(var_names = c("litrc"),
                                                  path = allsim_path,
                                                  initial_date = ymd(initial_date),
                                                  parameter_file = parameter_file,
                                                  num_canopies = 1)
-  p300_patch_ground$value <- as.numeric(p300_patch_ground$value)
-  p300_patch_ground$wy <- y_to_wy(lubridate::year(p300_patch_ground$dates),lubridate::month(p300_patch_ground$dates))
-  p300_patch_ground_sum <- p300_patch_ground %>%
+  patch_ground$value <- as.numeric(patch_ground$value)
+  patch_ground$wy <- y_to_wy(lubridate::year(patch_ground$dates),lubridate::month(patch_ground$dates))
+  patch_ground_sum <- patch_ground %>%
     group_by(wy, run, var_type) %>%
     summarize(avg_value = mean(value)*1000)     # Ground stores are originally in Kg/m2
-  rm(p300_patch_ground)
+  rm(patch_ground)
   
   
-  p300_patch_height <- readin_rhessys_output_cal(var_names = c("height"),
+  patch_height <- readin_rhessys_output_cal(var_names = c("height"),
                                                  path = allsim_path,
                                                  initial_date = ymd(initial_date),
                                                  parameter_file = parameter_file,
                                                  num_canopies = num_canopies)
-  p300_patch_height$wy <- y_to_wy(lubridate::year(p300_patch_height$dates),lubridate::month(p300_patch_height$dates))
-  p300_patch_height_sum <- p300_patch_height %>%
+  patch_height$wy <- y_to_wy(lubridate::year(patch_height$dates),lubridate::month(patch_height$dates))
+  patch_height_sum <- patch_height %>%
     group_by(wy, canopy_layer, run, var_type) %>%
     summarize(avg_value = mean(as.numeric(value)))
-  rm(p300_patch_height)
+  rm(patch_height)
   
-  #tail(p300_patch_ground)
-  #tail(p300_patch_height)
+  #tail(patch_ground)
+  #tail(patch_height)
   
   
   # ---------------------------------------------------------------------
@@ -61,7 +61,7 @@ patch_simulation_eval <- function(num_canopies,
   # value of overstory height and litter across the stand ages.
   
   # Process upper canopy height ranks (Produces for each parameter set, the mean and sd of rank values across stand ages)
-  rank_height <- p300_patch_height_sum %>% 
+  rank_height <- patch_height_sum %>% 
     dplyr::filter(wy %in% stand_age_vect) %>% 
     dplyr::filter(canopy_layer == 1) %>% 
     dplyr::group_by(wy) %>% 
@@ -79,7 +79,7 @@ patch_simulation_eval <- function(num_canopies,
   # ----
   # Process lower canopy height ranks (Produces for each parameter set, the mean and sd of rank values across stand ages)
   if (num_canopies == 2){
-    rank_height <- p300_patch_height_sum %>% 
+    rank_height <- patch_height_sum %>% 
       dplyr::filter(wy %in% stand_age_vect) %>% 
       dplyr::filter(canopy_layer == 2) %>% 
       dplyr::group_by(wy) %>% 
@@ -102,7 +102,7 @@ patch_simulation_eval <- function(num_canopies,
   
   # ----
   # Process litter ranks  (Produces for each parameter set, the mean and sd of rank values across stand ages)
-  rank_litter <- p300_patch_ground_sum %>% 
+  rank_litter <- patch_ground_sum %>% 
     dplyr::filter(var_type %in% "litrc") %>% 
     dplyr::filter(wy %in% stand_age_vect) %>% 
     dplyr::group_by(wy) %>% 
@@ -154,11 +154,11 @@ patch_simulation_eval <- function(num_canopies,
  
   # Height plot
   x <- ggplot() +
-    geom_line(data=dplyr::filter(p300_patch_height_sum, canopy_layer==1),
+    geom_line(data=dplyr::filter(patch_height_sum, canopy_layer==1),
               aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "gray70") +
-    geom_line(data=dplyr::filter(p300_patch_height_sum, canopy_layer==2),
+    geom_line(data=dplyr::filter(patch_height_sum, canopy_layer==2),
               aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "gray80") +
-    geom_line(data=dplyr::filter(p300_patch_height_sum, run==this_one),
+    geom_line(data=dplyr::filter(patch_height_sum, run==this_one),
               aes(x=wy,y=avg_value, linetype=as.factor(canopy_layer), group=as.factor(canopy_layer)), color="black",size = 1.2) +
     geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
     geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
@@ -170,9 +170,9 @@ patch_simulation_eval <- function(num_canopies,
 
   # Height - understory plot
   x <- ggplot() +
-    geom_line(data=dplyr::filter(p300_patch_height_sum, canopy_layer==2),
+    geom_line(data=dplyr::filter(patch_height_sum, canopy_layer==2),
               aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "gray80") +
-    geom_line(data=dplyr::filter(p300_patch_height_sum, run==this_one, canopy_layer==2),
+    geom_line(data=dplyr::filter(patch_height_sum, run==this_one, canopy_layer==2),
               aes(x=wy,y=avg_value, linetype=as.factor(canopy_layer), group=as.factor(canopy_layer)), color="black",size = 1.2) +
     geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
     geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
@@ -184,9 +184,9 @@ patch_simulation_eval <- function(num_canopies,
   
   # Litter  plot
   x <- ggplot() +
-    geom_line(data=p300_patch_ground_sum,
+    geom_line(data=patch_ground_sum,
               aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "gray80") +
-    geom_line(data=dplyr::filter(p300_patch_ground_sum, run==this_one),
+    geom_line(data=dplyr::filter(patch_ground_sum, run==this_one),
               aes(x=wy,y=avg_value, group=1), color="black",size = 1.2) +
     geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
     labs(title = paste("Litter Store - ", watershed, sep=""), x = "Wateryear", y = "Carbon (g/m2)")
