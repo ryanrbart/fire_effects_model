@@ -10,22 +10,22 @@ source("R/0.1_utilities.R")
 # ---------------------------------------------------------------------
 # Assemble Parameter Sets for Sobol Sensitivity Test (Sobol)
 
-n_sim <- 500
+n_sim <- 20
 
 input_sobol <- list()
+# Produce a list with two sets of parameter sets for Sobol method
 input_sobol <- lapply(seq(1,2), function(x){
 
   tmp1 <- setNames(data.frame(runif(n_sim, min=5,max=8)), "ws_p300/defs/patch_p300.def:overstory_height_thresh")
   tmp2 <- setNames(data.frame(runif(n_sim, min=2,max=4)), "ws_p300/defs/patch_p300.def:understory_height_thresh")
-  tmp3 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_p300/defs/veg_p300_shrub.def:pspread_loss_rel")
-  tmp4 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_p300/defs/veg_p300_shrub.def:vapor_loss_rel")
-  tmp5 <- setNames(data.frame(runif(n_sim, min=-20,max=-1)), "ws_p300/defs/veg_p300_shrub.def:biomass_loss_rel_k1")
-  tmp6 <- setNames(data.frame(runif(n_sim, min=0.2,max=2)), "ws_p300/defs/veg_p300_shrub.def:biomass_loss_rel_k2")
-  tmp7 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_p300/defs/veg_p300_conifer.def:pspread_loss_rel")
-  tmp8 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_p300/defs/veg_p300_conifer.def:vapor_loss_rel")
-  tmp9 <- setNames(data.frame(runif(n_sim, min=-20,max=-1)), "ws_p300/defs/veg_p300_conifer.def:biomass_loss_rel_k1")
-  tmp10 <- setNames(data.frame(runif(n_sim, min=0.2,max=2)), "ws_p300/defs/veg_p300_conifer.def:biomass_loss_rel_k2")
-  
+  tmp3 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_p300/defs/veg_p300_shrub.def:understory_mort")
+  tmp4 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_p300/defs/veg_p300_shrub.def:consumption")
+  tmp5 <- setNames(data.frame(runif(n_sim, min=-20,max=-1)), "ws_p300/defs/veg_p300_shrub.def:overstory_mort_k1")
+  tmp6 <- setNames(data.frame(runif(n_sim, min=0.2,max=2)), "ws_p300/defs/veg_p300_shrub.def:overstory_mort_k2")
+  tmp7 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_p300/defs/veg_p300_conifer.def:understory_mort")
+  tmp8 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_p300/defs/veg_p300_conifer.def:consumption")
+  tmp9 <- setNames(data.frame(runif(n_sim, min=-20,max=-1)), "ws_p300/defs/veg_p300_conifer.def:overstory_mort_k1")
+  tmp10 <- setNames(data.frame(runif(n_sim, min=0.2,max=2)), "ws_p300/defs/veg_p300_conifer.def:overstory_mort_k2")
   tmp_pspread <- setNames(data.frame(runif(n_sim, min=0.001,max=1)), "pspread")
   
   input_sobol[[x]] <- bind_cols(tmp1,tmp2,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,tmp9,tmp10,tmp_pspread)
@@ -37,6 +37,7 @@ sobol_model <- sobolmartinez(model = NULL, X1 = input_sobol[[1]], X2 = input_sob
 
 # Export the parameter sets to be used in the sobol model.
 write.csv(sobol_model$X, RHESSYS_PAR_SOBOL_2.1_P300, row.names = FALSE, quote=FALSE)
+saveRDS(sobol_model, RHESSYS_PAR_SOBOL_MODEL_2.1_P300)
 
 n_runs <- length(sobol_model$X[,1])
 output_init <- c(1,rep(0,(n_runs-1)))   # Used for output_initiation argument in run_rhessys 
@@ -61,13 +62,13 @@ input_rhessys <- list()
 input_rhessys$rhessys_version <- "bin/rhessys5.20.1"
 input_rhessys$tec_file <- "ws_p300/tecfiles/p300_patch_fire.tec"
 input_rhessys$world_file <- "assigned below"
-input_rhessys$world_hdr_prefix <- "p300_30m_2can_patch_9445"
+input_rhessys$world_hdr_prefix <- "2.1"
 input_rhessys$flow_file <- "ws_p300/flowtables/p300_30m_patch_9445.flow"
 input_rhessys$start_date <- "1941 10 1 1"
 input_rhessys$end_date <- "1941 10 15 1"
 input_rhessys$output_folder <- "assigned below"
 input_rhessys$output_filename <- "patch_fire"
-input_rhessys$command_options <- c("-b -g -c -p")
+input_rhessys$command_options <- c("-b -g -c -p -f")
 
 
 # HDR (header) file
@@ -89,35 +90,34 @@ input_preexisting_table <- NULL
 # List of lists containing def_file, parameter and parameters values
 #input_def_list <- NULL
 input_def_list <- list(
+  # Patch parameters
+  list(input_hdr_list$soil_def, "soil_depth", c(ps$`ws_p300/defs/patch_p300.def:soil_depth`)),
+  
+  # -----
+  # Upper canopy parameters
+  list(input_hdr_list$stratum_def[1], "epc.alloc_frootc_leafc", c(ps$`ws_p300/defs/veg_p300_conifer.def:epc.alloc_frootc_leafc`)),
+  list(input_hdr_list$stratum_def[1], "epc.alloc_crootc_stemc", c(ps$`ws_p300/defs/veg_p300_conifer.def:epc.alloc_crootc_stemc`)),
+  list(input_hdr_list$stratum_def[1], "epc.alloc_stemc_leafc", c(ps$`ws_p300/defs/veg_p300_conifer.def:epc.alloc_stemc_leafc`)),
+  list(input_hdr_list$stratum_def[1], "epc.alloc_livewoodc_woodc", c(ps$`ws_p300/defs/veg_p300_conifer.def:epc.alloc_livewoodc_woodc`)),
+  list(input_hdr_list$stratum_def[1], "epc.leaf_turnover", c(ps$`ws_p300/defs/veg_p300_conifer.def:epc.leaf_turnover`)),
+  list(input_hdr_list$stratum_def[1], "epc.livewood_turnover", c(ps$`ws_p300/defs/veg_p300_conifer.def:epc.livewood_turnover`)),
+  list(input_hdr_list$stratum_def[1], "epc.branch_turnover", c(ps$`ws_p300/defs/veg_p300_conifer.def:epc.branch_turnover`)),
+  list(input_hdr_list$stratum_def[1], "epc.height_to_stem_coef", c(ps$`ws_p300/defs/veg_p300_conifer.def:epc.height_to_stem_coef`)),
+  
+  # -----
   # Lower canopy parameters
-  list(input_hdr_list$stratum_def[2], "epc.leaf_turnover", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.leaf_turnover`)),
-  list(input_hdr_list$stratum_def[2], "epc.livewood_turnover", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.livewood_turnover`)),
   list(input_hdr_list$stratum_def[2], "epc.alloc_frootc_leafc", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.alloc_frootc_leafc`)),
   list(input_hdr_list$stratum_def[2], "epc.alloc_crootc_stemc", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.alloc_crootc_stemc`)),
   list(input_hdr_list$stratum_def[2], "epc.alloc_stemc_leafc", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.alloc_stemc_leafc`)),
   list(input_hdr_list$stratum_def[2], "epc.alloc_livewoodc_woodc", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.alloc_livewoodc_woodc`)),
+  list(input_hdr_list$stratum_def[2], "epc.leaf_turnover", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.leaf_turnover`)),
+  list(input_hdr_list$stratum_def[2], "epc.livewood_turnover", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.livewood_turnover`)),
   list(input_hdr_list$stratum_def[2], "epc.branch_turnover", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.branch_turnover`)),
-  list(input_hdr_list$stratum_def[2], "epc.height_to_stem_exp", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.height_to_stem_exp`)),
-  list(input_hdr_list$stratum_def[2], "epc.height_to_stem_coef", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.height_to_stem_coef`)),
-  # Upper canopy parameters
-  list(input_hdr_list$stratum_def[1], "epc.height_to_stem_exp", c(ps$`ws_p300/defs/veg_p300_conifer.def:epc.height_to_stem_exp`)),
-  list(input_hdr_list$stratum_def[1], "epc.height_to_stem_coef", c(ps$`ws_p300/defs/veg_p300_conifer.def:epc.height_to_stem_coef`))
-)
+  list(input_hdr_list$stratum_def[2], "epc.height_to_stem_coef", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.height_to_stem_coef`))
+  
   # -----
   # Patch fire parameters (assigned below as model steps through SOBOL parameter sets)
-  # list(input_hdr_list$soil_def[1], "overstory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:overstory_height_thresh`[aa]),
-  # list(input_hdr_list$soil_def[1], "understory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:understory_height_thresh`[aa]),
-  # # Lower canopy fire parameters
-  # list(input_hdr_list$stratum_def[2], "pspread_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:pspread_loss_rel`[aa]),
-  # list(input_hdr_list$stratum_def[2], "vapor_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:vapor_loss_rel`[aa]),
-  # list(input_hdr_list$stratum_def[2], "biomass_loss_rel_k1", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:biomass_loss_rel_k1`[aa]),
-  # list(input_hdr_list$stratum_def[2], "biomass_loss_rel_k2", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:biomass_loss_rel_k2`[aa]),
-  # # Upper canopy fire parameters
-  # list(input_hdr_list$stratum_def[1], "pspread_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:pspread_loss_rel`[aa]),
-  # list(input_hdr_list$stratum_def[1], "vapor_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:vapor_loss_rel`[aa]),
-  # list(input_hdr_list$stratum_def[1], "biomass_loss_rel_k1", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:biomass_loss_rel_k1`[aa]),
-  # list(input_hdr_list$stratum_def[1], "biomass_loss_rel_k2", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:biomass_loss_rel_k2`[aa])
-
+)
 
 # Standard sub-surface parameters
 # input_standard_par_list <- NULL
@@ -180,20 +180,16 @@ input_tec_data[2,] <- data.frame(1941, 10, 1, 2, "print_daily_growth_on", string
 # file location), and the location/name of rhessys output file with variable of interest.
 # output_variables <- NULL
 output_variables <- data.frame(variable=character(),awk_path=character(),out_file=character(),stringsAsFactors=FALSE)
-output_variables[1,] <- data.frame("lai", "awks/output_var_bd_lai.awk","patch_fire_basin.daily",stringsAsFactors=FALSE)
-output_variables[2,] <- data.frame("leafc", "awks/output_var_cdg_leafc.awk","patch_fire_grow_stratum.daily",stringsAsFactors=FALSE)
-output_variables[3,] <- data.frame("stemc", "awks/output_var_cdg_stemc.awk","patch_fire_grow_stratum.daily",stringsAsFactors=FALSE)
-output_variables[4,] <- data.frame("live_stemc", "awks/output_var_cdg_live_stemc.awk","patch_fire_grow_stratum.daily",stringsAsFactors=FALSE)
-output_variables[5,] <- data.frame("dead_stemc", "awks/output_var_cdg_dead_stemc.awk","patch_fire_grow_stratum.daily",stringsAsFactors=FALSE)
-output_variables[6,] <- data.frame("rootc", "awks/output_var_cdg_rootc.awk","patch_fire_grow_stratum.daily",stringsAsFactors=FALSE)
-
-output_variables[7,] <- data.frame("litrc", "awks/output_var_bd_litrc.awk","patch_fire_basin.daily",stringsAsFactors=FALSE)
-output_variables[8,] <- data.frame("cwdc", "awks/output_var_cdg_cwdc.awk","patch_fire_grow_stratum.daily",stringsAsFactors=FALSE)
-output_variables[9,] <- data.frame("soil1c", "awks/output_var_pdg_soil1c.awk","patch_fire_grow_patch.daily",stringsAsFactors=FALSE)
-
-output_variables[10,] <- data.frame("height", "awks/output_var_cd_height.awk","patch_fire_stratum.daily",stringsAsFactors=FALSE)
-
-
+output_variables[1,] <- data.frame("leafc", "awks/output_var_cdg_leafc.awk","patch_fire_grow_stratum.daily",stringsAsFactors=FALSE)
+output_variables[2,] <- data.frame("stemc", "awks/output_var_cdg_stemc.awk","patch_fire_grow_stratum.daily",stringsAsFactors=FALSE)
+output_variables[3,] <- data.frame("litrc", "awks/output_var_bd_litrc.awk","patch_fire_basin.daily",stringsAsFactors=FALSE)
+output_variables[4,] <- data.frame("cwdc", "awks/output_var_cdg_cwdc.awk","patch_fire_grow_stratum.daily",stringsAsFactors=FALSE)
+output_variables[5,] <- data.frame("soil1c", "awks/output_var_pdg_soil1c.awk","patch_fire_grow_patch.daily",stringsAsFactors=FALSE)
+output_variables[6,] <- data.frame("height", "awks/output_var_cd_height.awk","patch_fire_stratum.daily",stringsAsFactors=FALSE)
+output_variables[7,] <- data.frame("canopy_target_prop_mort", "awks/output_var_fd_canopy_target_prop_mort.awk","patch_fire_fire.daily",stringsAsFactors=FALSE)
+output_variables[8,] <- data.frame("canopy_target_prop_mort_consumed", "awks/output_var_fd_canopy_target_prop_mort_consumed.awk","patch_fire_fire.daily",stringsAsFactors=FALSE)
+output_variables[9,] <- data.frame("canopy_target_prop_c_consumed", "awks/output_var_fd_canopy_target_prop_c_consumed.awk","patch_fire_fire.daily",stringsAsFactors=FALSE)
+output_variables[10,] <- data.frame("canopy_target_prop_c_remain", "awks/output_var_fd_canopy_target_prop_c_remain.awk","patch_fire_fire.daily",stringsAsFactors=FALSE)
 
 # ---------------------------------------------------------------------
 # ---------------------------------------------------------------------
@@ -219,18 +215,18 @@ system.time(
     input_rhessys$output_folder <- RHESSYS_OUT_DIR_2.1_P300_STAND1
     
     # Patch fire parameters
-    input_def_list[[12]] <- list(input_hdr_list$soil_def[1], "overstory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:overstory_height_thresh`[aa])
-    input_def_list[[13]] <- list(input_hdr_list$soil_def[1], "understory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:understory_height_thresh`[aa])
+    input_def_list[[18]] <- list(input_hdr_list$soil_def[1], "overstory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:overstory_height_thresh`[aa])
+    input_def_list[[19]] <- list(input_hdr_list$soil_def[1], "understory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:understory_height_thresh`[aa])
     # Lower canopy fire parameters
-    input_def_list[[14]] <- list(input_hdr_list$stratum_def[2], "pspread_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:pspread_loss_rel`[aa])
-    input_def_list[[15]] <- list(input_hdr_list$stratum_def[2], "vapor_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:vapor_loss_rel`[aa])
-    input_def_list[[16]] <- list(input_hdr_list$stratum_def[2], "biomass_loss_rel_k1", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:biomass_loss_rel_k1`[aa])
-    input_def_list[[17]] <- list(input_hdr_list$stratum_def[2], "biomass_loss_rel_k2", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:biomass_loss_rel_k2`[aa])
+    input_def_list[[20]] <- list(input_hdr_list$stratum_def[2], "understory_mort", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:understory_mort`[aa])
+    input_def_list[[21]] <- list(input_hdr_list$stratum_def[2], "consumption", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:consumption`[aa])
+    input_def_list[[22]] <- list(input_hdr_list$stratum_def[2], "overstory_mort_k1", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:overstory_mort_k1`[aa])
+    input_def_list[[23]] <- list(input_hdr_list$stratum_def[2], "overstory_mort_k2", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:overstory_mort_k2`[aa])
     # Upper canopy fire parameters
-    input_def_list[[18]] <- list(input_hdr_list$stratum_def[1], "pspread_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:pspread_loss_rel`[aa])
-    input_def_list[[19]] <- list(input_hdr_list$stratum_def[1], "vapor_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:vapor_loss_rel`[aa])
-    input_def_list[[20]] <- list(input_hdr_list$stratum_def[1], "biomass_loss_rel_k1", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:biomass_loss_rel_k1`[aa])
-    input_def_list[[21]] <- list(input_hdr_list$stratum_def[1], "biomass_loss_rel_k2", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:biomass_loss_rel_k2`[aa])
+    input_def_list[[24]] <- list(input_hdr_list$stratum_def[1], "understory_mort", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:understory_mort`[aa])
+    input_def_list[[25]] <- list(input_hdr_list$stratum_def[1], "consumption", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:consumption`[aa])
+    input_def_list[[26]] <- list(input_hdr_list$stratum_def[1], "overstory_mort_k1", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:overstory_mort_k1`[aa])
+    input_def_list[[27]] <- list(input_hdr_list$stratum_def[1], "overstory_mort_k2", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:overstory_mort_k2`[aa])
     
     # Make a list of dated sequence data.frames (file name, year, month, day, hour, value)
     # input_dated_seq_list <- NULL
@@ -268,18 +264,18 @@ system.time(
     input_rhessys$output_folder <- RHESSYS_OUT_DIR_2.1_P300_STAND2
     
     # Patch fire parameters
-    input_def_list[[12]] <- list(input_hdr_list$soil_def[1], "overstory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:overstory_height_thresh`[aa])
-    input_def_list[[13]] <- list(input_hdr_list$soil_def[1], "understory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:understory_height_thresh`[aa])
+    input_def_list[[18]] <- list(input_hdr_list$soil_def[1], "overstory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:overstory_height_thresh`[aa])
+    input_def_list[[19]] <- list(input_hdr_list$soil_def[1], "understory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:understory_height_thresh`[aa])
     # Lower canopy fire parameters
-    input_def_list[[14]] <- list(input_hdr_list$stratum_def[2], "pspread_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:pspread_loss_rel`[aa])
-    input_def_list[[15]] <- list(input_hdr_list$stratum_def[2], "vapor_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:vapor_loss_rel`[aa])
-    input_def_list[[16]] <- list(input_hdr_list$stratum_def[2], "biomass_loss_rel_k1", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:biomass_loss_rel_k1`[aa])
-    input_def_list[[17]] <- list(input_hdr_list$stratum_def[2], "biomass_loss_rel_k2", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:biomass_loss_rel_k2`[aa])
+    input_def_list[[20]] <- list(input_hdr_list$stratum_def[2], "understory_mort", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:understory_mort`[aa])
+    input_def_list[[21]] <- list(input_hdr_list$stratum_def[2], "consumption", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:consumption`[aa])
+    input_def_list[[22]] <- list(input_hdr_list$stratum_def[2], "overstory_mort_k1", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:overstory_mort_k1`[aa])
+    input_def_list[[23]] <- list(input_hdr_list$stratum_def[2], "overstory_mort_k2", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:overstory_mort_k2`[aa])
     # Upper canopy fire parameters
-    input_def_list[[18]] <- list(input_hdr_list$stratum_def[1], "pspread_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:pspread_loss_rel`[aa])
-    input_def_list[[19]] <- list(input_hdr_list$stratum_def[1], "vapor_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:vapor_loss_rel`[aa])
-    input_def_list[[20]] <- list(input_hdr_list$stratum_def[1], "biomass_loss_rel_k1", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:biomass_loss_rel_k1`[aa])
-    input_def_list[[21]] <- list(input_hdr_list$stratum_def[1], "biomass_loss_rel_k2", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:biomass_loss_rel_k2`[aa])
+    input_def_list[[24]] <- list(input_hdr_list$stratum_def[1], "understory_mort", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:understory_mort`[aa])
+    input_def_list[[25]] <- list(input_hdr_list$stratum_def[1], "consumption", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:consumption`[aa])
+    input_def_list[[26]] <- list(input_hdr_list$stratum_def[1], "overstory_mort_k1", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:overstory_mort_k1`[aa])
+    input_def_list[[27]] <- list(input_hdr_list$stratum_def[1], "overstory_mort_k2", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:overstory_mort_k2`[aa])
     
     # Make a list of dated sequence data.frames (file name, year, month, day, hour, value)
     # input_dated_seq_list <- NULL
@@ -317,18 +313,18 @@ system.time(
     input_rhessys$output_folder <- RHESSYS_OUT_DIR_2.1_P300_STAND3
     
     # Patch fire parameters
-    input_def_list[[12]] <- list(input_hdr_list$soil_def[1], "overstory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:overstory_height_thresh`[aa])
-    input_def_list[[13]] <- list(input_hdr_list$soil_def[1], "understory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:understory_height_thresh`[aa])
+    input_def_list[[18]] <- list(input_hdr_list$soil_def[1], "overstory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:overstory_height_thresh`[aa])
+    input_def_list[[19]] <- list(input_hdr_list$soil_def[1], "understory_height_thresh", sobol_model$X$`ws_p300/defs/patch_p300.def:understory_height_thresh`[aa])
     # Lower canopy fire parameters
-    input_def_list[[14]] <- list(input_hdr_list$stratum_def[2], "pspread_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:pspread_loss_rel`[aa])
-    input_def_list[[15]] <- list(input_hdr_list$stratum_def[2], "vapor_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:vapor_loss_rel`[aa])
-    input_def_list[[16]] <- list(input_hdr_list$stratum_def[2], "biomass_loss_rel_k1", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:biomass_loss_rel_k1`[aa])
-    input_def_list[[17]] <- list(input_hdr_list$stratum_def[2], "biomass_loss_rel_k2", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:biomass_loss_rel_k2`[aa])
+    input_def_list[[20]] <- list(input_hdr_list$stratum_def[2], "understory_mort", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:understory_mort`[aa])
+    input_def_list[[21]] <- list(input_hdr_list$stratum_def[2], "consumption", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:consumption`[aa])
+    input_def_list[[22]] <- list(input_hdr_list$stratum_def[2], "overstory_mort_k1", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:overstory_mort_k1`[aa])
+    input_def_list[[23]] <- list(input_hdr_list$stratum_def[2], "overstory_mort_k2", sobol_model$X$`ws_p300/defs/veg_p300_shrub.def:overstory_mort_k2`[aa])
     # Upper canopy fire parameters
-    input_def_list[[18]] <- list(input_hdr_list$stratum_def[1], "pspread_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:pspread_loss_rel`[aa])
-    input_def_list[[19]] <- list(input_hdr_list$stratum_def[1], "vapor_loss_rel", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:vapor_loss_rel`[aa])
-    input_def_list[[20]] <- list(input_hdr_list$stratum_def[1], "biomass_loss_rel_k1", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:biomass_loss_rel_k1`[aa])
-    input_def_list[[21]] <- list(input_hdr_list$stratum_def[1], "biomass_loss_rel_k2", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:biomass_loss_rel_k2`[aa])
+    input_def_list[[24]] <- list(input_hdr_list$stratum_def[1], "understory_mort", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:understory_mort`[aa])
+    input_def_list[[25]] <- list(input_hdr_list$stratum_def[1], "consumption", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:consumption`[aa])
+    input_def_list[[26]] <- list(input_hdr_list$stratum_def[1], "overstory_mort_k1", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:overstory_mort_k1`[aa])
+    input_def_list[[27]] <- list(input_hdr_list$stratum_def[1], "overstory_mort_k2", sobol_model$X$`ws_p300/defs/veg_p300_conifer.def:overstory_mort_k2`[aa])
     
     # Make a list of dated sequence data.frames (file name, year, month, day, hour, value)
     # input_dated_seq_list <- NULL

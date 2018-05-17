@@ -27,10 +27,10 @@ patch_simulation_eval <- function(num_canopies,
   # Patch Simulation data processing
   
   patch_ground <- readin_rhessys_output_cal(var_names = c("litrc"),
-                                                 path = allsim_path,
-                                                 initial_date = ymd(initial_date),
-                                                 parameter_file = parameter_file,
-                                                 num_canopies = 1)
+                                            path = allsim_path,
+                                            initial_date = ymd(initial_date),
+                                            parameter_file = parameter_file,
+                                            num_canopies = 1)
   patch_ground$value <- as.numeric(patch_ground$value)
   patch_ground$wy <- y_to_wy(lubridate::year(patch_ground$dates),lubridate::month(patch_ground$dates))
   patch_ground_sum <- patch_ground %>%
@@ -40,19 +40,15 @@ patch_simulation_eval <- function(num_canopies,
   
   
   patch_height <- readin_rhessys_output_cal(var_names = c("height"),
-                                                 path = allsim_path,
-                                                 initial_date = ymd(initial_date),
-                                                 parameter_file = parameter_file,
-                                                 num_canopies = num_canopies)
+                                            path = allsim_path,
+                                            initial_date = ymd(initial_date),
+                                            parameter_file = parameter_file,
+                                            num_canopies = num_canopies)
   patch_height$wy <- y_to_wy(lubridate::year(patch_height$dates),lubridate::month(patch_height$dates))
   patch_height_sum <- patch_height %>%
     group_by(wy, canopy_layer, run, var_type) %>%
     summarize(avg_value = mean(as.numeric(value)))
   rm(patch_height)
-  
-  #tail(patch_ground)
-  #tail(patch_height)
-  
   
   # ---------------------------------------------------------------------
   # Identify parameter set for simulation with 1.3_patch_fire
@@ -151,7 +147,7 @@ patch_simulation_eval <- function(num_canopies,
   this_one <- rank_final2[ps_row,]$run
   
   # ----
- 
+  
   # Height plot
   x <- ggplot() +
     geom_line(data=dplyr::filter(patch_height_sum, canopy_layer==1),
@@ -167,7 +163,7 @@ patch_simulation_eval <- function(num_canopies,
     theme(legend.position = "bottom")
   plot(x)  
   ggsave(paste("ts_height_",watershed,".pdf",sep=""), plot = x, path = OUTPUT_DIR_1)
-
+  
   # Height - understory plot
   x <- ggplot() +
     geom_line(data=dplyr::filter(patch_height_sum, canopy_layer==2),
