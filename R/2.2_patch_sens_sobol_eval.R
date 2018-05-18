@@ -14,8 +14,7 @@ patch_sens_sobol_eval <- function(num_canopies,
                                   initial_date,
                                   parameter_file,
                                   stand_age_vect,
-                                  top_par_output,
-                                  watershed,
+                                  fig_title,
                                   sobol_par_input,
                                   sobol_model_input){
   
@@ -100,19 +99,13 @@ patch_sens_sobol_eval <- function(num_canopies,
 
   # Sobol models of relative loss
 
-  # Height
+  # Height, Leaf, stem and ground store variables
   sobol_upper_canopy_height_rel <- tell(sobol_model, dplyr::filter(patch_height_diff, canopy_layer==1)$relative_change) 
   sobol_lower_canopy_height_rel <- tell(sobol_model, dplyr::filter(patch_height_diff, canopy_layer==2)$relative_change) 
-
-  # Leafc
   sobol_upper_canopy_leafc_rel <- tell(sobol_model, dplyr::filter(patch_canopy_diff, canopy_layer==1, var_type=="leafc")$relative_change) 
   sobol_lower_canopy_leafc_rel <- tell(sobol_model, dplyr::filter(patch_canopy_diff, canopy_layer==2, var_type=="leafc")$relative_change) 
-
-  # Stemc
   sobol_upper_canopy_stemc_rel <- tell(sobol_model, dplyr::filter(patch_canopy_diff, canopy_layer==1, var_type=="stemc")$relative_change) 
   sobol_lower_canopy_stemc_rel <- tell(sobol_model, dplyr::filter(patch_canopy_diff, canopy_layer==2, var_type=="stemc")$relative_change) 
-
-  # Ground stores
   sobol_cwd_rel <- tell(sobol_model, patch_cwdc_diff$relative_change) 
   sobol_litrc_rel <- tell(sobol_model, dplyr::filter(patch_ground_diff, var_type=="litrc")$relative_change) 
   sobol_soil1c_rel <- tell(sobol_model, dplyr::filter(patch_ground_diff, var_type=="soil1c")$relative_change) 
@@ -151,6 +144,7 @@ patch_sens_sobol_eval <- function(num_canopies,
                              h=sobol_litrc_rel$S$original,
                              i=sobol_soil1c_rel$S$original,
                              parameter=parameter_long)
+  response_variable_veg_ground <- names(sobol_veg_ground[1:9])
   sobol_veg_ground <- tidyr::gather(sobol_veg_ground, response_variable, sensitivity_value, 1:9)
   
   sobol_fire <- tibble(prop_c_mort_o = sobol_upper_canopy_mort_rel$S$original,
@@ -162,37 +156,41 @@ patch_sens_sobol_eval <- function(num_canopies,
                        prop_c_remain_o = sobol_upper_canopy_c_remain_rel$S$original,
                        prop_c_remain_u = sobol_lower_canopy_c_remain_rel$S$original,
                        parameter=parameter_long)
+  response_variable_fire <- names(sobol_fire[1:8])
   sobol_fire <- tidyr::gather(sobol_fire, response_variable, sensitivity_value, 1:8)
   
   #row.names(sobol_model$S)
   
   # ---------------------------------------------------------------------
-  # 
-  # Make figure with parameter on y, response variable on x, color equal to sensitivity
-  # Facet wrap by watershed (or stand age)
+  # Figures 
   
-  
-  theme_set(theme_bw(base_size = 11))
+  theme_set(theme_bw(base_size = 12))
   ggplot(sobol_fire) +
     geom_tile(aes(x=parameter, y=response_variable, fill=sensitivity_value)) +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1))
-  
-  
+    scale_fill_continuous(name="Sensitivity\nValue") +
+    scale_x_discrete(limits=c(parameter_long)) +
+    scale_y_discrete(limits=c(response_variable_fire)) +
+    theme(axis.text.x = element_text(angle = 330, hjust=0)) +
+    labs(title = fig_title, x = "Parameter", y = "Response Variable")
+    #ggsave(paste("***_",watershed,".pdf",sep=""), plot = x, path = OUTPUT_DIR_1)
+    
 }
 
+
 # ---------------------------------------------------------------------
 # ---------------------------------------------------------------------
 # ---------------------------------------------------------------------
+# Call patch sensitivity evaluation function
 
 
-# HJA
-patch_sens_sobol_eval(num_canopies = 2,
-                      allsim_path = RHESSYS_ALLSIM_DIR_1.1_HJA,
-                      initial_date = ymd("1957-10-01"),
-                      parameter_file = RHESSYS_PAR_FILE_1.1_HJA,
-                      stand_age_vect = c(1968,1978,1998,2028,2058,2098,2148),
-                      top_par_output = OUTPUT_DIR_1_HJA_TOP_PS,
-                      watershed = "HJA")
+# # HJA
+# patch_sens_sobol_eval(num_canopies = 2,
+#                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_HJA,
+#                       initial_date = ymd("1957-10-01"),
+#                       parameter_file = RHESSYS_PAR_FILE_1.1_HJA,
+#                       stand_age_vect = c(1968,1978,1998,2028,2058,2098,2148),
+#                       top_par_output = OUTPUT_DIR_1_HJA_TOP_PS,
+#                       fig_title = "HJA")
 
 # P300
 patch_sens_sobol_eval(num_canopies = 2,
@@ -200,30 +198,29 @@ patch_sens_sobol_eval(num_canopies = 2,
                       initial_date = ymd("1941-10-01"),
                       parameter_file = RHESSYS_PAR_SOBOL_2.1_P300,
                       stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
-                      top_par_output = NA,
-                      watershed = "P300",
+                      fig_title = "Sensitivity Sobol: P300 at stand age 5",
                       sobol_par_input = RHESSYS_PAR_SOBOL_2.1_P300,
                       sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2.1_P300)
 
 
 
 # RS
-patch_sens_sobol_eval(num_canopies = 1,
-                      allsim_path = RHESSYS_ALLSIM_DIR_1.1_RS,
-                      initial_date = ymd("1988-10-01"),
-                      parameter_file = RHESSYS_PAR_FILE_1.1_RS,
-                      stand_age_vect = c(1994,2001,2009,2019,2029,2049,2069),
-                      top_par_output = OUTPUT_DIR_1_RS_TOP_PS,
-                      watershed = "RS")
-
-# SF
-patch_sens_sobol_eval(num_canopies = 2,
-                      allsim_path = RHESSYS_ALLSIM_DIR_1.1_SF,
-                      initial_date = ymd("1941-10-01"),
-                      parameter_file = RHESSYS_PAR_FILE_1.1_SF,
-                      stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
-                      top_par_output = OUTPUT_DIR_1_SF_TOP_PS,
-                      watershed = "SF")
+# patch_sens_sobol_eval(num_canopies = 1,
+#                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_RS,
+#                       initial_date = ymd("1988-10-01"),
+#                       parameter_file = RHESSYS_PAR_FILE_1.1_RS,
+#                       stand_age_vect = c(1994,2001,2009,2019,2029,2049,2069),
+#                       top_par_output = OUTPUT_DIR_1_RS_TOP_PS,
+#                       fig_title = "RS")
+# 
+# # SF
+# patch_sens_sobol_eval(num_canopies = 2,
+#                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_SF,
+#                       initial_date = ymd("1941-10-01"),
+#                       parameter_file = RHESSYS_PAR_FILE_1.1_SF,
+#                       stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
+#                       top_par_output = OUTPUT_DIR_1_SF_TOP_PS,
+#                       fig_title = "SF")
 
 
 
