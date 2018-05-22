@@ -24,57 +24,6 @@ patch_sens_sobol_eval <- function(num_canopies,
   # Patch Fire data processing
   # Computes differences in variables for several days before to several days after a fire.
   
-  patch_canopy <- readin_rhessys_output_cal(var_names = c("leafc", "stemc"),
-                                            path = allsim_path,
-                                            initial_date = initial_date,
-                                            parameter_file = parameter_file,
-                                            num_canopies = num_canopies)
-  patch_canopy_diff <- patch_canopy %>%
-    dplyr::filter(dates == ymd("1941-10-03") | dates == ymd("1941-10-11")) %>%
-    spread(dates, value) %>%
-    mutate(relative_change = ((`1941-10-11` - `1941-10-03`)/`1941-10-03`)*100, absolute_change = `1941-10-11` - `1941-10-03`)
-  rm(patch_canopy)
-  
-  
-  patch_ground <- readin_rhessys_output_cal(var_names = c("litrc", "soil1c"),
-                                            path = allsim_path,
-                                            initial_date = initial_date,
-                                            parameter_file = parameter_file,
-                                            num_canopies = 1)
-  patch_ground$value <- as.double(patch_ground$value)
-  patch_ground_diff <- patch_ground %>%
-    dplyr::filter(dates == ymd("1941-10-03") | dates == ymd("1941-10-11")) %>%
-    spread(dates, value) %>%
-    mutate(relative_change = ((`1941-10-11` - `1941-10-03`)/`1941-10-03`)*100, absolute_change = `1941-10-11` - `1941-10-03`)
-  rm(patch_ground)
-  
-  
-  patch_cwdc <- readin_rhessys_output_cal(var_names = c("cwdc"),
-                                          path = allsim_path,
-                                          initial_date = initial_date,
-                                          parameter_file = parameter_file,
-                                          num_canopies = num_canopies)
-  patch_cwdc_diff <- patch_cwdc %>%
-    group_by(run, dates, var_type) %>%
-    summarize(value = sum(value)) %>%
-    dplyr::filter(dates == ymd("1941-10-03") | dates == ymd("1941-10-11")) %>%
-    spread(dates, value) %>%
-    mutate(relative_change = ((`1941-10-11` - `1941-10-03`)/`1941-10-03`)*100, absolute_change = `1941-10-11` - `1941-10-03`)
-  rm(patch_cwdc)
-  
-  
-  patch_height <- readin_rhessys_output_cal(var_names = c("height"),
-                                            path = allsim_path,
-                                            initial_date = initial_date,
-                                            parameter_file = parameter_file,
-                                            num_canopies = num_canopies)
-  patch_height_diff <- patch_height %>%
-    dplyr::filter(dates == ymd("1941-10-03") | dates == ymd("1941-10-11")) %>%
-    spread(dates, value) %>%
-    mutate(relative_change = ((`1941-10-11` - `1941-10-03`)/`1941-10-03`)*100, absolute_change = `1941-10-11` - `1941-10-03`)
-  rm(patch_height)
-  
-  
   patch_fire <- readin_rhessys_output_cal(var_names = c("canopy_target_prop_mort",
                                                         "canopy_target_prop_mort_consumed",
                                                         "canopy_target_prop_c_consumed",
@@ -100,19 +49,6 @@ patch_sens_sobol_eval <- function(num_canopies,
 
   # ----
   # Sobol models of relative loss
-
-  # Height, Leaf, stem and ground store variables
-  sobol_upper_canopy_height_rel <- tell(sobol_model, dplyr::filter(patch_height_diff, canopy_layer==1)$relative_change) 
-  sobol_lower_canopy_height_rel <- tell(sobol_model, dplyr::filter(patch_height_diff, canopy_layer==2)$relative_change) 
-  sobol_upper_canopy_leafc_rel <- tell(sobol_model, dplyr::filter(patch_canopy_diff, canopy_layer==1, var_type=="leafc")$relative_change) 
-  sobol_lower_canopy_leafc_rel <- tell(sobol_model, dplyr::filter(patch_canopy_diff, canopy_layer==2, var_type=="leafc")$relative_change) 
-  sobol_upper_canopy_stemc_rel <- tell(sobol_model, dplyr::filter(patch_canopy_diff, canopy_layer==1, var_type=="stemc")$relative_change) 
-  sobol_lower_canopy_stemc_rel <- tell(sobol_model, dplyr::filter(patch_canopy_diff, canopy_layer==2, var_type=="stemc")$relative_change) 
-  sobol_cwd_rel <- tell(sobol_model, patch_cwdc_diff$relative_change) 
-  sobol_litrc_rel <- tell(sobol_model, dplyr::filter(patch_ground_diff, var_type=="litrc")$relative_change) 
-  sobol_soil1c_rel <- tell(sobol_model, dplyr::filter(patch_ground_diff, var_type=="soil1c")$relative_change) 
-
-  # Fire variables
   sobol_upper_canopy_mort_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort", canopy_layer==1)$relative_change) 
   sobol_lower_canopy_mort_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort", canopy_layer==2)$relative_change) 
   sobol_upper_canopy_mort_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_consumed", canopy_layer==1)$relative_change) 
@@ -149,19 +85,6 @@ patch_sens_sobol_eval <- function(num_canopies,
   
   # ----
   # Make a tibble for analyzing sensitivity
-  
-  sobol_veg_ground <- tibble(a=sobol_upper_canopy_height_rel$S$original,
-                             b=sobol_lower_canopy_height_rel$S$original,
-                             c=sobol_upper_canopy_leafc_rel$S$original,
-                             d=sobol_lower_canopy_leafc_rel$S$original,
-                             e=sobol_upper_canopy_stemc_rel$S$original,
-                             f=sobol_lower_canopy_stemc_rel$S$original,
-                             g=sobol_cwd_rel$S$original,
-                             h=sobol_litrc_rel$S$original,
-                             i=sobol_soil1c_rel$S$original,
-                             parameter=parameter_long)
-  response_variable_veg_ground <- names(sobol_veg_ground[1:9])
-  sobol_veg_ground <- tidyr::gather(sobol_veg_ground, response_variable, sensitivity_value, 1:9)
   
   # First-order indices
   sobol_fire_1st <- tibble(prop_c_mort_up = sobol_upper_canopy_mort_rel$S$original,

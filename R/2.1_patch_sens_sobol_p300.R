@@ -1,7 +1,7 @@
 # Sensitivity test using Sobol for P300
 # 
 # Global sensitivity analysis of fire model using Sobol variance-based
-# sensitivity model. Conducted separately for stand age **, **, **.
+# sensitivity model. Conducted separately for stand age 5, 20, 80.
 
 source("R/0.1_utilities.R")
 
@@ -10,7 +10,7 @@ source("R/0.1_utilities.R")
 # ---------------------------------------------------------------------
 # Assemble Parameter Sets for Sobol Sensitivity Test (Sobol)
 
-n_sim <- 20
+n_sim <- 100
 
 input_sobol <- list()
 # Produce a list with two sets of parameter sets for Sobol method
@@ -32,8 +32,8 @@ input_sobol <- lapply(seq(1,2), function(x){
 })
 
 # Produce empty model so that non-R model (RHESSys) can be used.
-sobol_model <- sobolmartinez(model = NULL, X1 = input_sobol[[1]], X2 = input_sobol[[2]], order = 1, nboot = 200)   # runs=n_sim*(p+2)
-#sobol_model <- sobol2002(model = NULL, X1 = input_sobol[[1]], X2 = input_sobol[[2]])  # runs=n_sim*(p+2)
+#sobol_model <- sobolmartinez(model = NULL, X1 = input_sobol[[1]], X2 = input_sobol[[2]], order = 1, nboot = 200)   # runs=n_sim*(p+2)
+sobol_model <- sobol2002(model = NULL, X1 = input_sobol[[1]], X2 = input_sobol[[2]])  # runs=n_sim*(p+2)
 
 # Export the parameter sets to be used in the sobol model.
 write.csv(sobol_model$X, RHESSYS_PAR_SOBOL_2.1_P300, row.names = FALSE, quote=FALSE)
@@ -180,16 +180,10 @@ input_tec_data[2,] <- data.frame(1941, 10, 1, 2, "print_daily_growth_on", string
 # file location), and the location/name of rhessys output file with variable of interest.
 # output_variables <- NULL
 output_variables <- data.frame(variable=character(),awk_path=character(),out_file=character(),stringsAsFactors=FALSE)
-output_variables[1,] <- data.frame("leafc", "awks/output_var_cdg_leafc.awk","patch_fire_grow_stratum.daily",stringsAsFactors=FALSE)
-output_variables[2,] <- data.frame("stemc", "awks/output_var_cdg_stemc.awk","patch_fire_grow_stratum.daily",stringsAsFactors=FALSE)
-output_variables[3,] <- data.frame("litrc", "awks/output_var_bd_litrc.awk","patch_fire_basin.daily",stringsAsFactors=FALSE)
-output_variables[4,] <- data.frame("cwdc", "awks/output_var_cdg_cwdc.awk","patch_fire_grow_stratum.daily",stringsAsFactors=FALSE)
-output_variables[5,] <- data.frame("soil1c", "awks/output_var_pdg_soil1c.awk","patch_fire_grow_patch.daily",stringsAsFactors=FALSE)
-output_variables[6,] <- data.frame("height", "awks/output_var_cd_height.awk","patch_fire_stratum.daily",stringsAsFactors=FALSE)
-output_variables[7,] <- data.frame("canopy_target_prop_mort", "awks/output_var_fd_canopy_target_prop_mort.awk","patch_fire_fire.daily",stringsAsFactors=FALSE)
-output_variables[8,] <- data.frame("canopy_target_prop_mort_consumed", "awks/output_var_fd_canopy_target_prop_mort_consumed.awk","patch_fire_fire.daily",stringsAsFactors=FALSE)
-output_variables[9,] <- data.frame("canopy_target_prop_c_consumed", "awks/output_var_fd_canopy_target_prop_c_consumed.awk","patch_fire_fire.daily",stringsAsFactors=FALSE)
-output_variables[10,] <- data.frame("canopy_target_prop_c_remain", "awks/output_var_fd_canopy_target_prop_c_remain.awk","patch_fire_fire.daily",stringsAsFactors=FALSE)
+output_variables[1,] <- data.frame("canopy_target_prop_mort", "awks/output_var_fd_canopy_target_prop_mort.awk","patch_fire_fire.daily",stringsAsFactors=FALSE)
+output_variables[2,] <- data.frame("canopy_target_prop_mort_consumed", "awks/output_var_fd_canopy_target_prop_mort_consumed.awk","patch_fire_fire.daily",stringsAsFactors=FALSE)
+output_variables[3,] <- data.frame("canopy_target_prop_c_consumed", "awks/output_var_fd_canopy_target_prop_c_consumed.awk","patch_fire_fire.daily",stringsAsFactors=FALSE)
+output_variables[4,] <- data.frame("canopy_target_prop_c_remain", "awks/output_var_fd_canopy_target_prop_c_remain.awk","patch_fire_fire.daily",stringsAsFactors=FALSE)
 
 # ---------------------------------------------------------------------
 # ---------------------------------------------------------------------
@@ -260,7 +254,7 @@ beep(1)
 system.time(
   for (aa in seq_len(nrow(sobol_model$X))){
     
-    input_rhessys$world_file <- stand_ages[4]
+    input_rhessys$world_file <- stand_ages[3]
     input_rhessys$output_folder <- RHESSYS_OUT_DIR_2.1_P300_STAND2
     
     # Patch fire parameters
