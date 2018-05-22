@@ -15,8 +15,10 @@ patch_sens_sobol_eval <- function(num_canopies,
                                   parameter_file,
                                   stand_age_vect,
                                   fig_title,
-                                  sobol_par_input,
-                                  sobol_model_input){
+                                  watershed,
+                                  stand_age,
+                                  sobol_model_input,
+                                  output_path){
   
   # ---------------------------------------------------------------------
   # Patch Fire data processing
@@ -90,13 +92,13 @@ patch_sens_sobol_eval <- function(num_canopies,
   
   # ---------------------------------------------------------------------
   # Sensitivity analysis
-  # Generate y from above, and possibly substitute values for stand_age
   
   # Import the parameter sets used in the sobol model.
-  sobol_par <- read.csv(sobol_par_input)
+  sobol_par <- read.csv(parameter_file)
   sobol_model <- readRDS(sobol_model_input)
 
 
+  # ----
   # Sobol models of relative loss
 
   # Height, Leaf, stem and ground store variables
@@ -121,18 +123,32 @@ patch_sens_sobol_eval <- function(num_canopies,
   sobol_lower_canopy_c_remain_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_remain", canopy_layer==2)$relative_change) 
 
   
-  # Make a tibble for analyzing  
+  # ----
+  # Establish names for figures  
   
   # Parameter names for HJA, P300 and SF
-  parameter_long <- c("overstory_height_thresh", "understory_height_thresh", "shrub_understory_mort",     
-                      "shrub_consumption", "shrub_overstory_mort_k1", "shrub_overstory_mort_k2",   
-                      "conifer_understory_mort", "conifer_consumption", "conifer_overstory_mort_k1", 
-                      "conifer_overstory_mort_k2", "pspread")
+  parameter_long <- c("overstory_height_thresh", "understory_height_thresh", "LowerCan:understory_mort",     
+                      "LowerCan:consumption", "LowerCan:overstory_mort_k1", "LowerCan:overstory_mort_k2",   
+                      "UpperCan:understory_mort", "UpperCan:consumption", "UpperCan:overstory_mort_k1", 
+                      "UpperCan:overstory_mort_k2", "I'")
   
   # Parameter names for RS
-  parameter_short <- c("overstory_height_thresh", "understory_height_thresh", "shrub_understory_mort",     
-                       "shrub_consumption", "shrub_overstory_mort_k1", "shrub_overstory_mort_k2",   
-                       "pspread")
+  parameter_short <- c("overstory_height_thresh", "understory_height_thresh", "LowerCan:understory_mort",     
+                       "LowerCan:consumption", "LowerCan:overstory_mort_k1", "LowerCan:overstory_mort_k2",   
+                       "I'")
+  
+  # Response variable names for HJA, P300 and SF
+  response_variable_names_long <- c("UpperCan:prop_c_mort", "UpperCan:prop_mort_consumed",
+                                    "UpperCan:prop_c_consumed", "UpperCan:prop_c_remain",
+                                    "LowerCan:prop_c_mort", "LowerCan:prop_mort_consumed",
+                                    "LowerCan:prop_c_consumed","LowerCan:prop_c_remain")
+                                     
+  # Response variable names for RS
+  response_variable_names_short <- c("LowerCan:prop_c_mort", "LowerCan:prop_mort_consumed",
+                                    "LowerCan:prop_c_consumed", "LowerCan:prop_c_remain")
+  
+  # ----
+  # Make a tibble for analyzing sensitivity
   
   sobol_veg_ground <- tibble(a=sobol_upper_canopy_height_rel$S$original,
                              b=sobol_lower_canopy_height_rel$S$original,
@@ -147,33 +163,63 @@ patch_sens_sobol_eval <- function(num_canopies,
   response_variable_veg_ground <- names(sobol_veg_ground[1:9])
   sobol_veg_ground <- tidyr::gather(sobol_veg_ground, response_variable, sensitivity_value, 1:9)
   
-  sobol_fire <- tibble(prop_c_mort_o = sobol_upper_canopy_mort_rel$S$original,
-                       prop_c_mort_u = sobol_lower_canopy_mort_rel$S$original,
-                       prop_mort_consumed_o = sobol_upper_canopy_mort_consumed_rel$S$original,
-                       prop_mort_consumed_u = sobol_lower_canopy_mort_consumed_rel$S$original,
-                       prop_c_consumed_o = sobol_upper_canopy_c_consumed_rel$S$original,
-                       prop_c_consumed_u = sobol_lower_canopy_c_consumed_rel$S$original,
-                       prop_c_remain_o = sobol_upper_canopy_c_remain_rel$S$original,
-                       prop_c_remain_u = sobol_lower_canopy_c_remain_rel$S$original,
-                       parameter=parameter_long)
-  response_variable_fire <- names(sobol_fire[1:8])
-  sobol_fire <- tidyr::gather(sobol_fire, response_variable, sensitivity_value, 1:8)
+  # First-order indices
+  sobol_fire_1st <- tibble(prop_c_mort_up = sobol_upper_canopy_mort_rel$S$original,
+                           prop_mort_consumed_up = sobol_upper_canopy_mort_consumed_rel$S$original,
+                           prop_c_consumed_up = sobol_upper_canopy_c_consumed_rel$S$original,
+                           prop_c_remain_up = sobol_upper_canopy_c_remain_rel$S$original,
+                           prop_c_mort_low = sobol_lower_canopy_mort_rel$S$original,
+                           prop_mort_consumed_low = sobol_lower_canopy_mort_consumed_rel$S$original,
+                           prop_c_consumed_low = sobol_lower_canopy_c_consumed_rel$S$original,
+                           prop_c_remain_low = sobol_lower_canopy_c_remain_rel$S$original,
+                           parameter=parameter_long)
+  response_variable_fire_limits <- names(sobol_fire_1st[1:8])
+  sobol_fire_1st <- tidyr::gather(sobol_fire_1st, response_variable, sensitivity_value, 1:8)
   
-  #row.names(sobol_model$S)
+  # Total indices
+  sobol_fire_total <- tibble(prop_c_mort_up = sobol_upper_canopy_mort_rel$T$original,
+                           prop_c_mort_low = sobol_lower_canopy_mort_rel$T$original,
+                           prop_mort_consumed_up = sobol_upper_canopy_mort_consumed_rel$T$original,
+                           prop_mort_consumed_low = sobol_lower_canopy_mort_consumed_rel$T$original,
+                           prop_c_consumed_up = sobol_upper_canopy_c_consumed_rel$T$original,
+                           prop_c_consumed_low = sobol_lower_canopy_c_consumed_rel$T$original,
+                           prop_c_remain_up = sobol_upper_canopy_c_remain_rel$T$original,
+                           prop_c_remain_low = sobol_lower_canopy_c_remain_rel$T$original,
+                           parameter=parameter_long)
+  response_variable_fire_limits <- names(sobol_fire_total[1:8])
+  sobol_fire_total <- tidyr::gather(sobol_fire_total, response_variable, sensitivity_value, 1:8)
   
   # ---------------------------------------------------------------------
   # Figures 
   
   theme_set(theme_bw(base_size = 12))
-  ggplot(sobol_fire) +
+  
+  # First-order indices
+  x <- ggplot(sobol_fire_1st) +
     geom_tile(aes(x=parameter, y=response_variable, fill=sensitivity_value)) +
-    scale_fill_continuous(name="Sensitivity\nValue") +
+    scale_fill_continuous(name="First-order\nIndices    ") +
     scale_x_discrete(limits=c(parameter_long)) +
-    scale_y_discrete(limits=c(response_variable_fire)) +
+    scale_y_discrete(labels = c(rev(response_variable_names_long)),
+                     limits=c(rev(response_variable_fire_limits))) +
     theme(axis.text.x = element_text(angle = 330, hjust=0)) +
     labs(title = fig_title, x = "Parameter", y = "Response Variable")
-    #ggsave(paste("***_",watershed,".pdf",sep=""), plot = x, path = OUTPUT_DIR_1)
+  plot(x)
+  ggsave(paste("sobal_1st_", watershed, "_", stand_age, ".pdf",sep=""), plot = x,
+         path = output_path, width = 8, height=7)
     
+  # Total indices
+  x <- ggplot(sobol_fire_total) +
+    geom_tile(aes(x=parameter, y=response_variable, fill=sensitivity_value)) +
+    scale_fill_continuous(name="Total\nIndices    ") +
+    scale_x_discrete(limits=c(parameter_long)) +
+    scale_y_discrete(labels = c(rev(response_variable_names_long)),
+                     limits=c(rev(response_variable_fire_limits))) +
+    theme(axis.text.x = element_text(angle = 330, hjust=0)) +
+    labs(title = fig_title, x = "Parameter", y = "Response Variable")
+  plot(x)
+  ggsave(paste("sobal_total_", watershed, "_", stand_age, ".pdf",sep=""), plot = x,
+         path = output_path, width = 8, height=7)
+  
 }
 
 
@@ -183,7 +229,9 @@ patch_sens_sobol_eval <- function(num_canopies,
 # Call patch sensitivity evaluation function
 
 
-# # HJA
+# # ----
+# HJA
+#
 # patch_sens_sobol_eval(num_canopies = 2,
 #                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_HJA,
 #                       initial_date = ymd("1957-10-01"),
@@ -192,19 +240,50 @@ patch_sens_sobol_eval <- function(num_canopies,
 #                       top_par_output = OUTPUT_DIR_1_HJA_TOP_PS,
 #                       fig_title = "HJA")
 
-# P300
+# ----
+# P301
+
+# Stand age 5 years
 patch_sens_sobol_eval(num_canopies = 2,
                       allsim_path = RHESSYS_ALLSIM_DIR_2.1_P300_STAND1,
                       initial_date = ymd("1941-10-01"),
                       parameter_file = RHESSYS_PAR_SOBOL_2.1_P300,
                       stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
-                      fig_title = "Sensitivity Sobol: P300 at stand age 5",
-                      sobol_par_input = RHESSYS_PAR_SOBOL_2.1_P300,
-                      sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2.1_P300)
+                      fig_title = "Sobol: P300 at stand age 5",
+                      watershed = "P300",
+                      stand_age = "5",
+                      sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2.1_P300,
+                      output_path = OUTPUT_DIR_2)
+
+# Stand age 20 years 
+patch_sens_sobol_eval(num_canopies = 2,
+                      allsim_path = RHESSYS_ALLSIM_DIR_2.1_P300_STAND2,
+                      initial_date = ymd("1941-10-01"),
+                      parameter_file = RHESSYS_PAR_SOBOL_2.1_P300,
+                      stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
+                      fig_title = "Sobol: P300 at stand age 20",
+                      watershed = "P300",
+                      stand_age = "20",
+                      sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2.1_P300,
+                      output_path = OUTPUT_DIR_2)
+
+# Stand age 80 years
+patch_sens_sobol_eval(num_canopies = 2,
+                      allsim_path = RHESSYS_ALLSIM_DIR_2.1_P300_STAND3,
+                      initial_date = ymd("1941-10-01"),
+                      parameter_file = RHESSYS_PAR_SOBOL_2.1_P300,
+                      stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
+                      fig_title = "Sobol: P300 at stand age 80",
+                      watershed = "P300",
+                      stand_age = "80",
+                      sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2.1_P300,
+                      output_path = OUTPUT_DIR_2)
 
 
 
+# # ----
 # RS
+#
 # patch_sens_sobol_eval(num_canopies = 1,
 #                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_RS,
 #                       initial_date = ymd("1988-10-01"),
@@ -213,7 +292,9 @@ patch_sens_sobol_eval(num_canopies = 2,
 #                       top_par_output = OUTPUT_DIR_1_RS_TOP_PS,
 #                       fig_title = "RS")
 # 
-# # SF
+# # ----
+# SF
+#
 # patch_sens_sobol_eval(num_canopies = 2,
 #                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_SF,
 #                       initial_date = ymd("1941-10-01"),
