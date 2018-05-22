@@ -4,8 +4,6 @@
 
 source("R/0.1_utilities.R")
 
-theme_set(theme_bw(base_size = 11))
-
 # ---------------------------------------------------------------------
 # Patch simulation evaluation function
 
@@ -46,42 +44,47 @@ patch_sens_sobol_eval <- function(num_canopies,
   sobol_par <- read.csv(parameter_file)
   sobol_model <- readRDS(sobol_model_input)
 
-
   # ----
   # Sobol models of relative loss
-  sobol_upper_canopy_mort_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort", canopy_layer==1)$relative_change) 
-  sobol_lower_canopy_mort_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort", canopy_layer==2)$relative_change) 
-  sobol_upper_canopy_mort_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_consumed", canopy_layer==1)$relative_change) 
-  sobol_lower_canopy_mort_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_consumed", canopy_layer==2)$relative_change) 
-  sobol_upper_canopy_c_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_consumed", canopy_layer==1)$relative_change) 
-  sobol_lower_canopy_c_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_consumed", canopy_layer==2)$relative_change) 
-  sobol_upper_canopy_c_remain_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_remain", canopy_layer==1)$relative_change) 
-  sobol_lower_canopy_c_remain_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_remain", canopy_layer==2)$relative_change) 
-
+  sobol_upper_canopy_mort_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort", canopy_layer==1)$relative_change)
+  sobol_lower_canopy_mort_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort", canopy_layer==2)$relative_change)
+  sobol_upper_canopy_mort_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_consumed", canopy_layer==1)$relative_change)
+  sobol_lower_canopy_mort_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_consumed", canopy_layer==2)$relative_change)
+  sobol_upper_canopy_c_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_consumed", canopy_layer==1)$relative_change)
+  sobol_lower_canopy_c_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_consumed", canopy_layer==2)$relative_change)
+  sobol_upper_canopy_c_remain_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_remain", canopy_layer==1)$relative_change)
+  sobol_lower_canopy_c_remain_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_remain", canopy_layer==2)$relative_change)
   
   # ----
-  # Establish names for figures  
+  # Establish parameter and response variables (plus names) for figures  
   
-  # Parameter names for HJA, P300 and SF
-  parameter_long <- c("overstory_height_thresh", "understory_height_thresh", "LowerCan:understory_mort",     
-                      "LowerCan:consumption", "LowerCan:overstory_mort_k1", "LowerCan:overstory_mort_k2",   
-                      "UpperCan:understory_mort", "UpperCan:consumption", "UpperCan:overstory_mort_k1", 
-                      "UpperCan:overstory_mort_k2", "I'")
-  
-  # Parameter names for RS
-  parameter_short <- c("overstory_height_thresh", "understory_height_thresh", "LowerCan:understory_mort",     
-                       "LowerCan:consumption", "LowerCan:overstory_mort_k1", "LowerCan:overstory_mort_k2",   
-                       "I'")
-  
-  # Response variable names for HJA, P300 and SF
-  response_variable_names_long <- c("UpperCan:prop_c_mort", "UpperCan:prop_mort_consumed",
-                                    "UpperCan:prop_c_consumed", "UpperCan:prop_c_remain",
-                                    "LowerCan:prop_c_mort", "LowerCan:prop_mort_consumed",
-                                    "LowerCan:prop_c_consumed","LowerCan:prop_c_remain")
-                                     
-  # Response variable names for RS
-  response_variable_names_short <- c("LowerCan:prop_c_mort", "LowerCan:prop_mort_consumed",
-                                    "LowerCan:prop_c_consumed", "LowerCan:prop_c_remain")
+  if (watershed != "RS"){
+    # HJA, P300 and SF
+    parameter <- c("h_overstory", "h_understory", "LowerCan: k_mort_u",
+                    "LowerCan: k_consumption", "LowerCan: k1_mort_o", "LowerCan: k2_mort_o",
+                    "UpperCan: k_mort_u", "UpperCan: k_consumption", "UpperCan: k1_mort_o",
+                    "UpperCan: k2_mort_o", "I'")
+    
+    parameter_names <- c(expression('h'[overstory]), expression('h'[understory]), 
+                         expression('LowerCan: k'[mort_u]), expression('LowerCan: k'[consumption]), 
+                         expression('LowerCan: k'['1_mort_o']), expression('LowerCan: k'['2_mort_o']),   
+                         expression('UpperCan: k'[mort_u]), expression('UpperCan: k'[consumption]), 
+                         expression('UpperCan: k'['1_mort_o']), expression('UpperCan: k'['2_mort_o']), "I'")
+    
+    response_variable_names <- c("UpperCan: prop_c_mort", "UpperCan: prop_mort_consumed",
+                                      "UpperCan: prop_c_consumed", "UpperCan: prop_c_remain",
+                                      "LowerCan: prop_c_mort", "LowerCan: prop_mort_consumed",
+                                      "LowerCan: prop_c_consumed","LowerCan: prop_c_remain")
+  } else {
+    # RS
+    parameter <- c("overstory_height_thresh", "understory_height_thresh", "LowerCan: understory_mort",     
+                    "LowerCan: consumption", "LowerCan: overstory_mort_k1", "LowerCan: overstory_mort_k2",   
+                    "I'")
+      
+    # Response variable names
+    response_variable_names <- c("LowerCan: prop_c_mort", "LowerCan: prop_mort_consumed",
+                                       "LowerCan: prop_c_consumed", "LowerCan: prop_c_remain")
+  }
   
   # ----
   # Make a tibble for analyzing sensitivity
@@ -95,21 +98,21 @@ patch_sens_sobol_eval <- function(num_canopies,
                            prop_mort_consumed_low = sobol_lower_canopy_mort_consumed_rel$S$original,
                            prop_c_consumed_low = sobol_lower_canopy_c_consumed_rel$S$original,
                            prop_c_remain_low = sobol_lower_canopy_c_remain_rel$S$original,
-                           parameter=parameter_long)
-  response_variable_fire_limits <- names(sobol_fire_1st[1:8])
+                           parameter=parameter)
+  response_variable_limits_1st <- names(sobol_fire_1st[1:8])
   sobol_fire_1st <- tidyr::gather(sobol_fire_1st, response_variable, sensitivity_value, 1:8)
   
   # Total indices
   sobol_fire_total <- tibble(prop_c_mort_up = sobol_upper_canopy_mort_rel$T$original,
-                           prop_c_mort_low = sobol_lower_canopy_mort_rel$T$original,
-                           prop_mort_consumed_up = sobol_upper_canopy_mort_consumed_rel$T$original,
-                           prop_mort_consumed_low = sobol_lower_canopy_mort_consumed_rel$T$original,
-                           prop_c_consumed_up = sobol_upper_canopy_c_consumed_rel$T$original,
-                           prop_c_consumed_low = sobol_lower_canopy_c_consumed_rel$T$original,
-                           prop_c_remain_up = sobol_upper_canopy_c_remain_rel$T$original,
-                           prop_c_remain_low = sobol_lower_canopy_c_remain_rel$T$original,
-                           parameter=parameter_long)
-  response_variable_fire_limits <- names(sobol_fire_total[1:8])
+                             prop_mort_consumed_up = sobol_upper_canopy_mort_consumed_rel$T$original,
+                             prop_c_consumed_up = sobol_upper_canopy_c_consumed_rel$T$original,
+                             prop_c_remain_up = sobol_upper_canopy_c_remain_rel$T$original,
+                             prop_c_mort_low = sobol_lower_canopy_mort_rel$T$original,
+                             prop_mort_consumed_low = sobol_lower_canopy_mort_consumed_rel$T$original,
+                             prop_c_consumed_low = sobol_lower_canopy_c_consumed_rel$T$original,
+                             prop_c_remain_low = sobol_lower_canopy_c_remain_rel$T$original,
+                             parameter=parameter)
+  response_variable_limits_total <- names(sobol_fire_total[1:8])
   sobol_fire_total <- tidyr::gather(sobol_fire_total, response_variable, sensitivity_value, 1:8)
   
   # ---------------------------------------------------------------------
@@ -121,27 +124,29 @@ patch_sens_sobol_eval <- function(num_canopies,
   x <- ggplot(sobol_fire_1st) +
     geom_tile(aes(x=parameter, y=response_variable, fill=sensitivity_value)) +
     scale_fill_continuous(name="First-order\nIndices    ") +
-    scale_x_discrete(limits=c(parameter_long)) +
-    scale_y_discrete(labels = c(rev(response_variable_names_long)),
-                     limits=c(rev(response_variable_fire_limits))) +
+    scale_x_discrete(labels = c(parameter_names),
+                                limits=c(parameter)) +
+    scale_y_discrete(labels = c(rev(response_variable_names)),
+                     limits=c(rev(response_variable_limits_1st))) +
     theme(axis.text.x = element_text(angle = 330, hjust=0)) +
     labs(title = fig_title, x = "Parameter", y = "Response Variable")
   plot(x)
   ggsave(paste("sobal_1st_", watershed, "_", stand_age, ".pdf",sep=""), plot = x,
-         path = output_path, width = 8, height=7)
+         path = output_path, width = 8, height=6)
     
   # Total indices
   x <- ggplot(sobol_fire_total) +
     geom_tile(aes(x=parameter, y=response_variable, fill=sensitivity_value)) +
     scale_fill_continuous(name="Total\nIndices    ") +
-    scale_x_discrete(limits=c(parameter_long)) +
-    scale_y_discrete(labels = c(rev(response_variable_names_long)),
-                     limits=c(rev(response_variable_fire_limits))) +
+    scale_x_discrete(labels = c(parameter_names),
+                     limits=c(parameter)) +
+    scale_y_discrete(labels = c(rev(response_variable_names)),
+                     limits=c(rev(response_variable_limits_total))) +
     theme(axis.text.x = element_text(angle = 330, hjust=0)) +
     labs(title = fig_title, x = "Parameter", y = "Response Variable")
   plot(x)
   ggsave(paste("sobal_total_", watershed, "_", stand_age, ".pdf",sep=""), plot = x,
-         path = output_path, width = 8, height=7)
+         path = output_path, width = 8, height=6)
   
 }
 
