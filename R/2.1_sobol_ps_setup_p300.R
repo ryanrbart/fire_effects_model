@@ -12,7 +12,7 @@ source("R/0.1_utilities.R")
 # P300
 
 
-n_sim <- 200
+n_sim <- 1000
 
 input_sobol <- list()
 # Produce a list with two sets of parameter sets for Sobol method
@@ -47,15 +47,3 @@ saveRDS(sobol_model_2002, RHESSYS_PAR_SOBOL_MODEL_2002_2.1_P300) # Empty model
 saveRDS(sobol_model_2007, RHESSYS_PAR_SOBOL_MODEL_2007_2.1_P300) # Empty model
 saveRDS(sobol_model_jansen, RHESSYS_PAR_SOBOL_MODEL_JANSEN_2.1_P300) # Empty model
 
-
-# ---------------------------------------------------------------------
-# ---------------------------------------------------------------------
-# ---------------------------------------------------------------------
-
-# ***** Probably need to repeat this code for all watershds *******
-
-  
-  
-  
-  
-  
