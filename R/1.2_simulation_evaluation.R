@@ -146,6 +146,7 @@ patch_simulation_eval <- function(num_canopies,
   # Figures: Time-series for Height and Litter
   
   this_one <- rank_final2[ps_row,]$run
+  print(paste("this_one", this_one))
   
   # ----
   
