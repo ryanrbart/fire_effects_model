@@ -12,7 +12,6 @@ patch_sens_sobol_eval <- function(num_canopies,
                                   initial_date,
                                   parameter_file,
                                   stand_age_vect,
-                                  fig_title,
                                   watershed,
                                   stand_age,
                                   sobol_model_input,
@@ -22,10 +21,10 @@ patch_sens_sobol_eval <- function(num_canopies,
   # Patch Fire data processing
   # Computes differences in variables for several days before to several days after a fire.
   
-  patch_fire <- readin_rhessys_output_cal(var_names = c("canopy_target_prop_mort",
-                                                        "canopy_target_prop_mort_consumed",
-                                                        "canopy_target_prop_c_consumed",
-                                                        "canopy_target_prop_c_remain"),
+  patch_fire <- readin_rhessys_output_cal(var_names = c("canopy_target_prop_mort_patched",
+                                                        "canopy_target_prop_mort_consumed_patched",
+                                                        "canopy_target_prop_c_consumed_patched",
+                                                        "canopy_target_prop_c_remain_patched"),
                                           path = allsim_path,
                                           initial_date = initial_date,
                                           parameter_file = parameter_file,
@@ -35,6 +34,13 @@ patch_sens_sobol_eval <- function(num_canopies,
     spread(dates, value) %>%
     mutate(relative_change = as.double(`1941-10-11`)*100)
   rm(patch_fire)
+  
+  # Check data output
+  # Note: monotonic relation non necessary for variance based measures (Song 2015)
+  # For monotonic relation, plot relation between parameter and response variable
+  # ggplot(data=patch_fire_diff) +
+  #   geom_histogram(aes(x=relative_change)) +
+  #   facet_grid(var_type~canopy_layer)
   
   
   # ---------------------------------------------------------------------
@@ -46,14 +52,14 @@ patch_sens_sobol_eval <- function(num_canopies,
 
   # ----
   # Sobol models of relative loss
-  sobol_upper_canopy_mort_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort", canopy_layer==1)$relative_change)
-  sobol_lower_canopy_mort_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort", canopy_layer==2)$relative_change)
-  sobol_upper_canopy_mort_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_consumed", canopy_layer==1)$relative_change)
-  sobol_lower_canopy_mort_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_consumed", canopy_layer==2)$relative_change)
-  sobol_upper_canopy_c_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_consumed", canopy_layer==1)$relative_change)
-  sobol_lower_canopy_c_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_consumed", canopy_layer==2)$relative_change)
-  sobol_upper_canopy_c_remain_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_remain", canopy_layer==1)$relative_change)
-  sobol_lower_canopy_c_remain_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_remain", canopy_layer==2)$relative_change)
+  sobol_upper_canopy_mort_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_patched", canopy_layer==1)$relative_change)
+  sobol_lower_canopy_mort_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_patched", canopy_layer==2)$relative_change)
+  sobol_upper_canopy_mort_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_consumed_patched", canopy_layer==1)$relative_change)
+  sobol_lower_canopy_mort_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_consumed_patched", canopy_layer==2)$relative_change)
+  sobol_upper_canopy_c_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_consumed_patched", canopy_layer==1)$relative_change)
+  sobol_lower_canopy_c_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_consumed_patched", canopy_layer==2)$relative_change)
+  sobol_upper_canopy_c_remain_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_remain_patched", canopy_layer==1)$relative_change)
+  sobol_lower_canopy_c_remain_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_remain_patched", canopy_layer==2)$relative_change)
   
   # ----
   # Establish parameter and response variables (plus names) for figures  
@@ -120,6 +126,28 @@ patch_sens_sobol_eval <- function(num_canopies,
   # ****** Need to save output tibbles so that final figures can be made *****
   
   
+  # ----
+  # Make a tibble for analyzing convergence
+  # Quick and dirty version (print results instead)
+  print(paste("************** Watershed", watershed, "- Stand age", stand_age, "**************"))
+  print("sobol_upper_canopy_mort_rel - Canopy 1")
+  print(sobol_upper_canopy_mort_rel)
+  print("sobol_lower_canopy_mort_rel - Canopy 2")
+  print(sobol_lower_canopy_mort_rel)
+  print("sobol_upper_canopy_mort_consumed_rel - Canopy 1")
+  print(sobol_upper_canopy_mort_consumed_rel)
+  print("sobol_lower_canopy_mort_consumed_rel - Canopy 2")
+  print(sobol_lower_canopy_mort_consumed_rel)
+  print("sobol_upper_canopy_c_consumed_rel - Canopy 1")
+  print(sobol_upper_canopy_c_consumed_rel)
+  print("sobol_lower_canopy_c_consumed_rel - Canopy 2")
+  print(sobol_lower_canopy_c_consumed_rel)
+  print("sobol_upper_canopy_c_remain_rel - Canopy 1")
+  print(sobol_upper_canopy_c_remain_rel)
+  print("sobol_lower_canopy_c_remain_rel - Canopy 2")
+  print(sobol_lower_canopy_c_remain_rel)
+
+  
   # ---------------------------------------------------------------------
   # Figures 
   
@@ -134,7 +162,7 @@ patch_sens_sobol_eval <- function(num_canopies,
     scale_y_discrete(labels = c(rev(response_variable_names)),
                      limits=c(rev(response_variable_limits_1st))) +
     theme(axis.text.x = element_text(angle = 330, hjust=0)) +
-    labs(title = fig_title, x = "Parameter", y = "Response Variable")
+    labs(title = paste("Sobol: ", watershed, " at stand age ", stand_age, sep=""), x = "Parameter", y = "Response Variable")
   #plot(x)
   ggsave(paste("sobal_1st_", watershed, "_", stand_age, ".pdf",sep=""), plot = x,
          path = output_path, width = 8, height=6)
@@ -148,7 +176,7 @@ patch_sens_sobol_eval <- function(num_canopies,
     scale_y_discrete(labels = c(rev(response_variable_names)),
                      limits=c(rev(response_variable_limits_total))) +
     theme(axis.text.x = element_text(angle = 330, hjust=0)) +
-    labs(title = fig_title, x = "Parameter", y = "Response Variable")
+    labs(title = paste("Sobol: ", watershed, " at stand age ", stand_age, sep=""), x = "Parameter", y = "Response Variable")
   #plot(x)
   ggsave(paste("sobal_total_", watershed, "_", stand_age, ".pdf",sep=""), plot = x,
          path = output_path, width = 8, height=6)
@@ -162,9 +190,9 @@ patch_sens_sobol_eval <- function(num_canopies,
 # Call patch sensitivity evaluation function
 
 
-# # ----
+# ----
 # HJA
-#
+
 # patch_sens_sobol_eval(num_canopies = 2,
 #                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_HJA,
 #                       initial_date = ymd("1957-10-01"),
@@ -176,47 +204,36 @@ patch_sens_sobol_eval <- function(num_canopies,
 # ----
 # P301
 
-# Stand age 5 years
-patch_sens_sobol_eval(num_canopies = 2,
-                      allsim_path = RHESSYS_ALLSIM_DIR_2.1_P300_STAND1,
-                      initial_date = ymd("1941-10-01"),
-                      parameter_file = RHESSYS_PAR_SOBOL_2.1_P300,
-                      stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
-                      fig_title = "Sobol: P300 at stand age 5",
-                      watershed = "P300",
-                      stand_age = "5",
-                      sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_MARTINEZ_2.1_P300,
-                      output_path = OUTPUT_DIR_2)
+allsim_2.4_p300 <- c(RHESSYS_ALLSIM_DIR_2.4_P300_STAND1,
+                     RHESSYS_ALLSIM_DIR_2.4_P300_STAND2,
+                     RHESSYS_ALLSIM_DIR_2.4_P300_STAND3,
+                     RHESSYS_ALLSIM_DIR_2.4_P300_STAND4,
+                     RHESSYS_ALLSIM_DIR_2.4_P300_STAND5,
+                     RHESSYS_ALLSIM_DIR_2.4_P300_STAND6,
+                     RHESSYS_ALLSIM_DIR_2.4_P300_STAND7)
 
-# Stand age 20 years 
-patch_sens_sobol_eval(num_canopies = 2,
-                      allsim_path = RHESSYS_ALLSIM_DIR_2.1_P300_STAND2,
-                      initial_date = ymd("1941-10-01"),
-                      parameter_file = RHESSYS_PAR_SOBOL_2.1_P300,
-                      stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
-                      fig_title = "Sobol: P300 at stand age 20",
-                      watershed = "P300",
-                      stand_age = "20",
-                      sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2.1_P300,
-                      output_path = OUTPUT_DIR_2)
+stand_age_p300 = c("5","12","20","30","40","60","80")
 
-# Stand age 80 years
-patch_sens_sobol_eval(num_canopies = 2,
-                      allsim_path = RHESSYS_ALLSIM_DIR_2.1_P300_STAND3,
-                      initial_date = ymd("1941-10-01"),
-                      parameter_file = RHESSYS_PAR_SOBOL_2.1_P300,
-                      stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
-                      fig_title = "Sobol: P300 at stand age 80",
-                      watershed = "P300",
-                      stand_age = "80",
-                      sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2.1_P300,
-                      output_path = OUTPUT_DIR_2)
+# Step through stands for p300
+for (aa in seq_along(allsim_2.4_p300)){
+  
+  patch_sens_sobol_eval(num_canopies = 2,
+                        allsim_path = allsim_2.4_p300[aa],
+                        initial_date = ymd("1941-10-01"),
+                        parameter_file = RHESSYS_PAR_SOBOL_2.1_P300,
+                        stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
+                        watershed = "P300",
+                        stand_age = stand_age_p300[aa],
+                        sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2007_2.1_P300,
+                        output_path = OUTPUT_DIR_2)
+}
 
 
 
-# # ----
+# ----
 # RS
-#
+
+
 # patch_sens_sobol_eval(num_canopies = 1,
 #                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_RS,
 #                       initial_date = ymd("1988-10-01"),
@@ -224,10 +241,11 @@ patch_sens_sobol_eval(num_canopies = 2,
 #                       stand_age_vect = c(1994,2001,2009,2019,2029,2049,2069),
 #                       top_par_output = OUTPUT_DIR_1_RS_TOP_PS,
 #                       fig_title = "RS")
-# 
-# # ----
+
+ 
+# ----
 # SF
-#
+
 # patch_sens_sobol_eval(num_canopies = 2,
 #                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_SF,
 #                       initial_date = ymd("1941-10-01"),
