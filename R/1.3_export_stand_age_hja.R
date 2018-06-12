@@ -129,3 +129,56 @@ system.time(
 
 beep(1)
 
+
+
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# Add extra line to worldfiles so that they can be used with dated sequence.
+
+world_ages_in <- c("ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y1968M10D1H1.state",
+                   "ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y1978M10D1H1.state",
+                   "ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y1998M10D1H1.state",
+                   "ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y2028M10D1H1.state",
+                   "ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y2058M10D1H1.state",
+                   "ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y2098M10D1H1.state",
+                   "ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y2148M10D1H1.state")
+
+world_ages_out <- c("ws_hja/worldfiles/hja_2can_patch_6018.world.Y1968M10D1H1.state",
+                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y1978M10D1H1.state",
+                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y1998M10D1H1.state",
+                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2028M10D1H1.state",
+                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2058M10D1H1.state",
+                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2098M10D1H1.state",
+                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2148M10D1H1.state")
+
+
+add_dated_seq <- function(world_name_in, world_name_out){
+  newrow <- data.frame(a=101, b="p_base_station_ID", stringsAsFactors = FALSE)
+  
+  # Read in worldfile
+  worldfile <- read.table(world_name_in, header = FALSE, stringsAsFactors = FALSE)
+  
+  for (aa in seq(2,nrow(worldfile))){         # Note that this should be a while loop since worldfile is extended. (see other examples)
+    if (aa%%1000 == 0 ){print(paste(aa,"out of", nrow(worldfile)))} # Counter
+    if (worldfile[aa,2] == "num_canopy_strata" && worldfile[aa-1,2] == "n_basestations"){
+      # Change previous n_basestations to 1
+      worldfile[aa-1,1] = 1
+      
+      # Add new line containing p_base_station_ID
+      worldfile[seq(aa+1,nrow(worldfile)+1),] <- worldfile[seq(aa,nrow(worldfile)),]
+      worldfile[aa,] <- newrow[1,]
+    }
+  }
+  
+  # Write new file
+  worldfile$V1 <- format(worldfile$V1, scientific = FALSE)
+  write.table(worldfile, file = world_name_out, row.names = FALSE, col.names = FALSE, quote=FALSE, sep="  ")
+} 
+
+
+# Produces new world files with extra line for patch-level dated sequence
+for (aa in seq_along(world_ages_in)){
+  add_dated_seq(world_ages_in[aa],world_ages_out[aa])
+}
+
