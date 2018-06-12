@@ -39,7 +39,3 @@ for (aa in seq_along(world_ages)){
   )
 }
 
-
-# ***** Use separate file for other watershds *******
-
-
