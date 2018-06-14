@@ -30,7 +30,7 @@ sobol_runs_p300 <- function(core_par_path,
   
   # RHESSys Inputs
   input_rhessys <- list()
-  input_rhessys$rhessys_version <- "bin/rhessys5.20.1"
+  input_rhessys$rhessys_version <- "bin/rhessys5.20.1_salsa"
   input_rhessys$tec_file <- "ws_p300/tecfiles/p300_patch_fire.tec"
   input_rhessys$world_file <- "assigned below"
   input_rhessys$world_hdr_prefix <- "assigned below"

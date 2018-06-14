@@ -30,7 +30,7 @@ sobol_runs_hja <- function(core_par_path,
   
   # RHESSys Inputs
   input_rhessys <- list()
-  input_rhessys$rhessys_version <- "bin/rhessys5.20.1_self_thinning"    # Code for self thinning
+  input_rhessys$rhessys_version <- "bin/rhessys5.20.1_self_thinning_salsa"    # Code for self thinning
   input_rhessys$tec_file <- "ws_hja/tecfiles/hja_patch_simulation.tec"
   input_rhessys$world_file <- "assigned below" 
   input_rhessys$world_hdr_prefix <- "assigned below"
