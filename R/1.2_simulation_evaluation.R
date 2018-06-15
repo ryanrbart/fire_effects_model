@@ -157,27 +157,35 @@ patch_simulation_eval <- function(num_canopies,
     geom_line(data=dplyr::filter(patch_height_sum, canopy_layer==2),
               aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "gray80") +
     geom_line(data=dplyr::filter(patch_height_sum, run==this_one),
-              aes(x=wy,y=avg_value, linetype=as.factor(canopy_layer), group=as.factor(canopy_layer)), color="black",size = 1.2) +
+              aes(x=wy,y=avg_value, group=as.factor(canopy_layer)), color="black",size = 1.2) +
     geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
     geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
     labs(title = paste("Height - ", watershed, sep=""), x = "Wateryear", y = "Height (meters)") +
     scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Upper Canopy","Lower Canopy")) +
     theme(legend.position = "bottom")
   plot(x)  
-  ggsave(paste("ts_height_",watershed,".pdf",sep=""), plot = x, path = output_path)
+  ggsave(paste("ts_height_",watershed,".pdf",sep=""),
+         plot = x,
+         path = output_path,
+         width = 6,
+         height = 4)
   
   # Height - understory plot
   x <- ggplot() +
     geom_line(data=dplyr::filter(patch_height_sum, canopy_layer==2),
               aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "gray80") +
     geom_line(data=dplyr::filter(patch_height_sum, run==this_one, canopy_layer==2),
-              aes(x=wy,y=avg_value, linetype=as.factor(canopy_layer), group=as.factor(canopy_layer)), color="black",size = 1.2) +
+              aes(x=wy,y=avg_value, group=as.factor(canopy_layer)), color="black",size = 1.2) +
     geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
     geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
     labs(title = paste("Height - Understory - ", watershed, sep=""), x = "Wateryear", y = "Height (meters)") +
     theme(legend.position = "bottom")
   plot(x)  
-  ggsave(paste("ts_height_understory_",watershed,".pdf",sep=""), plot = x, path = output_path)
+  ggsave(paste("ts_height_understory_",watershed,".pdf",sep=""),
+         plot = x,
+         path = output_path,
+         width = 6,
+         height = 4)
   
   # ----
   
@@ -190,7 +198,11 @@ patch_simulation_eval <- function(num_canopies,
     geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
     labs(title = paste("Litter Store - ", watershed, sep=""), x = "Wateryear", y = "Carbon (g/m2)")
   plot(x)
-  ggsave(paste("ts_litter_",watershed,".pdf",sep=""), plot = x, path = output_path)
+  ggsave(paste("ts_litter_",watershed,".pdf",sep=""),
+         plot = x,
+         path = output_path,
+         width = 6,
+         height = 4)
   
   # ---
   beep()
