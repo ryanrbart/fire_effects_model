@@ -29,10 +29,25 @@ patch_sens_sobol_eval <- function(num_canopies,
                                           initial_date = initial_date,
                                           parameter_file = parameter_file,
                                           num_canopies = num_canopies)
-  patch_fire_diff <- patch_fire %>%
-    dplyr::filter(dates == ymd("1941-10-11")) %>%
-    spread(dates, value) %>%
-    mutate(relative_change = as.double(`1941-10-11`)*100)
+  
+  if (watershed == "P300" | watershed == "SF"){
+    patch_fire_diff <- patch_fire %>%
+      dplyr::filter(dates == ('1941-10-11')) %>%
+      spread(dates, value) %>%
+      mutate(relative_change = as.double(`1941-10-11`)*100)
+  }
+  if (watershed == "HJA"){
+    patch_fire_diff <- patch_fire %>%
+      dplyr::filter(dates == ('1957-10-11')) %>%
+      spread(dates, value) %>%
+      mutate(relative_change = as.double(`1957-10-11`)*100)
+  }
+  if (watershed == "RS"){
+    patch_fire_diff <- patch_fire %>%
+      dplyr::filter(dates == ('1988-10-11')) %>%
+      spread(dates, value) %>%
+      mutate(relative_change = as.double(`1988-10-11`)*100)
+  }
   rm(patch_fire)
   
   # Check data output
@@ -146,7 +161,7 @@ patch_sens_sobol_eval <- function(num_canopies,
   print(sobol_upper_canopy_c_remain_rel)
   print("sobol_lower_canopy_c_remain_rel - Canopy 2")
   print(sobol_lower_canopy_c_remain_rel)
-
+  
   
   # ---------------------------------------------------------------------
   # Figures 
@@ -158,7 +173,7 @@ patch_sens_sobol_eval <- function(num_canopies,
     geom_tile(aes(x=parameter, y=response_variable, fill=sensitivity_value)) +
     scale_fill_continuous(name="First-order\nIndices    ") +
     scale_x_discrete(labels = c(parameter_names),
-                                limits=c(parameter)) +
+                     limits=c(parameter)) +
     scale_y_discrete(labels = c(rev(response_variable_names)),
                      limits=c(rev(response_variable_limits_1st))) +
     theme(axis.text.x = element_text(angle = 330, hjust=0)) +
@@ -166,7 +181,7 @@ patch_sens_sobol_eval <- function(num_canopies,
   #plot(x)
   ggsave(paste("sobal_1st_", watershed, "_", stand_age, ".pdf",sep=""), plot = x,
          path = output_path, width = 8, height=6)
-    
+  
   # Total indices
   x <- ggplot(sobol_fire_total) +
     geom_tile(aes(x=parameter, y=response_variable, fill=sensitivity_value)) +
@@ -190,35 +205,52 @@ patch_sens_sobol_eval <- function(num_canopies,
 # Call patch sensitivity evaluation function
 
 
-# ----
 # HJA
 
-# patch_sens_sobol_eval(num_canopies = 2,
-#                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_HJA,
-#                       initial_date = ymd("1957-10-01"),
-#                       parameter_file = RHESSYS_PAR_FILE_1.1_HJA,
-#                       stand_age_vect = c(1968,1978,1998,2028,2058,2098,2148),
-#                       top_par_output = OUTPUT_DIR_1_HJA_TOP_PS,
-#                       fig_title = "HJA")
+allsim_2.5_hja <- c(RHESSYS_ALLSIM_DIR_2.5_HJA_STAND1,
+                    RHESSYS_ALLSIM_DIR_2.5_HJA_STAND2,
+                    RHESSYS_ALLSIM_DIR_2.5_HJA_STAND3,
+                    RHESSYS_ALLSIM_DIR_2.5_HJA_STAND4,
+                    RHESSYS_ALLSIM_DIR_2.5_HJA_STAND5,
+                    RHESSYS_ALLSIM_DIR_2.5_HJA_STAND6,
+                    RHESSYS_ALLSIM_DIR_2.5_HJA_STAND7)
 
-# ----
-# P301
+stand_age_hja = c("10","20","40","70","100","140","190")
 
-allsim_2.4_p300 <- c(RHESSYS_ALLSIM_DIR_2.4_P300_STAND1,
-                     RHESSYS_ALLSIM_DIR_2.4_P300_STAND2,
-                     RHESSYS_ALLSIM_DIR_2.4_P300_STAND3,
-                     RHESSYS_ALLSIM_DIR_2.4_P300_STAND4,
-                     RHESSYS_ALLSIM_DIR_2.4_P300_STAND5,
-                     RHESSYS_ALLSIM_DIR_2.4_P300_STAND6,
-                     RHESSYS_ALLSIM_DIR_2.4_P300_STAND7)
+# Step through stands for HJA
+for (aa in seq_along(allsim_2.5_hja)){
+  
+  patch_sens_sobol_eval(num_canopies = 2,
+                        allsim_path = allsim_2.5_hja[aa],
+                        initial_date = ymd("1957-10-01"),
+                        parameter_file = RHESSYS_PAR_SOBOL_2.1_HJA,
+                        stand_age_vect = c(1968,1978,1998,2028,2058,2098,2148),
+                        watershed = "HJA",
+                        stand_age = stand_age_hja[aa],
+                        sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2007_2.1_HJA,
+                        output_path = OUTPUT_DIR_2)
+}
+
+
+
+# ---------------------------------------------------------------------
+# P300
+
+allsim_2.5_p300 <- c(RHESSYS_ALLSIM_DIR_2.5_P300_STAND1,
+                     RHESSYS_ALLSIM_DIR_2.5_P300_STAND2,
+                     RHESSYS_ALLSIM_DIR_2.5_P300_STAND3,
+                     RHESSYS_ALLSIM_DIR_2.5_P300_STAND4,
+                     RHESSYS_ALLSIM_DIR_2.5_P300_STAND5,
+                     RHESSYS_ALLSIM_DIR_2.5_P300_STAND6,
+                     RHESSYS_ALLSIM_DIR_2.5_P300_STAND7)
 
 stand_age_p300 = c("5","12","20","30","40","60","80")
 
-# Step through stands for p300
-for (aa in seq_along(allsim_2.4_p300)){
+# Step through stands for P300
+for (aa in seq_along(allsim_2.5_p300)){
   
   patch_sens_sobol_eval(num_canopies = 2,
-                        allsim_path = allsim_2.4_p300[aa],
+                        allsim_path = allsim_2.5_p300[aa],
                         initial_date = ymd("1941-10-01"),
                         parameter_file = RHESSYS_PAR_SOBOL_2.1_P300,
                         stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
@@ -230,31 +262,60 @@ for (aa in seq_along(allsim_2.4_p300)){
 
 
 
-# ----
+# ---------------------------------------------------------------------
 # RS
 
+allsim_2.5_rs <- c(RHESSYS_ALLSIM_DIR_2.5_RS_STAND1,
+                   RHESSYS_ALLSIM_DIR_2.5_RS_STAND2,
+                   RHESSYS_ALLSIM_DIR_2.5_RS_STAND3,
+                   RHESSYS_ALLSIM_DIR_2.5_RS_STAND4,
+                   RHESSYS_ALLSIM_DIR_2.5_RS_STAND5,
+                   RHESSYS_ALLSIM_DIR_2.5_RS_STAND6,
+                   RHESSYS_ALLSIM_DIR_2.5_RS_STAND7)
 
-# patch_sens_sobol_eval(num_canopies = 1,
-#                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_RS,
-#                       initial_date = ymd("1988-10-01"),
-#                       parameter_file = RHESSYS_PAR_FILE_1.1_RS,
-#                       stand_age_vect = c(1994,2001,2009,2019,2029,2049,2069),
-#                       top_par_output = OUTPUT_DIR_1_RS_TOP_PS,
-#                       fig_title = "RS")
+stand_age_rs = c("5","12","20","30","40","60","80")
 
- 
-# ----
+# Step through stands for RS
+for (aa in seq_along(allsim_2.5_rs)){
+  
+  patch_sens_sobol_eval(num_canopies = 1,
+                        allsim_path = allsim_2.5_rs[aa],
+                        initial_date = ymd("1988-10-01"),
+                        parameter_file = RHESSYS_PAR_SOBOL_2.1_RS,
+                        stand_age_vect = c(1994,2001,2009,2019,2029,2049,2069),
+                        watershed = "RS",
+                        stand_age = stand_age_rs[aa],
+                        sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2007_2.1_RS,
+                        output_path = OUTPUT_DIR_2)
+}
+
+
+
+# ---------------------------------------------------------------------
 # SF
 
-# patch_sens_sobol_eval(num_canopies = 2,
-#                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_SF,
-#                       initial_date = ymd("1941-10-01"),
-#                       parameter_file = RHESSYS_PAR_FILE_1.1_SF,
-#                       stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
-#                       top_par_output = OUTPUT_DIR_1_SF_TOP_PS,
-#                       fig_title = "SF")
+allsim_2.5_sf <- c(RHESSYS_ALLSIM_DIR_2.5_SF_STAND1,
+                   RHESSYS_ALLSIM_DIR_2.5_SF_STAND2,
+                   RHESSYS_ALLSIM_DIR_2.5_SF_STAND3,
+                   RHESSYS_ALLSIM_DIR_2.5_SF_STAND4,
+                   RHESSYS_ALLSIM_DIR_2.5_SF_STAND5,
+                   RHESSYS_ALLSIM_DIR_2.5_SF_STAND6,
+                   RHESSYS_ALLSIM_DIR_2.5_SF_STAND7)
 
+stand_age_sf = c("5","12","20","30","40","60","80")
 
-
+# Step through stands for SF
+for (aa in seq_along(allsim_2.5_sf)){
+  
+  patch_sens_sobol_eval(num_canopies = 2,
+                        allsim_path = allsim_2.5_sf[aa],
+                        initial_date = ymd("1941-10-01"),
+                        parameter_file = RHESSYS_PAR_SOBOL_2.1_SF,
+                        stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
+                        watershed = "SF",
+                        stand_age = stand_age_sf[aa],
+                        sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2007_2.1_SF,
+                        output_path = OUTPUT_DIR_2)
+}
 
 
