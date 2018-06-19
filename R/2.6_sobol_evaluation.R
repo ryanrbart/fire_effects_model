@@ -68,13 +68,16 @@ patch_sens_sobol_eval <- function(num_canopies,
   # ----
   # Sobol models of relative loss
   sobol_upper_canopy_mort_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_patched", canopy_layer==1)$relative_change)
-  sobol_lower_canopy_mort_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_patched", canopy_layer==2)$relative_change)
   sobol_upper_canopy_mort_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_consumed_patched", canopy_layer==1)$relative_change)
-  sobol_lower_canopy_mort_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_consumed_patched", canopy_layer==2)$relative_change)
   sobol_upper_canopy_c_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_consumed_patched", canopy_layer==1)$relative_change)
-  sobol_lower_canopy_c_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_consumed_patched", canopy_layer==2)$relative_change)
   sobol_upper_canopy_c_remain_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_remain_patched", canopy_layer==1)$relative_change)
-  sobol_lower_canopy_c_remain_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_remain_patched", canopy_layer==2)$relative_change)
+
+  if (watershed != "RS"){
+    sobol_lower_canopy_mort_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_patched", canopy_layer==2)$relative_change)
+    sobol_lower_canopy_mort_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_consumed_patched", canopy_layer==2)$relative_change)
+    sobol_lower_canopy_c_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_consumed_patched", canopy_layer==2)$relative_change)
+    sobol_lower_canopy_c_remain_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_remain_patched", canopy_layer==2)$relative_change)
+  }
   
   # ----
   # Establish parameter and response variables (plus names) for figures  
@@ -82,9 +85,9 @@ patch_sens_sobol_eval <- function(num_canopies,
   if (watershed != "RS"){
     # HJA, P300 and SF
     parameter <- c("h_overstory", "h_understory", "LowerCan: k_mort_u",
-                    "LowerCan: k_consumption", "LowerCan: k1_mort_o", "LowerCan: k2_mort_o",
-                    "UpperCan: k_mort_u", "UpperCan: k_consumption", "UpperCan: k1_mort_o",
-                    "UpperCan: k2_mort_o", "I'")
+                   "LowerCan: k_consumption", "LowerCan: k1_mort_o", "LowerCan: k2_mort_o",
+                   "UpperCan: k_mort_u", "UpperCan: k_consumption", "UpperCan: k1_mort_o",
+                   "UpperCan: k2_mort_o", "I'")
     
     parameter_names <- c(expression('h'[overstory]), expression('h'[understory]), 
                          expression('LowerCan: k'[mort_u]), expression('LowerCan: k'[consumption]), 
@@ -93,50 +96,75 @@ patch_sens_sobol_eval <- function(num_canopies,
                          expression('UpperCan: k'['1_mort_o']), expression('UpperCan: k'['2_mort_o']), "I'")
     
     response_variable_names <- c("UpperCan: prop_c_mort", "UpperCan: prop_mort_consumed",
-                                      "UpperCan: prop_c_consumed", "UpperCan: prop_c_remain",
-                                      "LowerCan: prop_c_mort", "LowerCan: prop_mort_consumed",
-                                      "LowerCan: prop_c_consumed","LowerCan: prop_c_remain")
+                                 "UpperCan: prop_c_consumed", "UpperCan: prop_c_remain",
+                                 "LowerCan: prop_c_mort", "LowerCan: prop_mort_consumed",
+                                 "LowerCan: prop_c_consumed","LowerCan: prop_c_remain")
   } else {
     
     # RS
-    parameter <- c("overstory_height_thresh", "understory_height_thresh", "LowerCan: understory_mort",     
-                    "LowerCan: consumption", "LowerCan: overstory_mort_k1", "LowerCan: overstory_mort_k2",   
-                    "I'")
-      
-    # Response variable names
-    response_variable_names <- c("LowerCan: prop_c_mort", "LowerCan: prop_mort_consumed",
-                                       "LowerCan: prop_c_consumed", "LowerCan: prop_c_remain")
+    parameter <- c("h_overstory", "h_understory", "UpperCan: k_mort_u", 
+                   "UpperCan: k_consumption", "UpperCan: k1_mort_o",
+                   "UpperCan: k2_mort_o", "I'")
+    
+    parameter_names <- c(expression('h'[overstory]), expression('h'[understory]),
+                         expression('UpperCan: k'[mort_u]), expression('UpperCan: k'[consumption]), 
+                         expression('UpperCan: k'['1_mort_o']), expression('UpperCan: k'['2_mort_o']), "I'")
+    
+    response_variable_names <- c("UpperCan: prop_c_mort", "UpperCan: prop_mort_consumed",
+                                 "UpperCan: prop_c_consumed", "UpperCan: prop_c_remain")
   }
   
   # ----
   # Make a tibble for analyzing sensitivity
   
-  # First-order indices
-  sobol_fire_1st <- tibble(prop_c_mort_up = sobol_upper_canopy_mort_rel$S$original,
-                           prop_mort_consumed_up = sobol_upper_canopy_mort_consumed_rel$S$original,
-                           prop_c_consumed_up = sobol_upper_canopy_c_consumed_rel$S$original,
-                           prop_c_remain_up = sobol_upper_canopy_c_remain_rel$S$original,
-                           prop_c_mort_low = sobol_lower_canopy_mort_rel$S$original,
-                           prop_mort_consumed_low = sobol_lower_canopy_mort_consumed_rel$S$original,
-                           prop_c_consumed_low = sobol_lower_canopy_c_consumed_rel$S$original,
-                           prop_c_remain_low = sobol_lower_canopy_c_remain_rel$S$original,
-                           parameter=parameter)
-  response_variable_limits_1st <- names(sobol_fire_1st[1:8])
-  sobol_fire_1st <- tidyr::gather(sobol_fire_1st, response_variable, sensitivity_value, 1:8)
-  
-  # Total indices
-  sobol_fire_total <- tibble(prop_c_mort_up = sobol_upper_canopy_mort_rel$T$original,
-                             prop_mort_consumed_up = sobol_upper_canopy_mort_consumed_rel$T$original,
-                             prop_c_consumed_up = sobol_upper_canopy_c_consumed_rel$T$original,
-                             prop_c_remain_up = sobol_upper_canopy_c_remain_rel$T$original,
-                             prop_c_mort_low = sobol_lower_canopy_mort_rel$T$original,
-                             prop_mort_consumed_low = sobol_lower_canopy_mort_consumed_rel$T$original,
-                             prop_c_consumed_low = sobol_lower_canopy_c_consumed_rel$T$original,
-                             prop_c_remain_low = sobol_lower_canopy_c_remain_rel$T$original,
+  if (watershed != "RS"){  
+    # First-order indices
+    sobol_fire_1st <- tibble(prop_c_mort_up = sobol_upper_canopy_mort_rel$S$original,
+                             prop_mort_consumed_up = sobol_upper_canopy_mort_consumed_rel$S$original,
+                             prop_c_consumed_up = sobol_upper_canopy_c_consumed_rel$S$original,
+                             prop_c_remain_up = sobol_upper_canopy_c_remain_rel$S$original,
+                             prop_c_mort_low = sobol_lower_canopy_mort_rel$S$original,
+                             prop_mort_consumed_low = sobol_lower_canopy_mort_consumed_rel$S$original,
+                             prop_c_consumed_low = sobol_lower_canopy_c_consumed_rel$S$original,
+                             prop_c_remain_low = sobol_lower_canopy_c_remain_rel$S$original,
                              parameter=parameter)
-  response_variable_limits_total <- names(sobol_fire_total[1:8])
-  sobol_fire_total <- tidyr::gather(sobol_fire_total, response_variable, sensitivity_value, 1:8)
-  
+    response_variable_limits_1st <- names(sobol_fire_1st[1:8])
+    sobol_fire_1st <- tidyr::gather(sobol_fire_1st, response_variable, sensitivity_value, 1:8)
+    
+    # Total indices
+    sobol_fire_total <- tibble(prop_c_mort_up = sobol_upper_canopy_mort_rel$T$original,
+                               prop_mort_consumed_up = sobol_upper_canopy_mort_consumed_rel$T$original,
+                               prop_c_consumed_up = sobol_upper_canopy_c_consumed_rel$T$original,
+                               prop_c_remain_up = sobol_upper_canopy_c_remain_rel$T$original,
+                               prop_c_mort_low = sobol_lower_canopy_mort_rel$T$original,
+                               prop_mort_consumed_low = sobol_lower_canopy_mort_consumed_rel$T$original,
+                               prop_c_consumed_low = sobol_lower_canopy_c_consumed_rel$T$original,
+                               prop_c_remain_low = sobol_lower_canopy_c_remain_rel$T$original,
+                               parameter=parameter)
+    response_variable_limits_total <- names(sobol_fire_total[1:8])
+    sobol_fire_total <- tidyr::gather(sobol_fire_total, response_variable, sensitivity_value, 1:8)
+    
+  } else {
+    # RS
+    
+    # First-order indices
+      sobol_fire_1st <- tibble(prop_c_mort_up = sobol_upper_canopy_mort_rel$S$original,
+                               prop_mort_consumed_up = sobol_upper_canopy_mort_consumed_rel$S$original,
+                               prop_c_consumed_up = sobol_upper_canopy_c_consumed_rel$S$original,
+                               prop_c_remain_up = sobol_upper_canopy_c_remain_rel$S$original,
+                               parameter=parameter)
+      response_variable_limits_1st <- names(sobol_fire_1st[1:4])
+      sobol_fire_1st <- tidyr::gather(sobol_fire_1st, response_variable, sensitivity_value, 1:4)
+      
+      # Total indices
+      sobol_fire_total <- tibble(prop_c_mort_up = sobol_upper_canopy_mort_rel$T$original,
+                                 prop_mort_consumed_up = sobol_upper_canopy_mort_consumed_rel$T$original,
+                                 prop_c_consumed_up = sobol_upper_canopy_c_consumed_rel$T$original,
+                                 prop_c_remain_up = sobol_upper_canopy_c_remain_rel$T$original,
+                                 parameter=parameter)
+      response_variable_limits_total <- names(sobol_fire_total[1:4])
+      sobol_fire_total <- tidyr::gather(sobol_fire_total, response_variable, sensitivity_value, 1:4)
+  }
   
   # ****** Need to save output tibbles so that final figures can be made *****
   
@@ -147,21 +175,23 @@ patch_sens_sobol_eval <- function(num_canopies,
   print(paste("************** Watershed", watershed, "- Stand age", stand_age, "**************"))
   print("sobol_upper_canopy_mort_rel - Canopy 1")
   print(sobol_upper_canopy_mort_rel)
-  print("sobol_lower_canopy_mort_rel - Canopy 2")
-  print(sobol_lower_canopy_mort_rel)
   print("sobol_upper_canopy_mort_consumed_rel - Canopy 1")
   print(sobol_upper_canopy_mort_consumed_rel)
-  print("sobol_lower_canopy_mort_consumed_rel - Canopy 2")
-  print(sobol_lower_canopy_mort_consumed_rel)
   print("sobol_upper_canopy_c_consumed_rel - Canopy 1")
   print(sobol_upper_canopy_c_consumed_rel)
-  print("sobol_lower_canopy_c_consumed_rel - Canopy 2")
-  print(sobol_lower_canopy_c_consumed_rel)
   print("sobol_upper_canopy_c_remain_rel - Canopy 1")
   print(sobol_upper_canopy_c_remain_rel)
-  print("sobol_lower_canopy_c_remain_rel - Canopy 2")
-  print(sobol_lower_canopy_c_remain_rel)
   
+  if (watershed != "RS"){  
+    print("sobol_lower_canopy_mort_rel - Canopy 2")
+    print(sobol_lower_canopy_mort_rel)
+    print("sobol_lower_canopy_mort_consumed_rel - Canopy 2")
+    print(sobol_lower_canopy_mort_consumed_rel)
+    print("sobol_lower_canopy_c_consumed_rel - Canopy 2")
+    print(sobol_lower_canopy_c_consumed_rel)
+    print("sobol_lower_canopy_c_remain_rel - Canopy 2")
+    print(sobol_lower_canopy_c_remain_rel)
+  }
   
   # ---------------------------------------------------------------------
   # Figures 

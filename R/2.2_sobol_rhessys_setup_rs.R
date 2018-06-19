@@ -12,10 +12,10 @@ source("R/0.1_utilities.R")
 # ---------------------------------------------------------------------
 
 sobol_runs_rs <- function(core_par_path,
-                            sobol_par_path,
-                            world, 
-                            hdr,
-                            output_path){
+                          sobol_par_path,
+                          world, 
+                          hdr,
+                          output_path){
   
   # Set up RHESSys model 
   
