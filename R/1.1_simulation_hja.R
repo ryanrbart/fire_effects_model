@@ -20,7 +20,7 @@ input_rhessys$world_file <- "ws_hja/worldfiles/hja_2can_patch_6018_ts.world"  # 
 input_rhessys$world_hdr_prefix <- "1.1"
 input_rhessys$flow_file <- "ws_hja/flowtables/hja_patch_6018.flow"
 input_rhessys$start_date <- "1957 10 1 1"
-input_rhessys$end_date <- "2157 10 1 1"
+input_rhessys$end_date <- "2107 10 1 1"
 input_rhessys$output_folder <- "ws_hja/out/1.1_hja_patch_simulation"
 input_rhessys$output_filename <- "patch_sim"
 input_rhessys$command_options <- c("-b -g -c -p -tchange 0 0")
@@ -132,7 +132,7 @@ input_tec_data <- data.frame(year=integer(),month=integer(),day=integer(),hour=i
 input_tec_data[1,] <- data.frame(1957, 10, 1, 1, "print_daily_on", stringsAsFactors=FALSE)
 input_tec_data[2,] <- data.frame(1957, 10, 1, 2, "print_daily_growth_on", stringsAsFactors=FALSE)
 # Change cover fraction of upper canopy
-input_tec_data[3,] <- data.frame(2057, 10, 1, 1, "redefine_world", stringsAsFactors=FALSE)
+input_tec_data[3,] <- data.frame(2017, 10, 1, 1, "redefine_world", stringsAsFactors=FALSE)
 
 
 # Data frame containing variable of interest, location/name of awk file (relative to output

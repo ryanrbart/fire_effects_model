@@ -21,7 +21,7 @@ input_rhessys$world_file <- "ws_hja/worldfiles/hja_2can_patch_6018_ts.world"  # 
 input_rhessys$world_hdr_prefix <- "1.3"
 input_rhessys$flow_file <- "ws_hja/flowtables/hja_patch_6018.flow"
 input_rhessys$start_date <- "1957 10 1 1"
-input_rhessys$end_date <- "2157 10 1 1"
+input_rhessys$end_date <- "2107 10 1 1"
 input_rhessys$output_folder <- "ws_hja/out/1.3_hja_patch_simulation"
 input_rhessys$output_filename <- "patch_sim"
 input_rhessys$command_options <- c("-b -g -c -p -tchange 0 0")
@@ -97,14 +97,14 @@ input_dated_seq_list <- NULL
 input_tec_data <- data.frame(year=integer(),month=integer(),day=integer(),hour=integer(),name=character(),stringsAsFactors=FALSE)
 input_tec_data[1,] <- data.frame(1957, 10, 1, 1, "print_daily_on", stringsAsFactors=FALSE)
 input_tec_data[2,] <- data.frame(1957, 10, 1, 2, "print_daily_growth_on", stringsAsFactors=FALSE)
-input_tec_data[3,] <- data.frame(1968, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-input_tec_data[4,] <- data.frame(1978, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-input_tec_data[5,] <- data.frame(1998, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-input_tec_data[6,] <- data.frame(2028, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-input_tec_data[7,] <- data.frame(2057, 10, 1, 1, "redefine_world", stringsAsFactors=FALSE)
-input_tec_data[8,] <- data.frame(2058, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-input_tec_data[9,] <- data.frame(2098, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-input_tec_data[10,] <- data.frame(2148, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+input_tec_data[3,] <- data.frame(1963, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+input_tec_data[4,] <- data.frame(1970, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+input_tec_data[5,] <- data.frame(1978, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+input_tec_data[6,] <- data.frame(1998, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+input_tec_data[7,] <- data.frame(2017, 10, 1, 1, "redefine_world", stringsAsFactors=FALSE)
+input_tec_data[8,] <- data.frame(2028, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+input_tec_data[9,] <- data.frame(2058, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+input_tec_data[10,] <- data.frame(2098, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
 
 
 # List of lists containing variable of interest, location/name of awk file (relative to output
@@ -136,21 +136,21 @@ beep(1)
 # ---------------------------------------------------------------------
 # Add extra line to worldfiles so that they can be used with dated sequence.
 
-world_ages_in <- c("ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y1968M10D1H1.state",
+world_ages_in <- c("ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y1963M10D1H1.state",
+                   "ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y1970M10D1H1.state",
                    "ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y1978M10D1H1.state",
                    "ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y1998M10D1H1.state",
                    "ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y2028M10D1H1.state",
                    "ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y2058M10D1H1.state",
-                   "ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y2098M10D1H1.state",
-                   "ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y2148M10D1H1.state")
+                   "ws_hja/worldfiles/hja_2can_patch_6018_ts.world.Y2098M10D1H1.state")
 
-world_ages_out <- c("ws_hja/worldfiles/hja_2can_patch_6018.world.Y1968M10D1H1.state",
+world_ages_out <- c("ws_hja/worldfiles/hja_2can_patch_6018.world.Y1963M10D1H1.state",
+                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y1970M10D1H1.state",
                     "ws_hja/worldfiles/hja_2can_patch_6018.world.Y1978M10D1H1.state",
                     "ws_hja/worldfiles/hja_2can_patch_6018.world.Y1998M10D1H1.state",
                     "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2028M10D1H1.state",
                     "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2058M10D1H1.state",
-                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2098M10D1H1.state",
-                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2148M10D1H1.state")
+                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2098M10D1H1.state")
 
 
 add_dated_seq <- function(world_name_in, world_name_out){
