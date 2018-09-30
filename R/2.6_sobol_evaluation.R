@@ -245,7 +245,7 @@ allsim_2.5_hja <- c(RHESSYS_ALLSIM_DIR_2.5_HJA_STAND1,
                     RHESSYS_ALLSIM_DIR_2.5_HJA_STAND6,
                     RHESSYS_ALLSIM_DIR_2.5_HJA_STAND7)
 
-stand_age_hja = c("10","20","40","70","100","140","190")
+stand_age_hja = c("6","12","20","40","70","100","140")
 
 # Step through stands for HJA
 for (aa in seq_along(allsim_2.5_hja)){
@@ -254,7 +254,7 @@ for (aa in seq_along(allsim_2.5_hja)){
                         allsim_path = allsim_2.5_hja[aa],
                         initial_date = ymd("1957-10-01"),
                         parameter_file = RHESSYS_PAR_SOBOL_2.1_HJA,
-                        stand_age_vect = c(1968,1978,1998,2028,2058,2098,2148),
+                        stand_age_vect = c(1963,1970,1978,1998,2028,2058,2098),
                         watershed = "HJA",
                         stand_age = stand_age_hja[aa],
                         sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2007_2.1_HJA,

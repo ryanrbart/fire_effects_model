@@ -14,7 +14,7 @@ parameter_method <- "lhc"
 
 # RHESSys Inputs
 input_rhessys <- list()
-input_rhessys$rhessys_version <- "bin/rhessys5.20.1_self_thinning"    # Code for self thinning
+input_rhessys$rhessys_version <- "bin/rhessys5.20.1_self_thinning_salsa"    # Code for self thinning
 input_rhessys$tec_file <- "ws_hja/tecfiles/hja_patch_simulation.tec"
 input_rhessys$world_file <- "ws_hja/worldfiles/hja_2can_patch_6018_ts.world"  # Worldfile for not using dated sequence. hja_2can_patch_6018.world is for dated sequence. 
 input_rhessys$world_hdr_prefix <- "1.1"
@@ -47,7 +47,7 @@ n_sim = 250
 #input_def_list <- NULL
 input_def_list <- list(
   # Patch parameters
-  list(input_hdr_list$soil_def, "soil_depth", c(3.0, 5.0, n_sim)),
+  list(input_hdr_list$soil_def, "soil_depth", c(1.5, 4.0, n_sim)),
   
   # -----
   # Upper canopy parameters
@@ -148,6 +148,7 @@ output_variables[2,] <- data.frame("height", "awks/output_var_cd_height.awk","pa
 
 system.time(
   run_rhessys(parameter_method = parameter_method,
+              output_method = "awk",
               input_rhessys = input_rhessys,
               input_hdr_list = input_hdr_list,
               input_preexisting_table = input_preexisting_table,

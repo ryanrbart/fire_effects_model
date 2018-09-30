@@ -195,6 +195,7 @@ sobol_runs_hja <- function(core_par_path,
       input_dated_seq_list[[1]] <- data.frame(name="lowProv",type="pspread",year=1957,month=10,day=7,hour=1,value=sobol_ps$pspread[aa],stringsAsFactors=FALSE)
       
       run_rhessys(parameter_method = parameter_method,
+                  output_method = "awk",
                   input_rhessys = input_rhessys,
                   input_hdr_list = input_hdr_list,
                   input_preexisting_table = input_preexisting_table,

@@ -10,13 +10,13 @@ source("R/2.2_sobol_rhessys_setup_hja.R")
 # HJA
 
 # Set worldfile at various stand ages 
-world_ages_hja <- c("ws_hja/worldfiles/hja_2can_patch_6018.world.Y1968M10D1H1.state",
+world_ages_hja <- c("ws_hja/worldfiles/hja_2can_patch_6018.world.Y1963M10D1H1.state",
+                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y1970M10D1H1.state",
                     "ws_hja/worldfiles/hja_2can_patch_6018.world.Y1978M10D1H1.state",
                     "ws_hja/worldfiles/hja_2can_patch_6018.world.Y1998M10D1H1.state",
                     "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2028M10D1H1.state",
                     "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2058M10D1H1.state",
-                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2098M10D1H1.state",
-                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2148M10D1H1.state")
+                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2098M10D1H1.state")
 
 output_2.3 <- c(RHESSYS_OUT_DIR_2.3_HJA_STAND1,
                 RHESSYS_OUT_DIR_2.3_HJA_STAND2,

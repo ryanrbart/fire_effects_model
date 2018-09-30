@@ -47,13 +47,13 @@ for (aa in seq_along(allsim_2.3_hja)){
 
 
 # Set worldfile at various stand ages (Copy from 2.3)
-world_ages_hja <- c("ws_hja/worldfiles/hja_2can_patch_6018.world.Y1968M10D1H1.state",
+world_ages_hja <- c("ws_hja/worldfiles/hja_2can_patch_6018.world.Y1963M10D1H1.state",
+                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y1970M10D1H1.state",
                     "ws_hja/worldfiles/hja_2can_patch_6018.world.Y1978M10D1H1.state",
                     "ws_hja/worldfiles/hja_2can_patch_6018.world.Y1998M10D1H1.state",
                     "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2028M10D1H1.state",
                     "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2058M10D1H1.state",
-                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2098M10D1H1.state",
-                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2148M10D1H1.state")
+                    "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2098M10D1H1.state")
 
 hdr_hja <- c("2.5_hja_stand1",
              "2.5_hja_stand2",
