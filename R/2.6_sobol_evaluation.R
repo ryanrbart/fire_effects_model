@@ -15,7 +15,9 @@ patch_sens_sobol_eval <- function(num_canopies,
                                   watershed,
                                   stand_age,
                                   sobol_model_input,
-                                  output_path){
+                                  output_path,
+                                  output_1st,
+                                  output_total){
   
   # ---------------------------------------------------------------------
   # Patch Fire data processing
@@ -166,12 +168,13 @@ patch_sens_sobol_eval <- function(num_canopies,
       sobol_fire_total <- tidyr::gather(sobol_fire_total, response_variable, sensitivity_value, 1:4)
   }
   
-  # ****** Need to save output tibbles so that final figures can be made *****
-  
+  # Output sobol final results
+  write_csv(sobol_fire_1st, output_1st)
+  write_csv(sobol_fire_total, output_total)
   
   # ----
   # Make a tibble for analyzing convergence
-  # Quick and dirty version (print results instead)
+  # Quick and dirty version (prints results instead)
   print(paste("************** Watershed", watershed, "- Stand age", stand_age, "**************"))
   print("sobol_upper_canopy_mort_rel - Canopy 1")
   print(sobol_upper_canopy_mort_rel)
@@ -245,7 +248,7 @@ allsim_2.5_hja <- c(RHESSYS_ALLSIM_DIR_2.5_HJA_STAND1,
                     RHESSYS_ALLSIM_DIR_2.5_HJA_STAND6,
                     RHESSYS_ALLSIM_DIR_2.5_HJA_STAND7)
 
-stand_age_hja = c("6","12","20","40","70","100","140")
+stand_age_hja = c("5","12","20","40","70","100","140")
 
 # Step through stands for HJA
 for (aa in seq_along(allsim_2.5_hja)){
@@ -258,7 +261,9 @@ for (aa in seq_along(allsim_2.5_hja)){
                         watershed = "HJA",
                         stand_age = stand_age_hja[aa],
                         sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2007_2.1_HJA,
-                        output_path = OUTPUT_DIR_2)
+                        output_path = OUTPUT_DIR_2,
+                        output_1st = OUTPUT_DIR_2_SOBOL_1ST_HJA,
+                        output_total = OUTPUT_DIR_2_SOBOL_TOTAL_HJA)
 }
 
 
@@ -287,7 +292,9 @@ for (aa in seq_along(allsim_2.5_p300)){
                         watershed = "P300",
                         stand_age = stand_age_p300[aa],
                         sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2007_2.1_P300,
-                        output_path = OUTPUT_DIR_2)
+                        output_path = OUTPUT_DIR_2,
+                        output_1st = OUTPUT_DIR_2_SOBOL_1ST_P300,
+                        output_total = OUTPUT_DIR_2_SOBOL_TOTAL_P300)
 }
 
 
@@ -316,7 +323,9 @@ for (aa in seq_along(allsim_2.5_rs)){
                         watershed = "RS",
                         stand_age = stand_age_rs[aa],
                         sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2007_2.1_RS,
-                        output_path = OUTPUT_DIR_2)
+                        output_path = OUTPUT_DIR_2,
+                        output_1st = OUTPUT_DIR_2_SOBOL_1ST_RS,
+                        output_total = OUTPUT_DIR_2_SOBOL_TOTAL_RS)
 }
 
 
@@ -345,7 +354,9 @@ for (aa in seq_along(allsim_2.5_sf)){
                         watershed = "SF",
                         stand_age = stand_age_sf[aa],
                         sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2007_2.1_SF,
-                        output_path = OUTPUT_DIR_2)
+                        output_path = OUTPUT_DIR_2,
+                        output_1st = OUTPUT_DIR_2_SOBOL_1ST_SF,
+                        output_total = OUTPUT_DIR_2_SOBOL_TOTAL_SF)
 }
 
 

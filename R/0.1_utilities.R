@@ -281,12 +281,20 @@ RHESSYS_ALL_OPTION_3.1_SF <- file.path(RHESSYS_OUT_DIR_3.1_SF, "patch_fire_all_o
 OUTPUT_DIR <- "outputs"
 
 OUTPUT_DIR_1 <- file.path(OUTPUT_DIR, "1_patch_sim")
+OUTPUT_DIR_1_HJA_TOP_PS <- file.path(OUTPUT_DIR_1, "1_hja_selected_ps.csv")
 OUTPUT_DIR_1_P300_TOP_PS <- file.path(OUTPUT_DIR_1, "1_p300_selected_ps.csv")
 OUTPUT_DIR_1_RS_TOP_PS <- file.path(OUTPUT_DIR_1, "1_rs_selected_ps.csv")
 OUTPUT_DIR_1_SF_TOP_PS <- file.path(OUTPUT_DIR_1, "1_sf_selected_ps.csv")
-OUTPUT_DIR_1_HJA_TOP_PS <- file.path(OUTPUT_DIR_1, "1_hja_selected_ps.csv")
 
 OUTPUT_DIR_2 <- file.path(OUTPUT_DIR, "2_patch_sens")
+OUTPUT_DIR_2_SOBOL_1ST_HJA <- file.path(OUTPUT_DIR_2, "2_sobol_1st_hja.csv")
+OUTPUT_DIR_2_SOBOL_1ST_P300 <- file.path(OUTPUT_DIR_2, "2_sobol_1st_p300.csv")
+OUTPUT_DIR_2_SOBOL_1ST_RS <- file.path(OUTPUT_DIR_2, "2_sobol_1st_rs.csv")
+OUTPUT_DIR_2_SOBOL_1ST_SF <- file.path(OUTPUT_DIR_2, "2_sobol_1st_sf.csv")
+OUTPUT_DIR_2_SOBOL_TOTAL_HJA <- file.path(OUTPUT_DIR_2, "2_sobol_total_hja.csv")
+OUTPUT_DIR_2_SOBOL_TOTAL_P300 <- file.path(OUTPUT_DIR_2, "2_sobol_total_p300.csv")
+OUTPUT_DIR_2_SOBOL_TOTAL_RS <- file.path(OUTPUT_DIR_2, "2_sobol_total_rs.csv")
+OUTPUT_DIR_2_SOBOL_TOTAL_SF <- file.path(OUTPUT_DIR_2, "2_sobol_total_sf.csv")
 
 OUTPUT_DIR_3 <- file.path(OUTPUT_DIR, "3_patch_fire")
 # OUTPUT_DIR_3_P300_FIRE <- file.path(OUTPUT_DIR_3, "")
