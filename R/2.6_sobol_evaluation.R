@@ -69,12 +69,14 @@ patch_sens_sobol_eval <- function(num_canopies,
 
   # ----
   # Sobol models of relative loss
+  # Upper canopy for all locations
   sobol_upper_canopy_mort_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_patched", canopy_layer==1)$relative_change)
   sobol_upper_canopy_mort_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_consumed_patched", canopy_layer==1)$relative_change)
   sobol_upper_canopy_c_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_consumed_patched", canopy_layer==1)$relative_change)
   sobol_upper_canopy_c_remain_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_remain_patched", canopy_layer==1)$relative_change)
 
   if (watershed != "RS"){
+    # Lower canopy for HJA, P300 and SF
     sobol_lower_canopy_mort_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_patched", canopy_layer==2)$relative_change)
     sobol_lower_canopy_mort_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_mort_consumed_patched", canopy_layer==2)$relative_change)
     sobol_lower_canopy_c_consumed_rel <- tell(sobol_model, dplyr::filter(patch_fire_diff, var_type=="canopy_target_prop_c_consumed_patched", canopy_layer==2)$relative_change)
@@ -86,38 +88,47 @@ patch_sens_sobol_eval <- function(num_canopies,
   
   if (watershed != "RS"){
     # HJA, P300 and SF
-    parameter <- c("h_overstory", "h_understory", "LowerCan: k_mort_u",
-                   "LowerCan: k_consumption", "LowerCan: k1_mort_o", "LowerCan: k2_mort_o",
-                   "UpperCan: k_mort_u", "UpperCan: k_consumption", "UpperCan: k1_mort_o",
-                   "UpperCan: k2_mort_o", "I'")
+
+    parameter_initial <- c("h_overstory", "h_understory", 
+                           "k_mort_u", "k_consumption", "k1_mort_o", "k2_mort_o",
+                           "k_mort_u", "k_consumption", "k1_mort_o", "k2_mort_o",
+                           "I'")
+    
+    parameter <- c("h_overstory", "h_understory",
+                   "k_mort_u", "k_consumption", "k1_mort_o", "k2_mort_o",
+                   "I'")
     
     parameter_names <- c(expression('h'[overstory]), expression('h'[understory]), 
-                         expression('LowerCan: k'[mort_u]), expression('LowerCan: k'[consumption]), 
-                         expression('LowerCan: k'['1_mort_o']), expression('LowerCan: k'['2_mort_o']),   
-                         expression('UpperCan: k'[mort_u]), expression('UpperCan: k'[consumption]), 
-                         expression('UpperCan: k'['1_mort_o']), expression('UpperCan: k'['2_mort_o']), "I'")
+                         expression('k'[mort_u]), expression('k'[consumption]), 
+                         expression('k'['1_mort_o']), expression('k'['2_mort_o']),   
+                         "I'")
     
-    response_variable_names <- c("UpperCan: prop_c_mort", "UpperCan: prop_mort_consumed",
-                                 "UpperCan: prop_c_consumed", "UpperCan: prop_c_remain",
-                                 "LowerCan: prop_c_mort", "LowerCan: prop_mort_consumed",
-                                 "LowerCan: prop_c_consumed","LowerCan: prop_c_remain")
+    response_variable_names <- c("prop_c_mort", "prop_mort_consumed",
+                                 "prop_c_consumed", "prop_c_remain")
+    
+    parameter_canopy_group <- c("none", "none",
+                                "low","low","low","low",
+                                "up","up","up","up",
+                                "none")
+    
   } else {
     
     # RS
-    parameter <- c("h_overstory", "h_understory", "UpperCan: k_mort_u", 
-                   "UpperCan: k_consumption", "UpperCan: k1_mort_o",
-                   "UpperCan: k2_mort_o", "I'")
+    parameter <- c("h_overstory", "h_understory", "k_mort_u", 
+                   "k_consumption", "k1_mort_o",
+                   "k2_mort_o", "I'")
     
     parameter_names <- c(expression('h'[overstory]), expression('h'[understory]),
-                         expression('UpperCan: k'[mort_u]), expression('UpperCan: k'[consumption]), 
-                         expression('UpperCan: k'['1_mort_o']), expression('UpperCan: k'['2_mort_o']), "I'")
+                         expression('k'[mort_u]), expression('k'[consumption]), 
+                         expression('k'['1_mort_o']), expression('k'['2_mort_o']), "I'")
     
-    response_variable_names <- c("UpperCan: prop_c_mort", "UpperCan: prop_mort_consumed",
-                                 "UpperCan: prop_c_consumed", "UpperCan: prop_c_remain")
+    response_variable_names <- c("prop_c_mort", "prop_mort_consumed",
+                                 "prop_c_consumed", "prop_c_remain")
   }
   
   # ----
   # Make a tibble for analyzing sensitivity
+  
   
   if (watershed != "RS"){  
     # First-order indices
@@ -129,9 +140,33 @@ patch_sens_sobol_eval <- function(num_canopies,
                              prop_mort_consumed_low = sobol_lower_canopy_mort_consumed_rel$S$original,
                              prop_c_consumed_low = sobol_lower_canopy_c_consumed_rel$S$original,
                              prop_c_remain_low = sobol_lower_canopy_c_remain_rel$S$original,
-                             parameter=parameter)
-    response_variable_limits_1st <- names(sobol_fire_1st[1:8])
-    sobol_fire_1st <- tidyr::gather(sobol_fire_1st, response_variable, sensitivity_value, 1:8)
+                             parameter=parameter_initial,
+                             parameter_canopy_group=parameter_canopy_group)
+    sobol_fire_1st <- sobol_fire_1st %>% 
+      tidyr::gather(response_variable, sensitivity_value, 1:8) %>% 
+      # Add canopy group variable
+      mutate(response_canopy_group = if_else(response_variable %in% c("prop_c_mort_up",
+                                                                      "prop_mort_consumed_up",
+                                                                      "prop_c_consumed_up",
+                                                                      "prop_c_remain_up"),
+                                             "Upper Canopy",
+                                             "Lower Canopy")) %>% 
+      # Remove values where lower canopy parameter values are associated with
+      # upper canopy response variables, and vice versa 
+      dplyr::filter((parameter_canopy_group == "low" & response_canopy_group == "Lower Canopy") |
+                      (parameter_canopy_group == "up" & response_canopy_group == "Upper Canopy") |
+                      (parameter_canopy_group == "none")) %>% 
+      # Change response variable names so they do not indicate upper or lower canopy
+      mutate(response_variable = case_when(
+        response_variable %in% c("prop_c_mort_up","prop_c_mort_low")~"prop_c_mort",
+        response_variable %in% c("prop_mort_consumed_up","prop_mort_consumed_low")~"prop_mort_consumed",
+        response_variable %in% c("prop_c_consumed_up","prop_c_consumed_low")~"prop_c_consumed",
+        response_variable %in% c("prop_c_remain_up","prop_c_remain_low")~"prop_c_remain"
+      ))
+    sobol_fire_1st$response_canopy_group <- factor(sobol_fire_1st$response_canopy_group,
+                                                   levels = c("Upper Canopy","Lower Canopy"))
+    
+    # ---
     
     # Total indices
     sobol_fire_total <- tibble(prop_c_mort_up = sobol_upper_canopy_mort_rel$T$original,
@@ -142,9 +177,31 @@ patch_sens_sobol_eval <- function(num_canopies,
                                prop_mort_consumed_low = sobol_lower_canopy_mort_consumed_rel$T$original,
                                prop_c_consumed_low = sobol_lower_canopy_c_consumed_rel$T$original,
                                prop_c_remain_low = sobol_lower_canopy_c_remain_rel$T$original,
-                               parameter=parameter)
-    response_variable_limits_total <- names(sobol_fire_total[1:8])
-    sobol_fire_total <- tidyr::gather(sobol_fire_total, response_variable, sensitivity_value, 1:8)
+                               parameter=parameter_initial,
+                               parameter_canopy_group=parameter_canopy_group)
+    sobol_fire_total <- sobol_fire_total %>% 
+      tidyr::gather(response_variable, sensitivity_value, 1:8) %>% 
+      # Add canopy group variable
+      mutate(response_canopy_group = if_else(response_variable %in% c("prop_c_mort_up",
+                                                                      "prop_mort_consumed_up",
+                                                                      "prop_c_consumed_up",
+                                                                      "prop_c_remain_up"),
+                                             "Upper Canopy",
+                                             "Lower Canopy")) %>% 
+      # Remove values where lower canopy parameter values are associated with
+      # upper canopy response variables, and vice versa 
+      dplyr::filter((parameter_canopy_group == "low" & response_canopy_group == "Lower Canopy") |
+                      (parameter_canopy_group == "up" & response_canopy_group == "Upper Canopy") |
+                      (parameter_canopy_group == "none")) %>% 
+      # Change response variable names so they do not indicate upper or lower canopy
+      mutate(response_variable = case_when(
+        response_variable %in% c("prop_c_mort_up","prop_c_mort_low")~"prop_c_mort",
+        response_variable %in% c("prop_mort_consumed_up","prop_mort_consumed_low")~"prop_mort_consumed",
+        response_variable %in% c("prop_c_consumed_up","prop_c_consumed_low")~"prop_c_consumed",
+        response_variable %in% c("prop_c_remain_up","prop_c_remain_low")~"prop_c_remain"
+      ))
+    sobol_fire_total$response_canopy_group <- factor(sobol_fire_total$response_canopy_group,
+                                                     levels = c("Upper Canopy","Lower Canopy"))
     
   } else {
     # RS
@@ -199,36 +256,96 @@ patch_sens_sobol_eval <- function(num_canopies,
   # ---------------------------------------------------------------------
   # Figures 
   
-  theme_set(theme_bw(base_size = 12))
+  # ******** An secondary grouping was added to the response variable (y-axis).
+  # See https://stackoverflow.com/questions/18165863/ for details. Possibly
+  # replace upper and lower canopy terminology with primary and secondary
+  # *********
   
-  # First-order indices
-  x <- ggplot(sobol_fire_1st) +
-    geom_tile(aes(x=parameter, y=response_variable, fill=sensitivity_value)) +
-    scale_fill_continuous(name="First-order\nIndices    ") +
-    scale_x_discrete(labels = c(parameter_names),
-                     limits=c(parameter)) +
-    scale_y_discrete(labels = c(rev(response_variable_names)),
-                     limits=c(rev(response_variable_limits_1st))) +
-    theme(axis.text.x = element_text(angle = 330, hjust=0)) +
-    labs(title = paste("Sobol: ", watershed, " at stand age ", stand_age, sep=""), x = "Parameter", y = "Response Variable")
-  #plot(x)
-  ggsave(paste("sobal_1st_", watershed, "_", stand_age, ".pdf",sep=""), plot = x,
-         path = output_path, width = 8, height=6)
-  
-  # Total indices
-  x <- ggplot(sobol_fire_total) +
-    geom_tile(aes(x=parameter, y=response_variable, fill=sensitivity_value)) +
-    scale_fill_continuous(name="Total\nIndices    ") +
-    scale_x_discrete(labels = c(parameter_names),
-                     limits=c(parameter)) +
-    scale_y_discrete(labels = c(rev(response_variable_names)),
-                     limits=c(rev(response_variable_limits_total))) +
-    theme(axis.text.x = element_text(angle = 330, hjust=0)) +
-    labs(title = paste("Sobol: ", watershed, " at stand age ", stand_age, sep=""), x = "Parameter", y = "Response Variable")
-  #plot(x)
-  ggsave(paste("sobal_total_", watershed, "_", stand_age, ".pdf",sep=""), plot = x,
-         path = output_path, width = 8, height=6)
-  
+  if (watershed != "RS"){
+    # Figures for HJA, P300 and RS
+    
+    theme_set(theme_bw(base_size = 12))
+    
+    # First-order indices
+    x <- ggplot(sobol_fire_1st) +
+      geom_tile(aes(x=parameter, y=response_variable, fill=sensitivity_value)) +
+      scale_fill_continuous(name="First-order\nIndices    ") +
+      scale_x_discrete(labels = c(parameter_names),
+                       limits=c(parameter),
+                       expand=c(0,0)) +
+      scale_y_discrete(labels = c(rev(response_variable_names)),
+                       limits=c(rev(response_variable_names)),
+                       expand=c(0,0)) +
+      theme(axis.text.x = element_text(angle = 330, hjust=0)) +
+      labs(title = paste("Sobol: ", watershed, " at stand age ", stand_age, sep=""),
+           x = "Parameter", y = "Response Variable") +
+      facet_grid(response_canopy_group~., switch = "y") +
+      theme(panel.spacing = unit(0, "lines"), 
+            strip.background = element_blank(),
+            strip.placement = "outside") + 
+      # geom_hline(yintercept=4.5, color='red', size=2) + # Problem: line is also made at top of graph due to faceting
+      NULL
+    #plot(x)
+    ggsave(paste("sobal_1st_", watershed, "_", stand_age, ".pdf",sep=""), plot = x,
+           path = output_path, width = 8, height=6)
+    
+    # Total indices
+    x <- ggplot(sobol_fire_total) +
+      geom_tile(aes(x=parameter, y=response_variable, fill=sensitivity_value)) +
+      scale_fill_continuous(name="Total\nIndices    ") +
+      scale_x_discrete(labels = c(parameter_names),
+                       limits=c(parameter),
+                       expand=c(0,0)) +
+      scale_y_discrete(labels = c(rev(response_variable_names)),
+                       limits=c(rev(response_variable_names)),
+                       expand=c(0,0)) +
+      theme(axis.text.x = element_text(angle = 330, hjust=0)) +
+      labs(title = paste("Sobol: ", watershed, " at stand age ", stand_age, sep=""),
+           x = "Parameter", y = "Response Variable") +
+      facet_grid(response_canopy_group~., switch = "y") +
+      theme(panel.spacing = unit(0, "lines"), 
+            strip.background = element_blank(),
+            strip.placement = "outside") + 
+      # geom_hline(yintercept=4.5, color='red', size=2) + # Problem: line is also made at top of graph due to faceting
+      NULL    
+    #plot(x)
+    ggsave(paste("sobal_total_", watershed, "_", stand_age, ".pdf",sep=""), plot = x,
+           path = output_path, width = 8, height=6)
+    
+  } else {
+    # Figures for RS
+    
+    theme_set(theme_bw(base_size = 12))
+    
+    # First-order indices
+    x <- ggplot(sobol_fire_1st) +
+      geom_tile(aes(x=parameter, y=response_variable, fill=sensitivity_value)) +
+      scale_fill_continuous(name="First-order\nIndices    ") +
+      scale_x_discrete(labels = c(parameter_names),
+                       limits=c(parameter)) +
+      scale_y_discrete(labels = c(rev(response_variable_names)),
+                       limits=c(rev(response_variable_limits_1st))) +
+      theme(axis.text.x = element_text(angle = 330, hjust=0)) +
+      labs(title = paste("Sobol: ", watershed, " at stand age ", stand_age, sep=""), x = "Parameter", y = "Response Variable")
+    #plot(x)
+    ggsave(paste("sobal_1st_", watershed, "_", stand_age, ".pdf",sep=""), plot = x,
+           path = output_path, width = 8, height=6)
+    
+    # Total indices
+    x <- ggplot(sobol_fire_total) +
+      geom_tile(aes(x=parameter, y=response_variable, fill=sensitivity_value)) +
+      scale_fill_continuous(name="Total\nIndices    ") +
+      scale_x_discrete(labels = c(parameter_names),
+                       limits=c(parameter)) +
+      scale_y_discrete(labels = c(rev(response_variable_names)),
+                       limits=c(rev(response_variable_limits_total))) +
+      theme(axis.text.x = element_text(angle = 330, hjust=0)) +
+      labs(title = paste("Sobol: ", watershed, " at stand age ", stand_age, sep=""), x = "Parameter", y = "Response Variable")
+    #plot(x)
+    ggsave(paste("sobal_total_", watershed, "_", stand_age, ".pdf",sep=""), plot = x,
+           path = output_path, width = 8, height=6)
+    
+  }
 }
 
 
