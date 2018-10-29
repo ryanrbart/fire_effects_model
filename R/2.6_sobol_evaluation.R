@@ -207,19 +207,19 @@ patch_sens_sobol_eval <- function(num_canopies,
     # RS
     
     # First-order indices
-      sobol_fire_1st <- tibble(prop_c_mort_up = sobol_upper_canopy_mort_rel$S$original,
-                               prop_mort_consumed_up = sobol_upper_canopy_mort_consumed_rel$S$original,
-                               prop_c_consumed_up = sobol_upper_canopy_c_consumed_rel$S$original,
-                               prop_c_remain_up = sobol_upper_canopy_c_remain_rel$S$original,
+      sobol_fire_1st <- tibble(prop_c_mort = sobol_upper_canopy_mort_rel$S$original,
+                               prop_mort_consumed = sobol_upper_canopy_mort_consumed_rel$S$original,
+                               prop_c_consumed = sobol_upper_canopy_c_consumed_rel$S$original,
+                               prop_c_remain = sobol_upper_canopy_c_remain_rel$S$original,
                                parameter=parameter)
       response_variable_limits_1st <- names(sobol_fire_1st[1:4])
       sobol_fire_1st <- tidyr::gather(sobol_fire_1st, response_variable, sensitivity_value, 1:4)
       
       # Total indices
-      sobol_fire_total <- tibble(prop_c_mort_up = sobol_upper_canopy_mort_rel$T$original,
-                                 prop_mort_consumed_up = sobol_upper_canopy_mort_consumed_rel$T$original,
-                                 prop_c_consumed_up = sobol_upper_canopy_c_consumed_rel$T$original,
-                                 prop_c_remain_up = sobol_upper_canopy_c_remain_rel$T$original,
+      sobol_fire_total <- tibble(prop_c_mort = sobol_upper_canopy_mort_rel$T$original,
+                                 prop_mort_consumed = sobol_upper_canopy_mort_consumed_rel$T$original,
+                                 prop_c_consumed = sobol_upper_canopy_c_consumed_rel$T$original,
+                                 prop_c_remain = sobol_upper_canopy_c_remain_rel$T$original,
                                  parameter=parameter)
       response_variable_limits_total <- names(sobol_fire_total[1:4])
       sobol_fire_total <- tidyr::gather(sobol_fire_total, response_variable, sensitivity_value, 1:4)
@@ -262,7 +262,7 @@ patch_sens_sobol_eval <- function(num_canopies,
   # *********
   
   if (watershed != "RS"){
-    # Figures for HJA, P300 and RS
+    # Figures for HJA, P300 and SF
     
     theme_set(theme_bw(base_size = 12))
     
