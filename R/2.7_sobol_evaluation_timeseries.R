@@ -66,6 +66,7 @@ process_sens_ts <- function(stand_age,
   
 }
 
+
 stand_age_hja = c("5","12","20","40","70","100","140")
 stand_age_p300 = c("5","12","20","30","40","60","80")
 stand_age_rs = c("5","12","20","30","40","60","80")
@@ -255,6 +256,7 @@ process_sens_ts(stand_age = stand_age_sf,
 
 
 # --------------------------------------------------------------
+
 
 # Should I be plotting response variables or parameters???
 
