@@ -1,4 +1,4 @@
-# Test patch-level fire effects for P300
+# Patch-level fire effects for P300
 # 
 # This script evaluates fire effects for landscapes simulated at various time intervals.
 
@@ -8,7 +8,7 @@ source("R/0.1_utilities.R")
 # ---------------------------------------------------------------------
 # ---------------------------------------------------------------------
 # ---------------------------------------------------------------------
-# Second RHESSys Simulation
+# RHESSys Simulation
 # Computes fire effects at each stand age
 
 # ---------------------------------------------------------------------
@@ -27,18 +27,12 @@ input_rhessys <- list()
 input_rhessys$rhessys_version <- "bin/rhessys5.20.1"
 #input_rhessys$rhessys_version <- "bin/rhessys6.0"
 input_rhessys$tec_file <- "ws_p300/tecfiles/p300_patch_fire.tec"
-input_rhessys$world_file <- c("ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y1947M10D1H1.state",
-                              "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y1954M10D1H1.state",
-                              "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y1962M10D1H1.state",
-                              "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y1972M10D1H1.state",
-                              "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y1982M10D1H1.state",
-                              "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y2002M10D1H1.state",
-                              "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y2022M10D1H1.state")
+input_rhessys$world_file <- "assigned_below"
 input_rhessys$world_hdr_prefix <- "p300_30m_2can_patch_9445"
 input_rhessys$flow_file <- "ws_p300/flowtables/p300_30m_patch_9445.flow"
 input_rhessys$start_date <- "1941 10 1 1"
 input_rhessys$end_date <- "1941 10 15 1"
-input_rhessys$output_folder <- "ws_p300/out/3.1_p300_patch_fire"
+input_rhessys$output_folder <- "ws_p300/out/3.2_p300"
 input_rhessys$output_filename <- "patch_fire"
 input_rhessys$command_options <- c("-b -g -c -p -f")
 
@@ -85,22 +79,7 @@ input_def_list <- list(
   list(input_hdr_list$stratum_def[2], "epc.leaf_turnover", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.leaf_turnover`)),
   list(input_hdr_list$stratum_def[2], "epc.livewood_turnover", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.livewood_turnover`)),
   list(input_hdr_list$stratum_def[2], "epc.branch_turnover", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.branch_turnover`)),
-  list(input_hdr_list$stratum_def[2], "epc.height_to_stem_coef", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.height_to_stem_coef`)),
-
-  # -----
-  # Patch fire parameters
-  list(input_hdr_list$soil_def[1], "overstory_height_thresh", c(7)),
-  list(input_hdr_list$soil_def[1], "understory_height_thresh", c(4)),
-  # Lower canopy fire parameters
-  list(input_hdr_list$stratum_def[2], "understory_mort", c(1)),
-  list(input_hdr_list$stratum_def[2], "consumption", c(1)),
-  list(input_hdr_list$stratum_def[2], "overstory_mort_k1", c(-10)),
-  list(input_hdr_list$stratum_def[2], "overstory_mort_k2", c(1)),
-  # Upper canopy fire parameters
-  list(input_hdr_list$stratum_def[1], "understory_mort", c(1)),
-  list(input_hdr_list$stratum_def[1], "consumption", c(1)),
-  list(input_hdr_list$stratum_def[1], "overstory_mort_k1", c(-10)),
-  list(input_hdr_list$stratum_def[1], "overstory_mort_k2", c(1))
+  list(input_hdr_list$stratum_def[2], "epc.height_to_stem_coef", c(ps$`ws_p300/defs/veg_p300_shrub.def:epc.height_to_stem_coef`))
 )
 
 
@@ -151,16 +130,6 @@ input_clim_base_list[[1]][[5]][2,] <- data.frame(c1=0, c2="number_non_critical_h
 # Make a list of dated sequence data.frames (file name, year, month, day, hour, value)
 # input_dated_seq_list <- NULL
 input_dated_seq_list = list()
-input_dated_seq_list[[1]] <- data.frame(name="lowProv",type="pspread",year=1941,month=10,day=7,hour=1,value=0.1,stringsAsFactors=FALSE)
-input_dated_seq_list[[2]] <- data.frame(name="lowProv",type="pspread",year=1941,month=10,day=7,hour=1,value=0.2,stringsAsFactors=FALSE)
-input_dated_seq_list[[3]] <- data.frame(name="lowProv",type="pspread",year=1941,month=10,day=7,hour=1,value=0.3,stringsAsFactors=FALSE)
-input_dated_seq_list[[4]] <- data.frame(name="lowProv",type="pspread",year=1941,month=10,day=7,hour=1,value=0.4,stringsAsFactors=FALSE)
-input_dated_seq_list[[5]] <- data.frame(name="lowProv",type="pspread",year=1941,month=10,day=7,hour=1,value=0.5,stringsAsFactors=FALSE)
-input_dated_seq_list[[6]] <- data.frame(name="lowProv",type="pspread",year=1941,month=10,day=7,hour=1,value=0.6,stringsAsFactors=FALSE)
-input_dated_seq_list[[7]] <- data.frame(name="lowProv",type="pspread",year=1941,month=10,day=7,hour=1,value=0.7,stringsAsFactors=FALSE)
-input_dated_seq_list[[8]] <- data.frame(name="lowProv",type="pspread",year=1941,month=10,day=7,hour=1,value=0.8,stringsAsFactors=FALSE)
-input_dated_seq_list[[9]] <- data.frame(name="lowProv",type="pspread",year=1941,month=10,day=7,hour=1,value=0.9,stringsAsFactors=FALSE)
-input_dated_seq_list[[10]] <- data.frame(name="lowProv",type="pspread",year=1941,month=10,day=7,hour=1,value=1.0,stringsAsFactors=FALSE)
 
 
 # Make tec-file
@@ -187,24 +156,70 @@ output_variables[10,] <- data.frame("canopy_target_prop_c_remain", "awks/output_
 
 
 
+
+
+
+
+
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# Simulation Analysis
+
+
+world_pspread_par <- read_csv(RHESSYS_PAR_SIM_3.1_P300)
+n_runs <- nrow(world_pspread_par)
+output_init <- c(1,rep(0,(n_runs-1)))   # Used for output_initiation argument in run_rhessys 
+
 # ---------------------------------------------------------------------
 
-
+# Step through parameter sets
 system.time(
-  run_rhessys(parameter_method = parameter_method,
-              output_method = "awk",
-              input_rhessys = input_rhessys,
-              input_hdr_list = input_hdr_list,
-              input_preexisting_table = input_preexisting_table,
-              input_def_list = input_def_list,
-              input_standard_par_list = input_standard_par_list,
-              input_clim_base_list = input_clim_base_list,
-              input_dated_seq_list = input_dated_seq_list,
-              input_tec_data = input_tec_data,
-              output_variables = output_variables)
+  for (aa in seq_len(nrow(world_pspread_par))){
+    
+    # ----
+    # Assign worldfile
+    input_rhessys$world_file <- world_pspread_par$world[aa]
+
+    # ----
+    # Assign parameters
+    
+    # Patch fire parameters
+    input_def_list[[18]] <- list(input_hdr_list$soil_def[1], "overstory_height_thresh", world_pspread_par$`ws_p300/defs/patch_p300.def:overstory_height_thresh`[aa])
+    input_def_list[[19]] <- list(input_hdr_list$soil_def[1], "understory_height_thresh", world_pspread_par$`ws_p300/defs/patch_p300.def:understory_height_thresh`[aa])
+    # Lower canopy fire parameters
+    input_def_list[[20]] <- list(input_hdr_list$stratum_def[2], "understory_mort", world_pspread_par$`ws_p300/defs/veg_p300_shrub.def:understory_mort`[aa])
+    input_def_list[[21]] <- list(input_hdr_list$stratum_def[2], "consumption", world_pspread_par$`ws_p300/defs/veg_p300_shrub.def:consumption`[aa])
+    input_def_list[[22]] <- list(input_hdr_list$stratum_def[2], "overstory_mort_k1", world_pspread_par$`ws_p300/defs/veg_p300_shrub.def:overstory_mort_k1`[aa])
+    input_def_list[[23]] <- list(input_hdr_list$stratum_def[2], "overstory_mort_k2", world_pspread_par$`ws_p300/defs/veg_p300_shrub.def:overstory_mort_k2`[aa])
+    # Upper canopy fire parameters
+    input_def_list[[24]] <- list(input_hdr_list$stratum_def[1], "understory_mort", world_pspread_par$`ws_p300/defs/veg_p300_conifer.def:understory_mort`[aa])
+    input_def_list[[25]] <- list(input_hdr_list$stratum_def[1], "consumption", world_pspread_par$`ws_p300/defs/veg_p300_conifer.def:consumption`[aa])
+    input_def_list[[26]] <- list(input_hdr_list$stratum_def[1], "overstory_mort_k1", world_pspread_par$`ws_p300/defs/veg_p300_conifer.def:overstory_mort_k1`[aa])
+    input_def_list[[27]] <- list(input_hdr_list$stratum_def[1], "overstory_mort_k2", world_pspread_par$`ws_p300/defs/veg_p300_conifer.def:overstory_mort_k2`[aa])
+    
+    # ----
+    input_dated_seq_list = list()
+    input_dated_seq_list[[1]] <- data.frame(name="lowProv",type="pspread",year=1941,month=10,day=7,hour=1,value=world_pspread_par$pspread_levels[aa],stringsAsFactors=FALSE)
+    
+    
+    run_rhessys(parameter_method = parameter_method,
+                output_method = "awk",
+                input_rhessys = input_rhessys,
+                input_hdr_list = input_hdr_list,
+                input_preexisting_table = input_preexisting_table,
+                input_def_list = input_def_list,
+                input_standard_par_list = input_standard_par_list,
+                input_clim_base_list = input_clim_base_list,
+                input_dated_seq_list = input_dated_seq_list,
+                input_tec_data = input_tec_data,
+                output_variables = output_variables,
+                output_initiation = output_init[aa])
+    
+    print("----------------------------------------------------------")
+    print(paste("Simulation: Run #", aa, "of", n_runs))
+  }
 )
-
 beep(1)
-
 
 

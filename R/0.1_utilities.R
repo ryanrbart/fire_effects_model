@@ -9,6 +9,7 @@ library(readr)
 library(ggplot2)
 library(tidyr)
 library(dplyr)
+library(purrr)
 library(lubridate)
 library(sensitivity)
 library(beepr)
@@ -77,10 +78,13 @@ RHESSYS_ALLSIM_DIR_2.5_HJA_STAND6 <- file.path(RHESSYS_OUT_DIR_2.5_HJA_STAND6, "
 RHESSYS_OUT_DIR_2.5_HJA_STAND7 <- file.path(RHESSYS_OUT_DIR_2.5_HJA, "stand7")
 RHESSYS_ALLSIM_DIR_2.5_HJA_STAND7 <- file.path(RHESSYS_OUT_DIR_2.5_HJA_STAND7, "allsim")
 
-RHESSYS_OUT_DIR_3.1_HJA <- "ws_hja/out/3.1_hja_patch_fire"
-RHESSYS_ALLSIM_DIR_3.1_HJA <- file.path(RHESSYS_OUT_DIR_3.1_HJA, "allsim")
-RHESSYS_PAR_FILE_3.1_HJA <- file.path(RHESSYS_OUT_DIR_3.1_HJA, "patch_fire_parameter_sets.csv")
-RHESSYS_ALL_OPTION_3.1_HJA <- file.path(RHESSYS_OUT_DIR_3.1_HJA, "patch_fire_all_options.csv")
+RHESSYS_OUT_DIR_3.1_HJA <- "ws_hja/out/3.1_hja"
+RHESSYS_PAR_SIM_3.1_HJA <- file.path(RHESSYS_OUT_DIR_3.1_HJA, "par_simulation.csv")
+
+RHESSYS_OUT_DIR_3.2_HJA <- "ws_hja/out/3.2_hja"
+RHESSYS_ALLSIM_DIR_3.2_HJA <- file.path(RHESSYS_OUT_DIR_3.2_HJA, "allsim")
+RHESSYS_PAR_FILE_3.2_HJA <- file.path(RHESSYS_OUT_DIR_3.2_HJA, "patch_fire_parameter_sets.csv")
+RHESSYS_ALL_OPTION_3.2_HJA <- file.path(RHESSYS_OUT_DIR_3.2_HJA, "patch_fire_all_options.csv")
 
 
 
@@ -141,10 +145,13 @@ RHESSYS_ALLSIM_DIR_2.5_P300_STAND6 <- file.path(RHESSYS_OUT_DIR_2.5_P300_STAND6,
 RHESSYS_OUT_DIR_2.5_P300_STAND7 <- file.path(RHESSYS_OUT_DIR_2.5_P300, "stand7")
 RHESSYS_ALLSIM_DIR_2.5_P300_STAND7 <- file.path(RHESSYS_OUT_DIR_2.5_P300_STAND7, "allsim")
 
-RHESSYS_OUT_DIR_3.1_P300 <- "ws_p300/out/3.1_p300_patch_fire"
-RHESSYS_ALLSIM_DIR_3.1_P300 <- file.path(RHESSYS_OUT_DIR_3.1_P300, "allsim")
-RHESSYS_PAR_FILE_3.1_P300 <- file.path(RHESSYS_OUT_DIR_3.1_P300, "patch_fire_parameter_sets.csv")
-RHESSYS_ALL_OPTION_3.1_P300 <- file.path(RHESSYS_OUT_DIR_3.1_P300, "patch_fire_all_options.csv")
+RHESSYS_OUT_DIR_3.1_P300 <- "ws_p300/out/3.1_p300"
+RHESSYS_PAR_SIM_3.1_P300 <- file.path(RHESSYS_OUT_DIR_3.1_P300, "par_simulation.csv")
+
+RHESSYS_OUT_DIR_3.2_P300 <- "ws_p300/out/3.2_p300"
+RHESSYS_ALLSIM_DIR_3.2_P300 <- file.path(RHESSYS_OUT_DIR_3.2_P300, "allsim")
+RHESSYS_PAR_FILE_3.2_P300 <- file.path(RHESSYS_OUT_DIR_3.2_P300, "patch_fire_parameter_sets.csv")
+RHESSYS_ALL_OPTION_3.2_P300 <- file.path(RHESSYS_OUT_DIR_3.2_P300, "patch_fire_all_options.csv")
 
 
 
@@ -205,10 +212,13 @@ RHESSYS_ALLSIM_DIR_2.5_RS_STAND6 <- file.path(RHESSYS_OUT_DIR_2.5_RS_STAND6, "al
 RHESSYS_OUT_DIR_2.5_RS_STAND7 <- file.path(RHESSYS_OUT_DIR_2.5_RS, "stand7")
 RHESSYS_ALLSIM_DIR_2.5_RS_STAND7 <- file.path(RHESSYS_OUT_DIR_2.5_RS_STAND7, "allsim")
 
-RHESSYS_OUT_DIR_3.1_RS <- "ws_rs/out/3.1_rs_patch_fire"
-RHESSYS_ALLSIM_DIR_3.1_RS <- file.path(RHESSYS_OUT_DIR_3.1_RS, "allsim")
-RHESSYS_PAR_FILE_3.1_RS <- file.path(RHESSYS_OUT_DIR_3.1_RS, "patch_fire_parameter_sets.csv")
-RHESSYS_ALL_OPTION_3.1_RS <- file.path(RHESSYS_OUT_DIR_3.1_RS, "patch_fire_all_options.csv")
+RHESSYS_OUT_DIR_3.1_RS <- "ws_rs/out/3.1_rs"
+RHESSYS_PAR_SIM_3.1_RS <- file.path(RHESSYS_OUT_DIR_3.1_RS, "par_simulation.csv")
+
+RHESSYS_OUT_DIR_3.2_RS <- "ws_rs/out/3.2_rs"
+RHESSYS_ALLSIM_DIR_3.2_RS <- file.path(RHESSYS_OUT_DIR_3.2_RS, "allsim")
+RHESSYS_PAR_FILE_3.2_RS <- file.path(RHESSYS_OUT_DIR_3.2_RS, "patch_fire_parameter_sets.csv")
+RHESSYS_ALL_OPTION_3.2_RS <- file.path(RHESSYS_OUT_DIR_3.2_RS, "patch_fire_all_options.csv")
 
 
 
@@ -269,11 +279,13 @@ RHESSYS_ALLSIM_DIR_2.5_SF_STAND6 <- file.path(RHESSYS_OUT_DIR_2.5_SF_STAND6, "al
 RHESSYS_OUT_DIR_2.5_SF_STAND7 <- file.path(RHESSYS_OUT_DIR_2.5_SF, "stand7")
 RHESSYS_ALLSIM_DIR_2.5_SF_STAND7 <- file.path(RHESSYS_OUT_DIR_2.5_SF_STAND7, "allsim")
 
-RHESSYS_OUT_DIR_3.1_SF <- "ws_sf/out/3.1_sf_patch_fire"
-RHESSYS_ALLSIM_DIR_3.1_SF <- file.path(RHESSYS_OUT_DIR_3.1_SF, "allsim")
-RHESSYS_PAR_FILE_3.1_SF <- file.path(RHESSYS_OUT_DIR_3.1_SF, "patch_fire_parameter_sets.csv")
-RHESSYS_ALL_OPTION_3.1_SF <- file.path(RHESSYS_OUT_DIR_3.1_SF, "patch_fire_all_options.csv")
+RHESSYS_OUT_DIR_3.1_SF <- "ws_sf/out/3.1_sf"
+RHESSYS_PAR_SIM_3.1_SF <- file.path(RHESSYS_OUT_DIR_3.1_SF, "par_simulation.csv")
 
+RHESSYS_OUT_DIR_3.2_SF <- "ws_sf/out/3.2_sf"
+RHESSYS_ALLSIM_DIR_3.2_SF <- file.path(RHESSYS_OUT_DIR_3.2_SF, "allsim")
+RHESSYS_PAR_FILE_3.2_SF <- file.path(RHESSYS_OUT_DIR_3.2_SF, "patch_fire_parameter_sets.csv")
+RHESSYS_ALL_OPTION_3.2_SF <- file.path(RHESSYS_OUT_DIR_3.2_SF, "patch_fire_all_options.csv")
 
 
 # ---------------------------------------------------------------------
