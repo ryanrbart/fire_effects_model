@@ -24,40 +24,23 @@ world_pspread <- tidyr::crossing(world, pspread_levels)
 
 
 # ---------------------------------------------------------------------
-# Do Latin Hypercube for each parameter set
+# Do monte carlo for each parameter set
+# LHC was not done since it was not (as far as I can tell) possible to input log distributed variables into lhc
 
-n_sim <- 10
+n_sim <- 40
 
-input_list <- list("ws_p300/defs/patch_p300.def:overstory_height_thresh" = c(7,7,n_sim),
-                   "ws_p300/defs/patch_p300.def:understory_height_thresh" = c(4.5,4.5,n_sim),
-                   "ws_p300/defs/veg_p300_shrub.def:understory_mort" = c(0.01,100,n_sim),
-                   "ws_p300/defs/veg_p300_shrub.def:consumption" = c(0.01,100,n_sim),
-                   "ws_p300/defs/veg_p300_shrub.def:overstory_mort_k1" = c(-5,-5,n_sim),
-                   "ws_p300/defs/veg_p300_shrub.def:overstory_mort_k2" = c(1,1,n_sim),
-                   "ws_p300/defs/veg_p300_conifer.def:understory_mort" = c(0.01,100,n_sim),
-                   "ws_p300/defs/veg_p300_conifer.def:consumption" = c(0.01,100,n_sim),
-                   "ws_p300/defs/veg_p300_conifer.def:overstory_mort_k1" = c(-20,-1,n_sim),
-                   "ws_p300/defs/veg_p300_conifer.def:overstory_mort_k2" = c(0.2,2,n_sim)
-                   )
+tmp1 <- setNames(data.frame(runif(n_sim, min=7,max=7)), "ws_p300/defs/patch_p300.def:overstory_height_thresh")
+tmp2 <- setNames(data.frame(runif(n_sim, min=4,max=4)), "ws_p300/defs/patch_p300.def:understory_height_thresh")
+tmp3 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_p300/defs/veg_p300_shrub.def:understory_mort")
+tmp4 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_p300/defs/veg_p300_shrub.def:consumption")
+tmp5 <- setNames(data.frame(runif(n_sim, min=-10,max=-10)), "ws_p300/defs/veg_p300_shrub.def:overstory_mort_k1")
+tmp6 <- setNames(data.frame(runif(n_sim, min=1,max=1)), "ws_p300/defs/veg_p300_shrub.def:overstory_mort_k2")
+tmp7 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_p300/defs/veg_p300_conifer.def:understory_mort")
+tmp8 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_p300/defs/veg_p300_conifer.def:consumption")
+tmp9 <- setNames(data.frame(runif(n_sim, min=-20,max=-1)), "ws_p300/defs/veg_p300_conifer.def:overstory_mort_k1")
+tmp10 <- setNames(data.frame(runif(n_sim, min=0.4,max=1.7)), "ws_p300/defs/veg_p300_conifer.def:overstory_mort_k2")
 
-k <- length(input_list)
-
-# Inputs for Latin Hypercube
-min_par <- sapply(seq_len(k), function(x,y) y[[x]][1], y=input_list)
-max_par <- sapply(seq_len(k), function(x,y) y[[x]][2], y=input_list)
-n <- input_list[[1]][3]
-
-# Transform a Latin hypercube
-grid <- lhs::randomLHS(n, k) # Generate generic hypercube
-out <- mapply(function(w, x, y, z) qunif(w[,x], min=y, max=z), 
-              x=seq_len(k), 
-              y=min_par, 
-              z=max_par, 
-              MoreArgs = list(w=grid))
-out <- matrix(out,nrow=n)
-out <- as.data.frame(out)
-colnames(out) <- names(input_list)
-
+out <- bind_cols(tmp1,tmp2,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,tmp9,tmp10)
 
 # ---------------------------------------------------------------------
 # Cross all parameter options with each world/pspread option
