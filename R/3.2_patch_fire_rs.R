@@ -184,7 +184,7 @@ system.time(
     
     # ----
     input_dated_seq_list = list()
-    input_dated_seq_list[[1]] <- data.frame(name="misreal",type="pspread",year=1988,month=10,day=7,hour=1,value=sobol_ps$pspread[aa],stringsAsFactors=FALSE)
+    input_dated_seq_list[[1]] <- data.frame(name="misreal",type="pspread",year=1988,month=10,day=7,hour=1,value=sobol_ps$pspread_levels[aa],stringsAsFactors=FALSE)
     
     
     run_rhessys(parameter_method = parameter_method,

@@ -278,7 +278,7 @@ patch_fire_eval <- function(num_canopies,
         NULL
       #plot(x)
       ggsave(paste(watershed,"_", variable_types[aa], ".pdf", sep=""), plot = x, 
-             device = "pdf", path = output_path, width = 7, height = 5)
+             device = "pdf", path = output_path, width = 8, height = 3)
       
     } else {       # Facet with two canopies
       
@@ -296,195 +296,13 @@ patch_fire_eval <- function(num_canopies,
         NULL
       #plot(x)
       ggsave(paste(watershed,"_", variable_types[aa], ".pdf", sep=""), plot = x, 
-             device = "pdf", path = output_path, width = 7, height = 5)
+             device = "pdf", path = output_path, width = 8, height = 5)
     }
   }
+
+  return(patch_canopy_diff)
 }
   
-  # ----
-  # 
-  # tmp <- dplyr::filter(p300_patch_canopy_diff,var_type == "leafc")
-  # x <- ggplot(data = tmp) +
-  #   geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
-  #                fill = "olivedrab3",
-  #                color="black", 
-  #                outlier.shape = NA) +
-  #   facet_grid(canopy_layer~world, labeller = labeller(world = world_file_yr, canopy_layer = canopy)) +
-  #   theme(legend.position = "none") +
-  #   labs(title = "Leaf Carbon", x = "Intensity", y = "Change in Leaf Carbon (%)") +
-  #   scale_x_continuous(breaks = c(0.2, 0.8))
-  # plot(x)
-  # #ggsave("p300_patch_sim_change_leafc.pdf",plot = x, path = OUTPUT_DIR_2)
-  # 
-  # 
-  # tmp <- dplyr::filter(p300_patch_canopy_diff,var_type == "stemc")
-  # x <- ggplot(data = tmp) +
-  #   geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
-  #                fill = "olivedrab3",
-  #                color="black", 
-  #                outlier.shape = NA) +
-  #   facet_grid(canopy_layer~world, labeller = labeller(world = world_file_yr, canopy_layer = canopy)) +
-  #   theme(legend.position = "none") +
-  #   labs(title = "Stem Carbon", x = "Intensity", y = "Change in Stem Carbon (%)") +
-  #   scale_x_continuous(breaks = c(0.2, 0.8))
-  # plot(x)
-  # #ggsave("p300_patch_sim_change_stemc.pdf",plot = x, path = OUTPUT_DIR_2)
-  # 
-  # 
-  # tmp <- dplyr::filter(p300_patch_height_diff,var_type == "height")
-  # x <- ggplot(data = tmp) +
-  #   geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
-  #                fill = "olivedrab3",
-  #                color="black", 
-  #                outlier.shape = NA) +
-  #   facet_grid(canopy_layer~world, labeller = labeller(world = world_file_yr, canopy_layer = canopy)) +
-  #   theme(legend.position = "none") +
-  #   labs(title = "Height", x = "Intensity", y = "Change in Height (%)") +
-  #   scale_x_continuous(breaks = c(0.2, 0.8))
-  # plot(x)
-  # #ggsave("p300_patch_sim_change_height.pdf",plot = x, path = OUTPUT_DIR_2)
-  # 
-  # # ----
-  # 
-  # tmp <- dplyr::filter(p300_patch_ground_diff, var_type == "litrc")
-  # x <- ggplot(data = tmp) +
-  #   geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
-  #                fill = "olivedrab3",
-  #                color="black", 
-  #                outlier.shape = NA) +
-  #   facet_grid(.~world, labeller = labeller(world = world_file_yr)) +
-  #   theme(legend.position = "none") +
-  #   labs(title = "Litter Carbon", x = "Intensity", y = "Change in Litter Carbon (%)") +
-  #   scale_x_continuous(breaks = c(0.2, 0.8))
-  # plot(x)
-  # #ggsave("p300_patch_sim_change_litrc.pdf",plot = x, path = OUTPUT_DIR_2)
-  # 
-  # tmp <- dplyr::filter(p300_patch_ground_diff, var_type == "soil1c")
-  # x <- ggplot(data = tmp) +
-  #   geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
-  #                fill = "olivedrab3",
-  #                color="black", 
-  #                outlier.shape = NA) +
-  #   #geom_bar(stat="identity",aes(x=pspread_levels,y=relative_change), color="olivedrab3") +
-  #   facet_grid(.~world, labeller = labeller(world = world_file_yr)) +
-  #   theme(legend.position = "none") +
-  #   labs(title = "Soil Carbon", x = "Intensity", y = "Change in Soil Carbon (%)") +
-  #   scale_x_continuous(breaks = c(0.2, 0.8))
-  # plot(x)
-  # #ggsave("p300_patch_sim_change_soil1c.pdf",plot = x, path = OUTPUT_DIR_2)
-  # 
-  # # tmp <- dplyr::filter(p300_patch_cwdc_diff, var_type == "cwdc")
-  # # x <- ggplot(data = tmp) +
-  # #   geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
-  # #                fill = "olivedrab3",
-  # #                color="black", 
-  # #                outlier.shape = NA) +
-  # #   facet_grid(.~world, labeller = labeller(world = world_file_yr, canopy_layer = canopy)) +
-  # #   theme(legend.position = "none") +
-  # #   labs(title = "Coarse Woody Debris Carbon", x = "Intensity", y = "Change in CWD Carbon (%)") +
-  # #   scale_x_continuous(breaks = c(0.2, 0.8))
-  # # plot(x)
-  # #ggsave("p300_patch_sim_change_cwdc.pdf",plot = x, path = OUTPUT_DIR_2)
-  # 
-  # 
-  # # ----
-  # 
-  # tmp <- dplyr::filter(p300_patch_canopy_diff,var_type == "leafc")
-  # x <- ggplot(data = tmp) +
-  #   geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
-  #                fill = "olivedrab3",
-  #                color="black", 
-  #                outlier.shape = NA) +
-  #   facet_grid(canopy_layer~world, labeller = labeller(world = world_file_yr, canopy_layer = canopy)) +
-  #   theme(legend.position = "none") +
-  #   labs(title = "Leaf Carbon", x = "Intensity", y = "Change in Leaf Carbon (%)") +
-  #   scale_x_continuous(breaks = c(0.2, 0.8))
-  # plot(x)
-  # #ggsave("p300_patch_sim_change_leafc.pdf",plot = x, path = OUTPUT_DIR_2)
-  # 
-  # 
-  # tmp <- dplyr::filter(p300_patch_canopy_diff,var_type == "stemc")
-  # x <- ggplot(data = tmp) +
-  #   geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
-  #                fill = "olivedrab3",
-  #                color="black", 
-  #                outlier.shape = NA) +
-  #   facet_grid(canopy_layer~world, labeller = labeller(world = world_file_yr, canopy_layer = canopy)) +
-  #   theme(legend.position = "none") +
-  #   labs(title = "Stem Carbon", x = "Intensity", y = "Change in Stem Carbon (%)") +
-  #   scale_x_continuous(breaks = c(0.2, 0.8))
-  # plot(x)
-  # #ggsave("p300_patch_sim_change_stemc.pdf",plot = x, path = OUTPUT_DIR_2)
-  # 
-  # 
-  # tmp <- dplyr::filter(p300_patch_height_diff,var_type == "height")
-  # x <- ggplot(data = tmp) +
-  #   geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
-  #                fill = "olivedrab3",
-  #                color="black", 
-  #                outlier.shape = NA) +
-  #   facet_grid(canopy_layer~world, labeller = labeller(world = world_file_yr, canopy_layer = canopy)) +
-  #   theme(legend.position = "none") +
-  #   labs(title = "Height", x = "Intensity", y = "Change in Height (%)") +
-  #   scale_x_continuous(breaks = c(0.2, 0.8))
-  # plot(x)
-  # #ggsave("p300_patch_sim_change_height.pdf",plot = x, path = OUTPUT_DIR_2)
-  # 
-  # # ---
-  # tmp <- dplyr::filter(p300_patch_fire_diff,var_type == "canopy_target_prop_mort")
-  # x <- ggplot(data = tmp) +
-  #   geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
-  #                fill = "olivedrab3",
-  #                color="black", 
-  #                outlier.shape = NA) +
-  #   facet_grid(canopy_layer~world, labeller = labeller(world = world_file_yr, canopy_layer = canopy)) +
-  #   theme(legend.position = "none") +
-  #   labs(title = "Mortality", x = "Intensity", y = "Mortality (%)") +
-  #   scale_x_continuous(breaks = c(0.2, 0.8))
-  # plot(x)
-  # #ggsave("p300_patch_sim_mortality.pdf",plot = x, path = OUTPUT_DIR_2)
-  # 
-  # tmp <- dplyr::filter(p300_patch_fire_diff,var_type == "canopy_target_prop_mort_consumed")
-  # x <- ggplot(data = tmp) +
-  #   geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
-  #                fill = "olivedrab3",
-  #                color="black", 
-  #                outlier.shape = NA) +
-  #   facet_grid(canopy_layer~world, labeller = labeller(world = world_file_yr, canopy_layer = canopy)) +
-  #   theme(legend.position = "none") +
-  #   labs(title = "Consumption", x = "Intensity", y = "Proportion of Mortality Consumed (%)") +
-  #   scale_x_continuous(breaks = c(0.2, 0.8))
-  # plot(x)
-  # #ggsave("p300_patch_sim_mortality_consumed.pdf",plot = x, path = OUTPUT_DIR_2)
-  # 
-  # tmp <- dplyr::filter(p300_patch_fire_diff,var_type == "canopy_target_prop_c_consumed")
-  # x <- ggplot(data = tmp) +
-  #   geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
-  #                fill = "olivedrab3",
-  #                color="black", 
-  #                outlier.shape = NA) +
-  #   facet_grid(canopy_layer~world, labeller = labeller(world = world_file_yr, canopy_layer = canopy)) +
-  #   theme(legend.position = "none") +
-  #   labs(title = "Canopy Consumption", x = "Intensity", y = "Canopy Carbon Consumed (%)") +
-  #   scale_x_continuous(breaks = c(0.2, 0.8))
-  # plot(x)
-  # #ggsave("p300_patch_sim_c_consumed.pdf",plot = x, path = OUTPUT_DIR_2)
-  # 
-  # tmp <- dplyr::filter(p300_patch_fire_diff,var_type == "canopy_target_prop_c_remain")
-  # x <- ggplot(data = tmp) +
-  #   geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
-  #                fill = "olivedrab3",
-  #                color="black", 
-  #                outlier.shape = NA) +
-  #   facet_grid(canopy_layer~world, labeller = labeller(world = world_file_yr, canopy_layer = canopy)) +
-  #   theme(legend.position = "none") +
-  #   labs(title = "Canopy Remaining as Litter", x = "Intensity", y = "Canopy Carbon Remaining as Litter (%)") +
-  #   scale_x_continuous(breaks = c(0.2, 0.8))
-  # plot(x)
-  # #ggsave("p300_patch_sim_c_remain.pdf",plot = x, path = OUTPUT_DIR_2)
-  # 
-  # 
-
 
 
 
@@ -497,32 +315,53 @@ patch_fire_eval <- function(num_canopies,
 # ---------------------------------------------------------------------
 # HJA
 
-
-
+out <- patch_fire_eval(num_canopies = 2,
+                       allsim_path = RHESSYS_ALLSIM_DIR_3.2_HJA,
+                       initial_date = ymd("1957-10-01"),
+                       parameter_file = RHESSYS_PAR_SIM_3.1_HJA,
+                       watershed = "HJA",
+                       output_path = OUTPUT_DIR_3,
+                       cwdc_yes = FALSE
+)
 
 
 # ---------------------------------------------------------------------
 # P300
 
-patch_fire_eval(num_canopies = 2,
-                allsim_path = RHESSYS_ALLSIM_DIR_3.2_P300,
-                initial_date = ymd("1941-10-01"),
-                parameter_file = RHESSYS_PAR_SIM_3.1_P300,
-                watershed = "P300",
-                output_path = OUTPUT_DIR_3,
-                cwdc_yes = FALSE
-                )
+out <- patch_fire_eval(num_canopies = 2,
+                       allsim_path = RHESSYS_ALLSIM_DIR_3.2_P300,
+                       initial_date = ymd("1941-10-01"),
+                       parameter_file = RHESSYS_PAR_SIM_3.1_P300,
+                       watershed = "P300",
+                       output_path = OUTPUT_DIR_3,
+                       cwdc_yes = FALSE
+)
 
 
 # ---------------------------------------------------------------------
 # RS
 
+out <- patch_fire_eval(num_canopies = 1,
+                       allsim_path = RHESSYS_ALLSIM_DIR_3.2_RS,
+                       initial_date = ymd("1988-10-01"),
+                       parameter_file = RHESSYS_PAR_SIM_3.1_RS,
+                       watershed = "RS",
+                       output_path = OUTPUT_DIR_3,
+                       cwdc_yes = FALSE
+)
 
 
 # ---------------------------------------------------------------------
 # SF
 
-
+out <- patch_fire_eval(num_canopies = 2,
+                       allsim_path = RHESSYS_ALLSIM_DIR_3.2_SF,
+                       initial_date = ymd("1941-10-01"),
+                       parameter_file = RHESSYS_PAR_SIM_3.1_SF,
+                       watershed = "SF",
+                       output_path = OUTPUT_DIR_3,
+                       cwdc_yes = FALSE
+)
 
 
 
@@ -533,10 +372,11 @@ patch_fire_eval(num_canopies = 2,
 
 
 # Find parameter to compare
-ls(p300_patch_canopy_diff)
-unique(p300_patch_canopy_diff$world)
+#P301
+ls(out)
+unique(out$world)
 
-x <- p300_patch_canopy_diff %>% 
+x <- out %>% 
   dplyr::filter(var_type == "stemc", 
                 world == "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y2022M10D1H1.state",
                 canopy_layer == 1) %>% 
@@ -546,6 +386,26 @@ x <- p300_patch_canopy_diff %>%
     #x=ws_p300.defs.veg_p300_conifer.def.consumption,
     #x=ws_p300.defs.veg_p300_conifer.def.overstory_mort_k1,
     x=ws_p300.defs.veg_p300_conifer.def.overstory_mort_k2,
+    y=relative_change)) +
+  facet_wrap(.~pspread_levels)
+plot(x)
+
+
+# ----
+#SF
+ls(out)
+unique(out$world)
+
+x <- out %>% 
+  dplyr::filter(var_type == "stemc", 
+                world == "ws_sf/worldfiles/sf_2can_patch_2777.world.Y2022M10D1H1.state",
+                canopy_layer == 1) %>% 
+  ggplot(.) +
+  geom_point(aes(
+    #x=ws_sf.defs.veg_sf_1ponderosapine.def.understory_mort,
+    #x=ws_sf.defs.veg_sf_1ponderosapine.def.consumption,
+    #x=ws_sf.defs.veg_sf_1ponderosapine.def.overstory_mort_k1,
+    x=ws_sf.defs.veg_sf_1ponderosapine.def.overstory_mort_k2,
     y=relative_change)) +
   facet_wrap(.~pspread_levels)
 plot(x)

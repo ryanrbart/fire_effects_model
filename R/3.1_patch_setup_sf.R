@@ -28,16 +28,16 @@ world_pspread <- tidyr::crossing(world, pspread_levels)
 
 n_sim <- 15
 
-tmp1 <- setNames(data.frame(runif(n_sim, min=7,max=7)), "ws_sf/defs/patch_sf.def:overstory_height_thresh")
-tmp2 <- setNames(data.frame(runif(n_sim, min=4,max=4)), "ws_sf/defs/patch_sf.def:understory_height_thresh")
-tmp3 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_sf/defs/veg_sf_shrub.def:understory_mort")
-tmp4 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_sf/defs/veg_sf_shrub.def:consumption")
-tmp5 <- setNames(data.frame(runif(n_sim, min=-10,max=-10)), "ws_sf/defs/veg_sf_shrub.def:overstory_mort_k1")
-tmp6 <- setNames(data.frame(runif(n_sim, min=1,max=1)), "ws_sf/defs/veg_sf_shrub.def:overstory_mort_k2")
-tmp7 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_sf/defs/veg_sf_conifer.def:understory_mort")
-tmp8 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_sf/defs/veg_sf_conifer.def:consumption")
-tmp9 <- setNames(data.frame(runif(n_sim, min=-20,max=-1)), "ws_sf/defs/veg_sf_conifer.def:overstory_mort_k1")
-tmp10 <- setNames(data.frame(runif(n_sim, min=0.4,max=1.7)), "ws_sf/defs/veg_sf_conifer.def:overstory_mort_k2")
+tmp1 <- setNames(data.frame(runif(n_sim, min=7,max=7)), "ws_sf/defs/soil_sf_303verydeepsandyloam.def:overstory_height_thresh")
+tmp2 <- setNames(data.frame(runif(n_sim, min=4,max=4)), "ws_sf/defs/soil_sf_303verydeepsandyloam.def:understory_height_thresh")
+tmp3 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_sf/defs/veg_sf_understory.def:understory_mort")
+tmp4 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_sf/defs/veg_sf_understory.def:consumption")
+tmp5 <- setNames(data.frame(runif(n_sim, min=-10,max=-10)), "ws_sf/defs/veg_sf_understory.def:overstory_mort_k1")
+tmp6 <- setNames(data.frame(runif(n_sim, min=1,max=1)), "ws_sf/defs/veg_sf_understory.def:overstory_mort_k2")
+tmp7 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_sf/defs/veg_sf_1ponderosapine.def:understory_mort")
+tmp8 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_sf/defs/veg_sf_1ponderosapine.def:consumption")
+tmp9 <- setNames(data.frame(runif(n_sim, min=-20,max=-1)), "ws_sf/defs/veg_sf_1ponderosapine.def:overstory_mort_k1")
+tmp10 <- setNames(data.frame(runif(n_sim, min=0.2,max=0.9)), "ws_sf/defs/veg_sf_1ponderosapine.def:overstory_mort_k2")
 
 out <- bind_cols(tmp1,tmp2,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,tmp9,tmp10)
 

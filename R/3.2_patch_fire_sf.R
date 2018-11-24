@@ -184,22 +184,22 @@ system.time(
     # Assign parameters
     
     # Patch fire parameters
-    input_def_list[[18]] <- list(input_hdr_list$soil_def[1], "overstory_height_thresh", sobol_ps$`ws_sf/defs/soil_sf_303verydeepsandyloam.def:overstory_height_thresh`[aa])
-    input_def_list[[19]] <- list(input_hdr_list$soil_def[1], "understory_height_thresh", sobol_ps$`ws_sf/defs/soil_sf_303verydeepsandyloam.def:understory_height_thresh`[aa])
+    input_def_list[[18]] <- list(input_hdr_list$soil_def[1], "overstory_height_thresh", world_pspread_par$`ws_sf/defs/soil_sf_303verydeepsandyloam.def:overstory_height_thresh`[aa])
+    input_def_list[[19]] <- list(input_hdr_list$soil_def[1], "understory_height_thresh", world_pspread_par$`ws_sf/defs/soil_sf_303verydeepsandyloam.def:understory_height_thresh`[aa])
     # Lower canopy fire parameters
-    input_def_list[[20]] <- list(input_hdr_list$stratum_def[2], "understory_mort", sobol_ps$`ws_sf/defs/veg_sf_understory.def:understory_mort`[aa])
-    input_def_list[[21]] <- list(input_hdr_list$stratum_def[2], "consumption", sobol_ps$`ws_sf/defs/veg_sf_understory.def:consumption`[aa])
-    input_def_list[[22]] <- list(input_hdr_list$stratum_def[2], "overstory_mort_k1", sobol_ps$`ws_sf/defs/veg_sf_understory.def:overstory_mort_k1`[aa])
-    input_def_list[[23]] <- list(input_hdr_list$stratum_def[2], "overstory_mort_k2", sobol_ps$`ws_sf/defs/veg_sf_understory.def:overstory_mort_k2`[aa])
+    input_def_list[[20]] <- list(input_hdr_list$stratum_def[2], "understory_mort", world_pspread_par$`ws_sf/defs/veg_sf_understory.def:understory_mort`[aa])
+    input_def_list[[21]] <- list(input_hdr_list$stratum_def[2], "consumption", world_pspread_par$`ws_sf/defs/veg_sf_understory.def:consumption`[aa])
+    input_def_list[[22]] <- list(input_hdr_list$stratum_def[2], "overstory_mort_k1", world_pspread_par$`ws_sf/defs/veg_sf_understory.def:overstory_mort_k1`[aa])
+    input_def_list[[23]] <- list(input_hdr_list$stratum_def[2], "overstory_mort_k2", world_pspread_par$`ws_sf/defs/veg_sf_understory.def:overstory_mort_k2`[aa])
     # Upper canopy fire parameters
-    input_def_list[[24]] <- list(input_hdr_list$stratum_def[1], "understory_mort", sobol_ps$`ws_sf/defs/veg_sf_1ponderosapine.def:understory_mort`[aa])
-    input_def_list[[25]] <- list(input_hdr_list$stratum_def[1], "consumption", sobol_ps$`ws_sf/defs/veg_sf_1ponderosapine.def:consumption`[aa])
-    input_def_list[[26]] <- list(input_hdr_list$stratum_def[1], "overstory_mort_k1", sobol_ps$`ws_sf/defs/veg_sf_1ponderosapine.def:overstory_mort_k1`[aa])
-    input_def_list[[27]] <- list(input_hdr_list$stratum_def[1], "overstory_mort_k2", sobol_ps$`ws_sf/defs/veg_sf_1ponderosapine.def:overstory_mort_k2`[aa])
+    input_def_list[[24]] <- list(input_hdr_list$stratum_def[1], "understory_mort", world_pspread_par$`ws_sf/defs/veg_sf_1ponderosapine.def:understory_mort`[aa])
+    input_def_list[[25]] <- list(input_hdr_list$stratum_def[1], "consumption", world_pspread_par$`ws_sf/defs/veg_sf_1ponderosapine.def:consumption`[aa])
+    input_def_list[[26]] <- list(input_hdr_list$stratum_def[1], "overstory_mort_k1", world_pspread_par$`ws_sf/defs/veg_sf_1ponderosapine.def:overstory_mort_k1`[aa])
+    input_def_list[[27]] <- list(input_hdr_list$stratum_def[1], "overstory_mort_k2", world_pspread_par$`ws_sf/defs/veg_sf_1ponderosapine.def:overstory_mort_k2`[aa])
     
     # ----
     input_dated_seq_list = list()
-    input_dated_seq_list[[1]] <- data.frame(name="snoelktr50",type="pspread",year=1941,month=10,day=7,hour=1,value=sobol_ps$pspread[aa],stringsAsFactors=FALSE)
+    input_dated_seq_list[[1]] <- data.frame(name="snoelktr50",type="pspread",year=1941,month=10,day=7,hour=1,value=world_pspread_par$pspread_levels[aa],stringsAsFactors=FALSE)
     
     
     run_rhessys(parameter_method = parameter_method,
