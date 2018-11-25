@@ -372,6 +372,27 @@ out <- patch_fire_eval(num_canopies = 2,
 
 
 # Find parameter to compare
+
+#HJA
+ls(out)
+unique(out$world)
+
+x <- out %>% 
+  dplyr::filter(var_type == "stemc", 
+                world == "ws_hja/worldfiles/hja_2can_patch_6018.world.Y2098M10D1H1.state",
+                canopy_layer == 1) %>% 
+  ggplot(.) +
+  geom_point(aes(
+    #x=ws_hja.defs.veg_hja_7dougfir.def.understory_mort,
+    #x=ws_hja.defs.veg_hja_7dougfir.def.consumption,
+    #x=ws_hja.defs.veg_hja_7dougfir.def.overstory_mort_k1,
+    x=ws_hja.defs.veg_hja_7dougfir.def.overstory_mort_k2,
+    y=relative_change)) +
+  facet_wrap(.~pspread_levels)
+plot(x)
+
+
+# ----
 #P301
 ls(out)
 unique(out$world)
@@ -386,6 +407,26 @@ x <- out %>%
     #x=ws_p300.defs.veg_p300_conifer.def.consumption,
     #x=ws_p300.defs.veg_p300_conifer.def.overstory_mort_k1,
     x=ws_p300.defs.veg_p300_conifer.def.overstory_mort_k2,
+    y=relative_change)) +
+  facet_wrap(.~pspread_levels)
+plot(x)
+
+
+# ----
+#RS
+ls(out)
+unique(out$world)
+
+x <- out %>% 
+  dplyr::filter(var_type == "stemc", 
+                world == "ws_rs/worldfiles/rs_30m_1can_patch_40537.world.Y2069M10D1H1.state",
+                canopy_layer == 1) %>% 
+  ggplot(.) +
+  geom_point(aes(
+    #x=ws_rs.defs.veg_rs_shrub.def.understory_mort,
+    #x=ws_rs.defs.veg_rs_shrub.def.consumption,
+    #x=ws_rs.defs.veg_rs_shrub.def.overstory_mort_k1,
+    x=ws_rs.defs.veg_rs_shrub.def.overstory_mort_k2,
     y=relative_change)) +
   facet_wrap(.~pspread_levels)
 plot(x)
@@ -409,6 +450,7 @@ x <- out %>%
     y=relative_change)) +
   facet_wrap(.~pspread_levels)
 plot(x)
+
 
 
 

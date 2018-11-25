@@ -177,14 +177,14 @@ system.time(
     input_def_list[[10]] <- list(input_hdr_list$soil_def[1], "overstory_height_thresh", world_pspread_par$`ws_rs/defs/patch_rs.def:overstory_height_thresh`[aa])
     input_def_list[[11]] <- list(input_hdr_list$soil_def[1], "understory_height_thresh", world_pspread_par$`ws_rs/defs/patch_rs.def:understory_height_thresh`[aa])
     # Lower canopy fire parameters
-    input_def_list[[12]] <- list(input_hdr_list$stratum_def[2], "understory_mort", world_pspread_par$`ws_rs/defs/veg_rs_shrub.def:understory_mort`[aa])
-    input_def_list[[13]] <- list(input_hdr_list$stratum_def[2], "consumption", world_pspread_par$`ws_rs/defs/veg_rs_shrub.def:consumption`[aa])
-    input_def_list[[14]] <- list(input_hdr_list$stratum_def[2], "overstory_mort_k1", world_pspread_par$`ws_rs/defs/veg_rs_shrub.def:overstory_mort_k1`[aa])
-    input_def_list[[15]] <- list(input_hdr_list$stratum_def[2], "overstory_mort_k2", world_pspread_par$`ws_rs/defs/veg_rs_shrub.def:overstory_mort_k2`[aa])
+    input_def_list[[12]] <- list(input_hdr_list$stratum_def[1], "understory_mort", world_pspread_par$`ws_rs/defs/veg_rs_shrub.def:understory_mort`[aa])
+    input_def_list[[13]] <- list(input_hdr_list$stratum_def[1], "consumption", world_pspread_par$`ws_rs/defs/veg_rs_shrub.def:consumption`[aa])
+    input_def_list[[14]] <- list(input_hdr_list$stratum_def[1], "overstory_mort_k1", world_pspread_par$`ws_rs/defs/veg_rs_shrub.def:overstory_mort_k1`[aa])
+    input_def_list[[15]] <- list(input_hdr_list$stratum_def[1], "overstory_mort_k2", world_pspread_par$`ws_rs/defs/veg_rs_shrub.def:overstory_mort_k2`[aa])
     
     # ----
     input_dated_seq_list = list()
-    input_dated_seq_list[[1]] <- data.frame(name="misreal",type="pspread",year=1988,month=10,day=7,hour=1,value=sobol_ps$pspread_levels[aa],stringsAsFactors=FALSE)
+    input_dated_seq_list[[1]] <- data.frame(name="misreal",type="pspread",year=1988,month=10,day=7,hour=1,value=world_pspread_par$pspread_levels[aa],stringsAsFactors=FALSE)
     
     
     run_rhessys(parameter_method = parameter_method,
