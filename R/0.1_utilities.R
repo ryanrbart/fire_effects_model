@@ -16,6 +16,7 @@ library(beepr)
 library(lhs)
 library(KScorrect)
 library(gtools)
+library(cowplot)
 
 
 # ---------------------------------------------------------------------

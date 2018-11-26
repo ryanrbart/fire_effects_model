@@ -16,7 +16,4 @@ source("R/0.1_utilities.R")
 # Results from 1.3 for timeseries
 # Results from 3.3 for fire effects
 
-
-
-
-
+# Generated in 3.3

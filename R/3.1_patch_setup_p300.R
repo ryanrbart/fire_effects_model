@@ -11,12 +11,12 @@ source("R/0.1_utilities.R")
 # Cross world files and dated_seq (pspread) options
 
 world <- c("ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y1947M10D1H1.state",
-                              "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y1954M10D1H1.state",
-                              "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y1962M10D1H1.state",
-                              "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y1972M10D1H1.state",
-                              "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y1982M10D1H1.state",
-                              "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y2002M10D1H1.state",
-                              "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y2022M10D1H1.state")
+           "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y1954M10D1H1.state",
+           "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y1962M10D1H1.state",
+           "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y1972M10D1H1.state",
+           "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y1982M10D1H1.state",
+           "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y2002M10D1H1.state",
+           "ws_p300/worldfiles/p300_30m_2can_patch_9445.world.Y2022M10D1H1.state")
 
 pspread_levels <- seq(0.1,1.0,by=0.1)
 
@@ -27,7 +27,16 @@ world_pspread <- tidyr::crossing(world, pspread_levels)
 # Do monte carlo for each parameter set
 # LHC was not done since it was not (as far as I can tell) possible to input log distributed variables into lhc
 
-n_sim <- 40
+# Number of parameter sets for each stand age/pspread value
+n_par <- 4
+# Total parameter sets
+n_sim <- n_par * nrow(world_pspread)
+
+# Replicate world_pspread by the number of unique parameters to be used
+world_pspread_rep <- n_par %>% 
+  purrr::rerun(world_pspread) %>% 
+  purrr::invoke(dplyr::bind_rows, .)
+
 
 tmp1 <- setNames(data.frame(runif(n_sim, min=7,max=7)), "ws_p300/defs/patch_p300.def:overstory_height_thresh")
 tmp2 <- setNames(data.frame(runif(n_sim, min=4,max=4)), "ws_p300/defs/patch_p300.def:understory_height_thresh")
@@ -46,7 +55,7 @@ out <- bind_cols(tmp1,tmp2,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,tmp9,tmp10)
 # Cross all parameter options with each world/pspread option
 # 70 world/ pspread options times n parameter options
 
-world_pspread_par <- tidyr::crossing(world_pspread, out)
+world_pspread_par <- dplyr::bind_cols(world_pspread_rep, out)
 
 # Export the parameter sets to be used in the sobol model.
 write.csv(world_pspread_par, RHESSYS_PAR_SIM_3.1_P300, row.names = FALSE, quote=FALSE) # Parameter sets
