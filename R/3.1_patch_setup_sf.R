@@ -26,7 +26,16 @@ world_pspread <- tidyr::crossing(world, pspread_levels)
 # Do monte carlo for each parameter set
 # LHC was not done since it was not (as far as I can tell) possible to input log distributed variables into lhc
 
-n_sim <- 15
+# Number of parameter sets for each stand age/pspread value
+n_par <- 40
+# Total parameter sets
+n_sim <- n_par * nrow(world_pspread)
+
+# Replicate world_pspread by the number of unique parameters to be used
+world_pspread_rep <- n_par %>% 
+  purrr::rerun(world_pspread) %>% 
+  purrr::invoke(dplyr::bind_rows, .)
+
 
 tmp1 <- setNames(data.frame(runif(n_sim, min=7,max=7)), "ws_sf/defs/soil_sf_303verydeepsandyloam.def:overstory_height_thresh")
 tmp2 <- setNames(data.frame(runif(n_sim, min=4,max=4)), "ws_sf/defs/soil_sf_303verydeepsandyloam.def:understory_height_thresh")
@@ -45,7 +54,7 @@ out <- bind_cols(tmp1,tmp2,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,tmp9,tmp10)
 # Cross all parameter options with each world/pspread option
 # 70 world/ pspread options times n parameter options
 
-world_pspread_par <- tidyr::crossing(world_pspread, out)
+world_pspread_par <- dplyr::bind_cols(world_pspread_rep, out)
 
 # Export the parameter sets to be used in the sobol model.
 write.csv(world_pspread_par, RHESSYS_PAR_SIM_3.1_SF, row.names = FALSE, quote=FALSE) # Parameter sets

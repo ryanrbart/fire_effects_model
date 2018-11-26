@@ -28,7 +28,7 @@ world_pspread <- tidyr::crossing(world, pspread_levels)
 # LHC was not done since it was not (as far as I can tell) possible to input log distributed variables into lhc
 
 # Number of parameter sets for each stand age/pspread value
-n_par <- 4
+n_par <- 40
 # Total parameter sets
 n_sim <- n_par * nrow(world_pspread)
 
