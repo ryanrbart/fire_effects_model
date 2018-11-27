@@ -24,8 +24,8 @@ parameter_method <- "all_combinations"
 
 # RHESSys Inputs
 input_rhessys <- list()
-input_rhessys$rhessys_version <- "bin/rhessys5.20.1"
-#input_rhessys$rhessys_version <- "bin/rhessys6.0"
+#input_rhessys$rhessys_version <- "bin/rhessys5.20.1"
+input_rhessys$rhessys_version <- "bin/rhessys6.0"
 input_rhessys$tec_file <- "ws_sf/tecfiles/sf_patch_fire.tec"
 input_rhessys$world_file <- "assigned below"
 input_rhessys$world_hdr_prefix <- "3.2_sf"
