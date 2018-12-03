@@ -41,17 +41,21 @@ consumption_figure = function(consumption_parameter, title_name){
     #theme_bw(base_size=21) +
     labs(title = title_name, x = "Proportion Mortality", y = "Proportion of Mortality Consumed") +
     scale_linetype(name = "Consumption\nParameter\n(k2)") +
-    scale_color_brewer(palette = "Dark2", name = "Consumption\nParameter\n(k2)")
-  plot(x)
+    scale_color_brewer(palette = "Dark2", name = "Consumption\nParameter\n(k2)") +
+    theme(axis.text = element_text(size=18)) +
+    NULL
+  #plot(x)
   return(x)
 }
 
-x = consumption_figure(consumption_parameter = c(0.01, 1, 100), title_name = "Consumption")
-ggsave("display_consumption.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
+fig_consumption = consumption_figure(consumption_parameter = c(0.01, 1, 100), title_name = "Consumption")
+ggsave("display_consumption.pdf", plot = fig_consumption, path = DISPLAY_FIGURES_DIR,
+       width = 7.5, height = 4.5)
 
 
+# ---------------------------------------------------------------------
+# Consumption Output Figures (These figures are no longer used)
 
-# Consumption Output Figures
 
 consumption_output_figure = function(consumption_parameter, title_name){
 
@@ -81,16 +85,16 @@ consumption_output_figure = function(consumption_parameter, title_name){
     labs(title = title_name, x = "Canopy Mortality (%)", y = "Percent of Canopy Carbon") +
     scale_linetype(name = "Carbon Pool", labels=c("Litter","Consumed")) +
     scale_color_brewer(palette = "Dark2", name = "Carbon Pool", labels=c("Litter","Consumed"))
-  plot(x)
+  #plot(x)
   return(x)
 }
 
-x = consumption_output_figure(consumption_parameter = 0.01, title_name = "High Consumption")
-ggsave("consumption_high.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
-x = consumption_output_figure(consumption_parameter = 1, title_name = "Medium Consumption")
-ggsave("consumption_medium.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
-x = consumption_output_figure(consumption_parameter = 100, title_name = "Low Consumption")
-ggsave("consumption_low.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
+# x = consumption_output_figure(consumption_parameter = 0.01, title_name = "High Consumption")
+# ggsave("consumption_high.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
+# x = consumption_output_figure(consumption_parameter = 1, title_name = "Medium Consumption")
+# ggsave("consumption_medium.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
+# x = consumption_output_figure(consumption_parameter = 100, title_name = "Low Consumption")
+# ggsave("consumption_low.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
 
 
 
@@ -130,14 +134,17 @@ understory_figure = function(pspread_mortality_parameter, title_name){
 #    labs(title = title_name, x = "Pspread", y = "Understory Mortality (%)") +
     labs(title = title_name, x = expression(Intensity~(i[u])), y = "Proportion Mortality") +
     scale_linetype(name = "Understory\nMortality\nParameter\n(k1)") +
-    scale_color_brewer(palette = "Dark2", name = "Understory\nMortality\nParameter\n(k1)")
-  plot(x)
+    scale_color_brewer(palette = "Dark2", name = "Understory\nMortality\nParameter\n(k1)") +
+    theme(axis.text = element_text(size=18)) +
+    NULL
+  #plot(x)
   return(x)
 }
 
 
-x = understory_figure(pspread_mortality_parameter = c(0.01, 1, 100), title_name = "Understory Mortality")
-ggsave("display_understory.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
+fig_under = understory_figure(pspread_mortality_parameter = c(0.01, 1, 100), title_name = "Understory Mortality")
+ggsave("display_understory.pdf", plot = fig_under, path = DISPLAY_FIGURES_DIR,
+       width = 7.5, height = 4.5)
 
 
 
@@ -169,16 +176,122 @@ overstory_figure = function(k1, k2, title_name){
     #theme_bw(base_size=16) +
     labs(title = title_name, x = expression(Understory~"&"~Litter~Consumption~(gC/m^2)), y = "Proportion Mortality") +
     scale_linetype(name = "Slope\nParameter\n(k3)") +
-    scale_color_brewer(palette = "Dark2", name = "Centerpoint\nParameter\n(k4)")
-  plot(x)
+    scale_color_brewer(palette = "Dark2", name = "Centerpoint\nParameter\n(k4)") +
+    theme(axis.text = element_text(size=18)) +
+    NULL
+  #plot(x)
   return(x)
 }
 
-x <- overstory_figure(k1 = c(-0.005, -0.01, -0.05), k2 = c(500, 1500), title_name = "Overstory Mortality")
-ggsave("display_overstory.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
+fig_over <- overstory_figure(k1 = c(-0.005, -0.01, -0.05), k2 = c(500, 1500), title_name = "Overstory Mortality")
+ggsave("display_overstory.pdf", plot = fig_over, path = DISPLAY_FIGURES_DIR,
+       width = 7.5, height = 4.5)
+
+
+
+# ---------------------------------------------------------------------
+# Carbon balance Figure
+# 
+
+
+carbon_balance_figure = function(prop_c_mort, title_name){
+  
+  variable <- c("0.1","0.1","0.1","0.5","0.5","0.5","0.9","0.9","0.9")
+  category <- c("Residual", "Consumed", "Alive",
+                "Residual", "Consumed", "Alive",
+                "Residual", "Consumed", "Alive")
+  value <- c(prop_c_mort*100*(.9), prop_c_mort*100*(.1), 100 - prop_c_mort*100,
+             prop_c_mort*100*(.5), prop_c_mort*100*(.5), 100 - prop_c_mort*100,
+             prop_c_mort*100*(.1), prop_c_mort*100*(.9), 100 - prop_c_mort*100)
+  
+  c_tib <- tibble::tibble(variable = variable,
+                          category = category,
+                          value = value)
+
+  x <- ggplot(data = c_tib) +
+    geom_col(aes(x = variable, y = value, fill = category), width = .7) +
+    geom_text(aes(x = variable, y = value),label=category, position = position_stack(vjust = 0.5), size = 6) +
+    labs(title = title_name, x = "Proportion of mortality consumed (prop_mort_consumed)", y = "Proportion of Pre-Fire Canopy Carbon (%)") +
+    scale_fill_brewer(palette = "Dark2", name = "Category") +
+    theme_classic(base_size=18) +
+    theme(legend.position="none", axis.text = element_text(size=18)) +
+    NULL
+  #plot(x)
+  
+  return(x)
+}
+
+fig_carb_bal <- carbon_balance_figure(prop_c_mort = 0.8, title_name = "Carbon Balance")
+ggsave("carbon_balance.pdf", plot = fig_carb_bal, path = DISPLAY_FIGURES_DIR,
+       width = 7.5, height = 7)
 
 
 
 
 
 
+
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# The following code was designed to stitch all the figures together using
+# cowplot. It will actually be easier to use powerpoint
+
+
+
+
+# # ---------------------------------------------------------------------
+# # Big Leaf diagram
+# 
+# library(magick)
+# 
+# img_path <- file.path(DISPLAY_FIGURES_DIR, "fig_2_photo_tmp_example.tif")
+# 
+# fig_big_leaf <- ggdraw() + draw_image(img_path, scale = 0.9)
+# 
+# 
+# 
+# # ---------------------------------------------------------------------
+# # ---------------------------------------------------------------------
+# # ---------------------------------------------------------------------
+# # Combine into single figure
+# 
+# theme_set(theme_bw(base_size = 12))
+# 
+# fig_consumption = consumption_figure(consumption_parameter = c(0.01, 1, 100), title_name = "Consumption")
+# fig_under = understory_figure(pspread_mortality_parameter = c(0.01, 1, 100), title_name = "Understory Mortality")
+# fig_over <- overstory_figure(k1 = c(-0.005, -0.01, -0.05), k2 = c(500, 1500), title_name = "Overstory Mortality")
+# fig_carb_bal <- carbon_balance_figure(prop_c_mort = 0.8, title_name = "Carbon Balance")
+# 
+# 
+# 
+# 
+# left_col <- cowplot::plot_grid(fig_big_leaf,
+#                                fig_carb_bal,
+#                                labels=c("A","B"),
+#                                nrow=2)
+# 
+# 
+# right_col <- cowplot::plot_grid(fig_under,
+#                                 fig_over,
+#                                 fig_consumption,
+#                                 labels=c("C","D","E"),
+#                                 nrow=3)
+# 
+# # Combine figures for Cowplot
+# fe_concep_fig <- cowplot::plot_grid(left_col,
+#                                     right_col,
+#                                     nrow=1,
+#                                     rel_widths = c(1.3, 1))
+# 
+# 
+# 
+# # Output conceptual figure
+# cowplot::save_plot(file.path(DISPLAY_FIGURES_DIR,"fe_concep_fig.pdf"),
+#                    fe_concep_fig,
+#                    ncol=1,
+#                    nrow=2,
+#                    base_aspect_ratio=2.5)
