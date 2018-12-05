@@ -363,7 +363,9 @@ patch_fire_eval <- function(num_canopies,
     theme_bw() + 
     theme(legend.position = "bottom") +
     NULL
-  plot(x_stores)
+  #plot(x_stores)
+  ggsave(paste(watershed,"_timeseries.pdf", sep=""), plot = x_stores, 
+         device = "pdf", path = output_path, width = 8, height = 5)
   
   # ----
   # Combine figures for Cowplot
@@ -442,6 +444,13 @@ out <- patch_fire_eval(num_canopies = 2,
                        output_path = OUTPUT_DIR_3,
                        cwdc_yes = FALSE
 )
+
+
+
+
+
+
+
 
 
 
