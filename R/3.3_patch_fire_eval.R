@@ -176,6 +176,7 @@ patch_fire_eval <- function(num_canopies,
     # For timeseries in cowplot
     stand_age_years <- c(1963,1970,1978,1998,2028,2058,2098)
     stores_ts <- readin_rhessys_output("ws_hja/out/1.3_hja_patch_simulation/patch_sim", g=1, c=1, p=0)
+    shed_name <- "H.J. Andrews"
   }
   
   if (watershed == "P300"){
@@ -193,6 +194,7 @@ patch_fire_eval <- function(num_canopies,
     # For timeseries in cowplot
     stand_age_years <- c(1947,1954,1962,1972,1982,2002,2022)
     stores_ts <- readin_rhessys_output("ws_p300/out/1.3_p300_patch_simulation/patch_sim", g=1, c=1, p=0)
+    shed_name <- "P301"
   }
   
   if (watershed == "RS"){
@@ -210,6 +212,7 @@ patch_fire_eval <- function(num_canopies,
     # For timeseries in cowplot
     stand_age_years <- c(1994,2001,2009,2019,2029,2049,2069)
     stores_ts <- readin_rhessys_output("ws_rs/out/1.3_rs_patch_simulation/patch_sim", g=1, c=1, p=0)
+    shed_name <- "Rattlesnake"
   }
   
   if (watershed == "SF"){
@@ -227,6 +230,7 @@ patch_fire_eval <- function(num_canopies,
     # For timeseries in cowplot
     stand_age_years <- c(1947,1954,1962,1972,1982,2002,2022)
     stores_ts <- readin_rhessys_output("ws_sf/out/1.3_sf_patch_simulation/patch_sim", g=1, c=1, p=0)
+    shed_name <- "Santa Fe"
   }
   
   canopy <- c("1" = "Upper Canopy","2" = "Lower Canopy")
@@ -247,13 +251,16 @@ patch_fire_eval <- function(num_canopies,
   
   single_canopy <- c("litrc","soil1c","cwdc")
   
-  fig_title <- c("Leaf Carbon", "Stem Carbon", "Height", "Litter Carbon", "Soil Carbon", 
-                 "Mortality", "Consumption", "Canopy Consumption", "Canopy Remaining as Litter")
+  fig_title_1 <- c("Leaf Carbon", "Stem Carbon", "Height", "Litter Carbon", "Soil Carbon", 
+                   "Canopy Mortality", "Consumption", "Canopy Consumption", "Canopy Remaining as Litter")
+  
+  fig_title_2 <- c("Upper Canopy Leaf Carbon", "Upper Canopy Stem Carbon", "Upper Canopy Height", "Litter Carbon", "Soil Carbon", 
+                   "Upper Canopy Mortality", "Consumption", "Upper Canopy Consumption", "Upper Canopy Remaining as Litter")
   
   y_label <- c("Change in Leaf Carbon (%)", "Change in Stem Carbon (%)", "Change in Height (%)",
                "Change in Litter Carbon (%)", "Change in Soil Carbon (%)", "Mortality (%)", 
-               "Proportion of Mortality Consumed (%)", "Canopy Carbon Consumed (%)",
-               "Canopy Carbon Remaining as Litter (%)")
+               "Proportion of Mortality Consumed (%)", "Carbon Consumed (%)",
+               "Carbon Remaining as Litter (%)")
   
   # Processing cwd is super slow. Option to ignore it when processing
   if (cwdc_yes == TRUE){
@@ -280,7 +287,7 @@ patch_fire_eval <- function(num_canopies,
     
     # ----
     
-    if (variable_types[aa] %in% single_canopy){       # Facet with one canopy
+    if (variable_types[aa] %in% single_canopy){       # litrc, soil1c, and cwdc
       tmp <- dplyr::filter(happy,var_type == variable_types[aa])
       x <- ggplot(data = tmp) +
         geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
@@ -289,44 +296,89 @@ patch_fire_eval <- function(num_canopies,
                      outlier.shape = NA) +
         facet_grid(.~world, labeller = labeller(world = world_file_yr)) +
         theme(legend.position = "none") +
-        labs(title = fig_title[aa], x = "Intensity (I')", y = y_label[aa]) +
+        labs(title = fig_title_1[aa], x = "Intensity (I')", y = y_label[aa]) +
         scale_x_continuous(breaks = c(0.2, 0.8)) +
-        theme_set(theme_bw(base_size = 11)) +
         NULL
-      #plot(x)
-      ggsave(paste(watershed,"_", variable_types[aa], ".pdf", sep=""), plot = x, 
+    
+      x1 <- x + theme_bw(base_size = 11)
+      #plot(x1)
+      ggsave(paste(watershed,"_", variable_types[aa], ".pdf", sep=""), plot = x1, 
              device = "pdf", path = output_path, width = 8, height = 3)
-      figure_list[[aa]] <- x
       
-    } else {       # Facet with two canopies
+      x2 <- x + theme_bw(base_size = 16)      
+      figure_list[[aa]] <- x2
       
-      tmp <- dplyr::filter(happy,var_type == variable_types[aa])
-      x <- ggplot(data = tmp) +
-        geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
-                     fill = "olivedrab3",
-                     color="black", 
-                     outlier.shape = NA) +
-        facet_grid(canopy_layer~world, labeller = labeller(world = world_file_yr, canopy_layer = canopy)) +
-        theme(legend.position = "none") +
-        labs(title = fig_title[aa], x = "Intensity (I')", y = y_label[aa]) +
-        scale_x_continuous(breaks = c(0.2, 0.8)) +
-        theme_set(theme_bw(base_size = 11)) +
-        NULL
-      #plot(x)
-      ggsave(paste(watershed,"_", variable_types[aa], ".pdf", sep=""), plot = x, 
-             device = "pdf", path = output_path, width = 8, height = 5)
-      figure_list[[aa]] <- x
+    } else {       # leafc, stemc, height, canopy_target_prop_mort, canopy_target_prop_mort_consumed, canopy_target_prop_c_consumed, canopy_target_prop_c_remain
+      
+      if (watershed == "RS"){
+        tmp <- dplyr::filter(happy,var_type == variable_types[aa])
+        x <- ggplot(data = tmp) +
+          geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
+                       fill = "olivedrab3",
+                       color="black", 
+                       outlier.shape = NA) +
+          facet_grid(.~world, labeller = labeller(world = world_file_yr)) +
+          theme(legend.position = "none") +
+          labs(title = fig_title_1[aa], x = "Intensity (I')", y = y_label[aa]) +
+          scale_x_continuous(breaks = c(0.2, 0.8)) +
+          NULL
+        #plot(x)
+        
+        x1 <- x + theme_bw(base_size = 11)
+        #plot(x1)
+        ggsave(paste(watershed,"_", variable_types[aa], ".pdf", sep=""), plot = x1, 
+               device = "pdf", path = output_path, width = 8, height = 3)
+        
+        x2 <- x + theme_bw(base_size = 16)      
+        figure_list[[aa]] <- x2
+        
+      } else {
+        # Export two canopies for possible display
+        tmp <- dplyr::filter(happy,var_type == variable_types[aa])
+        x <- ggplot(data = tmp) +
+          geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
+                       fill = "olivedrab3",
+                       color="black", 
+                       outlier.shape = NA) +
+          facet_grid(canopy_layer~world, labeller = labeller(world = world_file_yr, canopy_layer = canopy)) +
+          theme(legend.position = "none") +
+          labs(title = fig_title_1[aa], x = "Intensity (I')", y = y_label[aa]) +
+          scale_x_continuous(breaks = c(0.2, 0.8)) +
+          theme_bw(base_size = 11) +
+          NULL
+        #plot(x)
+        ggsave(paste(watershed,"_", variable_types[aa], "_two_canopies.pdf", sep=""), plot = x, 
+               device = "pdf", path = output_path, width = 8, height = 5)
+        
+        # Export upper canopy for possible display and for cowplot
+        tmp <- dplyr::filter(happy,var_type == variable_types[aa], canopy_layer==1)
+        x <- ggplot(data = tmp) +
+          geom_boxplot(aes(x=pspread_levels,y=relative_change, group=pspread_levels),
+                       fill = "olivedrab3",
+                       color="black", 
+                       outlier.shape = NA) +
+          facet_grid(.~world, labeller = labeller(world = world_file_yr)) +
+          theme(legend.position = "none") +
+          labs(title = fig_title_2[aa], x = "Intensity (I')", y = y_label[aa]) +
+          scale_x_continuous(breaks = c(0.2, 0.8)) +
+          theme_bw(base_size = 16) +
+          NULL
+        #plot(x)
+        ggsave(paste(watershed,"_", variable_types[aa], ".pdf", sep=""), plot = x, 
+               device = "pdf", path = output_path, width = 8, height = 3)
+        figure_list[[aa]] <- x
+      }
     }
   }
   
   # ---------------------------------------------------------------------
   # Cowplot time
   
-  # HJA
-  # 6018, 100000
-  # 9445, 100000
-  # 40537
-  # 2777, 10000
+  # Canopy IDs
+  # 6018, 100000  HJA
+  # 9445, 100000  P301
+  # 40537         RS
+  # 2777, 10000   SF
   
   # ----
   # Change stem carbon from daily to wy 
@@ -357,15 +409,22 @@ patch_fire_eval <- function(num_canopies,
     geom_line(data=stores_final, aes(x=wy,y=c_aboveground, group=as.factor(store), color=store, linetype=store), size = 1.2) +
     geom_vline(xintercept = stand_age, linetype=2, size=.4) +
     #geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
-    labs(title = paste("Timeseries of Aboveground Carbon Stores -", watershed), x = "Stand Age - Wateryear", y = expression('Carbon (g/m'^2*')')) +
-    scale_color_brewer(palette = "Set2", name="Carbon Stores", labels = c("Litter","Lower\nCanopy","Upper\nCanopy")) +
-    scale_linetype_discrete(name="Carbon Stores", labels = c("Litter","Lower\nCanopy","Upper\nCanopy")) +
-    theme_bw() + 
+    labs(title = paste(shed_name, "- Timeseries of Aboveground Carbon Stores"), x = "Stand Age - Wateryear", y = expression('Carbon (g/m'^2*')')) +
+    theme_bw(base_size = 14) + 
     theme(legend.position = "bottom") +
     NULL
+  
+  if (watershed == "RS"){
+    x_stores <- x_stores + scale_linetype_discrete(name="Carbon Stores", labels = c("Litter","Canopy")) +
+      scale_color_brewer(palette = "Set2", name="Carbon Stores", labels = c("Litter","Canopy"))
+  } else {
+    x_stores <- x_stores + scale_linetype_discrete(name="Carbon Stores", labels = c("Litter","Lower\nCanopy","Upper\nCanopy")) +
+      scale_color_brewer(palette = "Set2", name="Carbon Stores", labels = c("Litter","Lower\nCanopy","Upper\nCanopy"))
+  }
+      
   #plot(x_stores)
   ggsave(paste(watershed,"_timeseries.pdf", sep=""), plot = x_stores, 
-         device = "pdf", path = output_path, width = 8, height = 5)
+         device = "pdf", path = output_path, width = 8, height = 3)
   
   # ----
   # Combine figures for Cowplot
@@ -379,7 +438,7 @@ patch_fire_eval <- function(num_canopies,
   cowplot::save_plot(file.path(output_path, paste("4by1_cowplot_",watershed,".pdf",sep="")),
                      x_4by1,
                      ncol=1,
-                     nrow=5,
+                     nrow=4,
                      base_aspect_ratio=2)
 
   return(patch_canopy_diff)
@@ -408,7 +467,7 @@ out <- patch_fire_eval(num_canopies = 2,
 
 
 # ---------------------------------------------------------------------
-# P300
+# P301
 
 out <- patch_fire_eval(num_canopies = 2,
                        allsim_path = RHESSYS_ALLSIM_DIR_3.2_P300,
