@@ -48,10 +48,32 @@ process_sens_ts <- function(stand_age,
   # ------
   # Figures
   
+  if (watershed == "RS"){
+    # Prints a consolodated figure for RS
+    x <- sens_results_by_stand_age %>% 
+      dplyr::filter(response_canopy_group == response_can_group) %>%
+      dplyr::group_by(parameter,response_variable,response_canopy_group) %>% 
+      dplyr::summarise(sensitivity_value=mean(sensitivity_value)) %>% 
+      ggplot(.) +
+      geom_col(aes(x=parameter, y=sensitivity_value, group = parameter), 
+               color="black", width = .8) +
+      labs(title = plot_title, x = "Parameter", y = y_axis) +
+      scale_color_discrete(name="Parameter") +
+      scale_linetype_discrete(name="Parameter") +
+      facet_grid(response_variable~.) +
+      theme_bw(base_size = 10) +
+      theme(axis.text.x = element_text(angle = 300, hjust=0, vjust=0.6)) +
+      NULL
+    #plot(x)
+    ggsave(paste("sobal_ts_", sobol_indices, "_", watershed, "_", response_can_group_name,"2.pdf",sep=""), plot = x,
+           path = output_path, width = 5, height=6)
+  }
+  
   x <- sens_results_by_stand_age %>% 
     dplyr::filter(response_canopy_group == response_can_group) %>% 
-  ggplot(.) +
-    geom_line(aes(x=stand_num, y=sensitivity_value, group = parameter)) +
+    ggplot(.) +
+    geom_col(aes(x=stand_num, y=sensitivity_value, group = parameter), 
+             color="black", width = .8) +
     labs(title = plot_title, x = "Stand Age (years)", y = y_axis) +
     scale_color_discrete(name="Parameter") +
     scale_linetype_discrete(name="Parameter") +
@@ -60,10 +82,10 @@ process_sens_ts <- function(stand_age,
     theme_bw(base_size = 10) +
     theme(axis.text.x = element_text(angle = 300, hjust=0, vjust=0.6)) +
     NULL
+  
   #plot(x)
   ggsave(paste("sobal_ts_", sobol_indices, "_", watershed, "_", response_can_group_name,".pdf",sep=""), plot = x,
          path = output_path, width = 8, height=6)
-  
 }
 
 
@@ -138,7 +160,7 @@ process_sens_ts(stand_age = stand_age_p300,
                 response_can_group_name = "upper",
                 sobol_indices = "1st",
                 y_axis = "First-order Indices",
-                plot_title = "P300: First-order Indices for Upper Canopy"
+                plot_title = "P301: First-order Indices for Upper Canopy"
 )
 
 # 1st order, lower canopy
@@ -149,7 +171,7 @@ process_sens_ts(stand_age = stand_age_p300,
                 response_can_group_name = "lower",
                 sobol_indices = "1st",
                 y_axis = "First-order Indices",
-                plot_title = "P300: First-order Indices for Lower Canopy"
+                plot_title = "P301: First-order Indices for Lower Canopy"
 )
 
 
@@ -161,7 +183,7 @@ process_sens_ts(stand_age = stand_age_p300,
                 response_can_group_name = "upper",
                 sobol_indices = "total",
                 y_axis = "Total-order Indices",
-                plot_title = "P300: Total-order Indices for Upper Canopy"
+                plot_title = "P301: Total-order Indices for Upper Canopy"
 )
 
 # total, lower canopy
@@ -172,7 +194,7 @@ process_sens_ts(stand_age = stand_age_p300,
                 response_can_group_name = "lower",
                 sobol_indices = "total",
                 y_axis = "Total-order Indices",
-                plot_title = "P300: Total-order Indices for Lower Canopy"
+                plot_title = "P301: Total-order Indices for Lower Canopy"
 )
 
 
@@ -187,7 +209,7 @@ process_sens_ts(stand_age = stand_age_rs,
                 response_can_group_name = "upper",
                 sobol_indices = "1st",
                 y_axis = "First-order Indices",
-                plot_title = "Rattlesnake: First-order Indices for Upper Canopy"
+                plot_title = "Rattlesnake: First-order Indices"
 )
 
 # total, upper canopy
@@ -198,7 +220,7 @@ process_sens_ts(stand_age = stand_age_rs,
                 response_can_group_name = "upper",
                 sobol_indices = "total",
                 y_axis = "Total-order Indices",
-                plot_title = "Rattlesnake: Total-order Indices for Upper Canopy"
+                plot_title = "Rattlesnake: Total-order Indices"
 )
 
 

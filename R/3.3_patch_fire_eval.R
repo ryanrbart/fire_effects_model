@@ -409,7 +409,7 @@ patch_fire_eval <- function(num_canopies,
     geom_line(data=stores_final, aes(x=wy,y=c_aboveground, group=as.factor(store), color=store, linetype=store), size = 1.2) +
     geom_vline(xintercept = stand_age, linetype=2, size=.4) +
     #geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
-    labs(title = paste(shed_name, "- Timeseries of Aboveground Carbon Stores"), x = "Stand Age - Wateryear", y = expression('Carbon (g/m'^2*')')) +
+    labs(title = paste(shed_name, ": Timeseries of Aboveground Carbon Stores", sep=""), x = "Stand Age - Wateryear", y = expression('Carbon (g/m'^2*')')) +
     theme_bw(base_size = 14) + 
     theme(legend.position = "bottom") +
     NULL
