@@ -24,6 +24,9 @@ process_sens_ts <- function(stand_age,
   }
   sens_results_by_stand_age <- bind_rows(sens_results_list, .id="stand_num")
   
+  # Change response variable prop_c_remain to prop_c_residual
+  sens_results_by_stand_age$response_variable <- dplyr::recode(sens_results_by_stand_age$response_variable, "prop_c_remain"="prop_c_residual")
+  
   # If Rattlesnake, add dummy response_canopy_group column to match sites with 2 canopies
   if (watershed == "RS"){
     sens_results_by_stand_age$response_canopy_group <- response_can_group
@@ -37,7 +40,7 @@ process_sens_ts <- function(stand_age,
                                                             levels = c("prop_c_mort",
                                                                        "prop_mort_consumed",
                                                                        "prop_c_consumed",
-                                                                       "prop_c_remain"))
+                                                                       "prop_c_residual"))
   
   sens_results_by_stand_age$parameter <- factor(sens_results_by_stand_age$parameter,
                                                         levels = c("h_overstory", "h_understory",
@@ -45,11 +48,19 @@ process_sens_ts <- function(stand_age,
                                                                    "k1_mort_o", "k2_mort_o",
                                                                    "I'"))
   
+  parameter_var <- c("h_overstory", "h_understory", "k_mort_u", 
+                 "k_consumption", "k1_mort_o",
+                 "k2_mort_o", "I'")
+  
+  parameter_names <- c(expression('h'[overstory]), expression('h'[understory]), 
+                       expression('k'[mort_u]), expression('k'[consumption]), 
+                       expression('k'['1_mort_o']), expression('k'['2_mort_o']),   
+                       "I'")
   # ------
   # Figures
   
   if (watershed == "RS"){
-    # Prints a consolodated figure for RS
+    # Prints a consolidated figure for RS
     x <- sens_results_by_stand_age %>% 
       dplyr::filter(response_canopy_group == response_can_group) %>%
       dplyr::group_by(parameter,response_variable,response_canopy_group) %>% 
@@ -60,6 +71,9 @@ process_sens_ts <- function(stand_age,
       labs(title = plot_title, x = "Parameter", y = y_axis) +
       scale_color_discrete(name="Parameter") +
       scale_linetype_discrete(name="Parameter") +
+      scale_x_discrete(labels = c(parameter_names),
+                       limits=c(parameter_var),
+                       expand=c(0,0)) +
       facet_grid(response_variable~.) +
       theme_bw(base_size = 10) +
       theme(axis.text.x = element_text(angle = 300, hjust=0, vjust=0.6)) +
@@ -70,15 +84,22 @@ process_sens_ts <- function(stand_age,
   }
   
   x <- sens_results_by_stand_age %>% 
-    dplyr::filter(response_canopy_group == response_can_group) %>% 
-    ggplot(.) +
+    dplyr::filter(response_canopy_group == response_can_group)
+  
+  # Needed to add levels to get expressions to properly work https://stackoverflow.com/questions/37089052/
+  levels(x$parameter) <- c(expression('h'[overstory]), expression('h'[understory]), 
+                           expression('k'[mort_u]), expression('k'[consumption]), 
+                           expression('k'['1_mort_o']), expression('k'['2_mort_o']),   
+                           quote("`I\'`"))     # Needed to add backticks to get ' to work. https://stackoverflow.com/questions/17639325/
+  
+  x <- ggplot(x) +
     geom_col(aes(x=stand_num, y=sensitivity_value, group = parameter), 
              color="black", width = .8) +
     labs(title = plot_title, x = "Stand Age (years)", y = y_axis) +
     scale_color_discrete(name="Parameter") +
     scale_linetype_discrete(name="Parameter") +
     scale_x_discrete(labels = c(stand_age)) +
-    facet_grid(response_variable~parameter) +
+    facet_grid(response_variable~parameter, labeller = label_parsed) +
     theme_bw(base_size = 10) +
     theme(axis.text.x = element_text(angle = 300, hjust=0, vjust=0.6)) +
     NULL
