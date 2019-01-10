@@ -4,7 +4,7 @@
 
 source("R/0.1_utilities.R")
 
-theme_set(theme_bw(base_size = 18))
+theme_set(theme_classic(base_size = 18))
 
 # ---------------------------------------------------------------------
 # Consumption Output Figure
@@ -40,8 +40,10 @@ consumption_figure = function(consumption_parameter, title_name){
     geom_line(aes(x=percent_canopy_mortality_rep, y=percent_mortality, linetype = consumption_parameter_rep, color = consumption_parameter_rep), size=1.2) +
     #theme_bw(base_size=21) +
     labs(title = title_name, x = "Proportion Mortality", y = "Proportion of Mortality Consumed") +
-    scale_linetype(name = "Consumption\nParameter\n(k2)") +
-    scale_color_brewer(palette = "Dark2", name = "Consumption\nParameter\n(k2)") +
+    #scale_linetype(name = "Consumption\nParameter\n(k_consumption)") +
+    #scale_color_brewer(palette = "Dark2", name = "Consumption\nParameter\n(k_consumption)") +
+    scale_linetype(name = "Consumption\nParameter") +
+    scale_color_brewer(palette = "Dark2", name = "Consumption\nParameter") +
     theme(axis.text = element_text(size=18)) +
     NULL
   #plot(x)
@@ -131,10 +133,14 @@ understory_figure = function(pspread_mortality_parameter, title_name){
   x <- ggplot(data = happy) +
     geom_line(aes(x=pspread_rep, y=percent_mortality, linetype = pspread_mortality_parameter_rep, color = pspread_mortality_parameter_rep), size=1.2) +
     #theme_bw(base_size=16) +
-#    labs(title = title_name, x = "Pspread", y = "Understory Mortality (%)") +
-    labs(title = title_name, x = expression(Intensity~(i[u])), y = "Proportion Mortality") +
-    scale_linetype(name = "Understory\nMortality\nParameter\n(k1)") +
-    scale_color_brewer(palette = "Dark2", name = "Understory\nMortality\nParameter\n(k1)") +
+#    labs(title = title_name, x = "Pspread", y = "Understory Carbon Mortality (%)") +
+    labs(title = title_name, x = expression(Intensity~(i[u])), y = "Proportion Carbon Mortality") +
+    #scale_linetype(name = "Understory\nMortality\nParameter\n(k_mort_u)") +
+    #scale_linetype(name = expression(Understory~\nMortality~\nParameter~\n(k[consumption]))) +
+    #scale_linetype(name = bquote(atop("Understory Mortality", Parameter~(k[consumption])))) +  # Note that adding expression plus multiple lines is not really supported in plotmath. https://stackoverflow.com/questions/13317428/
+    #scale_color_brewer(palette = "Dark2", name = "Understory\nMortality\nParameter\n(k_mort_u)") +
+    scale_linetype(name = "Understory\nMortality\nParameter") +
+    scale_color_brewer(palette = "Dark2", name = "Understory\nMortality\nParameter") +
     theme(axis.text = element_text(size=18)) +
     NULL
   #plot(x)
@@ -174,9 +180,11 @@ overstory_figure = function(k1, k2, title_name){
   x <- ggplot(data = happy) +
     geom_line(aes(x=understory_biomass_mortality_rep, y=overstory_percent_mortality, linetype = k1_rep, color = k2_rep), size=1.2) +
     #theme_bw(base_size=16) +
-    labs(title = title_name, x = expression(Understory~"&"~Litter~Consumption~(gC/m^2)), y = "Proportion Mortality") +
-    scale_linetype(name = "Slope\nParameter\n(k3)") +
-    scale_color_brewer(palette = "Dark2", name = "Centerpoint\nParameter\n(k4)") +
+    labs(title = title_name, x = expression(Understory~"&"~Litter~Consumption~(gC/m^2)), y = "Proportion Carbon Mortality") +
+    #scale_linetype(name = "Slope\nParameter\n(k_1_mort_o)") +
+    #scale_color_brewer(palette = "Dark2", name = "Centerpoint\nParameter\n(k_2_mort_o)") +
+    scale_linetype(name = "Slope\nParameter") +
+    scale_color_brewer(palette = "Dark2", name = "Centerpoint\nParameter") +
     theme(axis.text = element_text(size=18)) +
     NULL
   #plot(x)
