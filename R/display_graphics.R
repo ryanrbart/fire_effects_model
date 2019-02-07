@@ -133,8 +133,8 @@ understory_figure = function(pspread_mortality_parameter, title_name){
   x <- ggplot(data = happy) +
     geom_line(aes(x=pspread_rep, y=percent_mortality, linetype = pspread_mortality_parameter_rep, color = pspread_mortality_parameter_rep), size=1.2) +
     #theme_bw(base_size=16) +
-#    labs(title = title_name, x = "Pspread", y = "Understory Carbon Mortality (%)") +
-    labs(title = title_name, x = expression(Intensity~(i[u])), y = "Proportion Carbon Mortality") +
+    # labs(title = title_name, x = "Pspread", y = "Understory Carbon Mortality (%)") +
+    labs(title = title_name, x = expression(Intensity~(`I'`[u])), y = "Proportion of Carbon Mortality") +
     #scale_linetype(name = "Understory\nMortality\nParameter\n(k_mort_u)") +
     #scale_linetype(name = expression(Understory~\nMortality~\nParameter~\n(k[consumption]))) +
     #scale_linetype(name = bquote(atop("Understory Mortality", Parameter~(k[consumption])))) +  # Note that adding expression plus multiple lines is not really supported in plotmath. https://stackoverflow.com/questions/13317428/
@@ -180,7 +180,7 @@ overstory_figure = function(k1, k2, title_name){
   x <- ggplot(data = happy) +
     geom_line(aes(x=understory_biomass_mortality_rep, y=overstory_percent_mortality, linetype = k1_rep, color = k2_rep), size=1.2) +
     #theme_bw(base_size=16) +
-    labs(title = title_name, x = expression(Understory~"&"~Litter~Consumption~(gC/m^2)), y = "Proportion Carbon Mortality") +
+    labs(title = title_name, x = expression(Understory~"&"~Litter~Consumption~(gC/m^2)), y = "Proportion of Carbon Mortality") +
     #scale_linetype(name = "Slope\nParameter\n(k_1_mort_o)") +
     #scale_color_brewer(palette = "Dark2", name = "Centerpoint\nParameter\n(k_2_mort_o)") +
     scale_linetype(name = "Slope\nParameter") +
