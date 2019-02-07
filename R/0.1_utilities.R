@@ -17,6 +17,7 @@ library(lhs)
 library(KScorrect)
 library(gtools)
 library(cowplot)
+library(stringr)
 
 
 # ---------------------------------------------------------------------

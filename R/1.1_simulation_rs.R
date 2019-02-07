@@ -15,6 +15,7 @@ parameter_method <- "lhc"
 # RHESSys Inputs
 input_rhessys <- list()
 input_rhessys$rhessys_version <- "bin/rhessys5.20.1"
+#input_rhessys$rhessys_version <- "bin/rhessys6.0"
 input_rhessys$tec_file <- "ws_rs/tecfiles/rs_patch_simulation.tec"
 input_rhessys$world_file <- "ws_rs/worldfiles/rs_30m_1can_patch_40537.world"
 input_rhessys$world_hdr_prefix <- "1.1"
@@ -131,6 +132,7 @@ output_variables[2,] <- data.frame("height", "awks/output_var_cd_height.awk","pa
 
 system.time(
   run_rhessys(parameter_method = parameter_method,
+              output_method = "awk",
               input_rhessys = input_rhessys,
               input_hdr_list = input_hdr_list,
               input_preexisting_table = input_preexisting_table,
