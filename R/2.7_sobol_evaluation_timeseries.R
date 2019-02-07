@@ -56,6 +56,12 @@ process_sens_ts <- function(stand_age,
                        expression('k'[mort_u]), expression('k'[consumption]), 
                        expression('k'['1_mort_o']), expression('k'['2_mort_o']),   
                        "I'")
+  
+  response_variable_lab <- c("prop_c_mort" = "prop_c_\nmort",
+                             "prop_mort_consumed" = "prop_mort_\nconsumed",
+                             "prop_c_consumed" = "prop_c_\nconsumed",
+                             "prop_c_residual" = "prop_c_\nresidual")
+  
   # ------
   # Figures
   
@@ -64,18 +70,19 @@ process_sens_ts <- function(stand_age,
     x <- sens_results_by_stand_age %>% 
       dplyr::filter(response_canopy_group == response_can_group) %>%
       dplyr::group_by(parameter,response_variable,response_canopy_group) %>% 
-      dplyr::summarise(sensitivity_value=mean(sensitivity_value)) %>% 
+      dplyr::summarise(sensitivity_value=mean(sensitivity_value), se_value=mean(se_value)) %>% 
       ggplot(.) +
       geom_col(aes(x=parameter, y=sensitivity_value, group = parameter), 
-               color="black", width = .8) +
+               color="black", fill = "Navajowhite2", width = .8) +
+      geom_errorbar(aes(x=parameter, ymax=sensitivity_value+se_value,ymin =sensitivity_value-se_value),
+                    color="black", width=0.4) +
       labs(title = plot_title, x = "Parameter", y = y_axis) +
       scale_color_discrete(name="Parameter") +
       scale_linetype_discrete(name="Parameter") +
       scale_x_discrete(labels = c(parameter_names),
-                       limits=c(parameter_var),
-                       expand=c(0,0)) +
-      facet_grid(response_variable~.) +
-      theme_bw(base_size = 10) +
+                       limits=c(parameter_var)) +
+      facet_grid(response_variable~., labeller = labeller(response_variable = response_variable_lab)) +
+      theme_bw(base_size = 16) +
       theme(axis.text.x = element_text(angle = 300, hjust=0, vjust=0.6)) +
       NULL
     #plot(x)
@@ -94,19 +101,23 @@ process_sens_ts <- function(stand_age,
   
   x <- ggplot(x) +
     geom_col(aes(x=stand_num, y=sensitivity_value, group = parameter), 
-             color="black", width = .8) +
+             color="black", fill = "navajowhite2", width = .8) +
+    geom_errorbar(aes(x=stand_num, ymax=sensitivity_value+se_value,ymin =sensitivity_value-se_value), 
+                  color="black", width=0.4) +
     labs(title = plot_title, x = "Stand Age (years)", y = y_axis) +
     scale_color_discrete(name="Parameter") +
     scale_linetype_discrete(name="Parameter") +
     scale_x_discrete(labels = c(stand_age)) +
-    facet_grid(response_variable~parameter, labeller = label_parsed) +
-    theme_bw(base_size = 10) +
-    theme(axis.text.x = element_text(angle = 300, hjust=0, vjust=0.6)) +
+    facet_grid(response_variable~parameter, labeller = labeller(.cols = label_parsed, .rows = response_variable_lab)) +
+    theme_bw(base_size = 14) +
+    theme(axis.text.x = element_text(angle = 270, hjust=0, vjust=0.6)) +
     NULL
   
   #plot(x)
   ggsave(paste("sobal_ts_", sobol_indices, "_", watershed, "_", response_can_group_name,".pdf",sep=""), plot = x,
          path = output_path, width = 8, height=6)
+  
+  return(x)
 }
 
 
@@ -119,54 +130,54 @@ stand_age_sf = c("5","12","20","30","40","60","80")
 # ---------------------------------------------------------------------
 # ---------------------------------------------------------------------
 # ---------------------------------------------------------------------
-# Call function function
+# Call function 
 
 
 # HJA
 
 # 1st order, upper canopy
-process_sens_ts(stand_age = stand_age_hja,
-                output_path = OUTPUT_DIR_2,
-                watershed = "HJA",
-                response_can_group = "Upper Canopy",
-                response_can_group_name = "upper",
-                sobol_indices = "1st",
-                y_axis = "First-order Indices",
-                plot_title = "H.J. Andrews: First-order Indices for Upper Canopy"
+x_hja_upper_1 <- process_sens_ts(stand_age = stand_age_hja,
+                                 output_path = OUTPUT_DIR_2,
+                                 watershed = "HJA",
+                                 response_can_group = "Upper Canopy",
+                                 response_can_group_name = "upper",
+                                 sobol_indices = "1st",
+                                 y_axis = "First-order Indices",
+                                 plot_title = "H.J. Andrews: First-order Indices for Upper Canopy"
 )
 
 # 1st order, lower canopy
-process_sens_ts(stand_age = stand_age_hja,
-                output_path = OUTPUT_DIR_2,
-                watershed = "HJA",
-                response_can_group = "Lower Canopy",
-                response_can_group_name = "lower",
-                sobol_indices = "1st",
-                y_axis = "First-order Indices",
-                plot_title = "H.J. Andrews: First-order Indices for Lower Canopy"
+x_hja_lower_1 <- process_sens_ts(stand_age = stand_age_hja,
+                                 output_path = OUTPUT_DIR_2,
+                                 watershed = "HJA",
+                                 response_can_group = "Lower Canopy",
+                                 response_can_group_name = "lower",
+                                 sobol_indices = "1st",
+                                 y_axis = "First-order Indices",
+                                 plot_title = "H.J. Andrews: First-order Indices for Lower Canopy"
 )
 
 
 # total, upper canopy
-process_sens_ts(stand_age = stand_age_hja,
-                output_path = OUTPUT_DIR_2,
-                watershed = "HJA",
-                response_can_group = "Upper Canopy",
-                response_can_group_name = "upper",
-                sobol_indices = "total",
-                y_axis = "Total-order Indices",
-                plot_title = "H.J. Andrews: Total-order Indices for Upper Canopy"
+x_hja_upper_total <- process_sens_ts(stand_age = stand_age_hja,
+                                     output_path = OUTPUT_DIR_2,
+                                     watershed = "HJA",
+                                     response_can_group = "Upper Canopy",
+                                     response_can_group_name = "upper",
+                                     sobol_indices = "total",
+                                     y_axis = "Total-order Indices",
+                                     plot_title = "H.J. Andrews: Total-order Indices for Upper Canopy"
 )
 
 # total, lower canopy
-process_sens_ts(stand_age = stand_age_hja,
-                output_path = OUTPUT_DIR_2,
-                watershed = "HJA",
-                response_can_group = "Lower Canopy",
-                response_can_group_name = "lower",
-                sobol_indices = "total",
-                y_axis = "Total-order Indices",
-                plot_title = "H.J. Andrews: Total-order Indices for Lower Canopy"
+x_hja_lower_total <- process_sens_ts(stand_age = stand_age_hja,
+                                     output_path = OUTPUT_DIR_2,
+                                     watershed = "HJA",
+                                     response_can_group = "Lower Canopy",
+                                     response_can_group_name = "lower",
+                                     sobol_indices = "total",
+                                     y_axis = "Total-order Indices",
+                                     plot_title = "H.J. Andrews: Total-order Indices for Lower Canopy"
 )
 
 
@@ -174,48 +185,48 @@ process_sens_ts(stand_age = stand_age_hja,
 # P300
 
 # 1st order, upper canopy
-process_sens_ts(stand_age = stand_age_p300,
-                output_path = OUTPUT_DIR_2,
-                watershed = "P300",
-                response_can_group = "Upper Canopy",
-                response_can_group_name = "upper",
-                sobol_indices = "1st",
-                y_axis = "First-order Indices",
-                plot_title = "P301: First-order Indices for Upper Canopy"
+x_p300_upper_1 <- process_sens_ts(stand_age = stand_age_p300,
+                                  output_path = OUTPUT_DIR_2,
+                                  watershed = "P300",
+                                  response_can_group = "Upper Canopy",
+                                  response_can_group_name = "upper",
+                                  sobol_indices = "1st",
+                                  y_axis = "First-order Indices",
+                                  plot_title = "P301: First-order Indices for Upper Canopy"
 )
 
 # 1st order, lower canopy
-process_sens_ts(stand_age = stand_age_p300,
-                output_path = OUTPUT_DIR_2,
-                watershed = "P300",
-                response_can_group = "Lower Canopy",
-                response_can_group_name = "lower",
-                sobol_indices = "1st",
-                y_axis = "First-order Indices",
-                plot_title = "P301: First-order Indices for Lower Canopy"
+x_p300_lower_1 <- process_sens_ts(stand_age = stand_age_p300,
+                                  output_path = OUTPUT_DIR_2,
+                                  watershed = "P300",
+                                  response_can_group = "Lower Canopy",
+                                  response_can_group_name = "lower",
+                                  sobol_indices = "1st",
+                                  y_axis = "First-order Indices",
+                                  plot_title = "P301: First-order Indices for Lower Canopy"
 )
 
 
 # total, upper canopy
-process_sens_ts(stand_age = stand_age_p300,
-                output_path = OUTPUT_DIR_2,
-                watershed = "P300",
-                response_can_group = "Upper Canopy",
-                response_can_group_name = "upper",
-                sobol_indices = "total",
-                y_axis = "Total-order Indices",
-                plot_title = "P301: Total-order Indices for Upper Canopy"
+x_p300_upper_total <- process_sens_ts(stand_age = stand_age_p300,
+                                      output_path = OUTPUT_DIR_2,
+                                      watershed = "P300",
+                                      response_can_group = "Upper Canopy",
+                                      response_can_group_name = "upper",
+                                      sobol_indices = "total",
+                                      y_axis = "Total-order Indices",
+                                      plot_title = "P301: Total-order Indices for Upper Canopy"
 )
 
 # total, lower canopy
-process_sens_ts(stand_age = stand_age_p300,
-                output_path = OUTPUT_DIR_2,
-                watershed = "P300",
-                response_can_group = "Lower Canopy",
-                response_can_group_name = "lower",
-                sobol_indices = "total",
-                y_axis = "Total-order Indices",
-                plot_title = "P301: Total-order Indices for Lower Canopy"
+x_p300_lower_total <- process_sens_ts(stand_age = stand_age_p300,
+                                      output_path = OUTPUT_DIR_2,
+                                      watershed = "P300",
+                                      response_can_group = "Lower Canopy",
+                                      response_can_group_name = "lower",
+                                      sobol_indices = "total",
+                                      y_axis = "Total-order Indices",
+                                      plot_title = "P301: Total-order Indices for Lower Canopy"
 )
 
 
@@ -223,25 +234,25 @@ process_sens_ts(stand_age = stand_age_p300,
 # RS
 
 # 1st order, upper canopy
-process_sens_ts(stand_age = stand_age_rs,
-                output_path = OUTPUT_DIR_2,
-                watershed = "RS",
-                response_can_group = "Upper Canopy",
-                response_can_group_name = "upper",
-                sobol_indices = "1st",
-                y_axis = "First-order Indices",
-                plot_title = "Rattlesnake: First-order Indices"
+x_rs_1 <- process_sens_ts(stand_age = stand_age_rs,
+                          output_path = OUTPUT_DIR_2,
+                          watershed = "RS",
+                          response_can_group = "Upper Canopy",
+                          response_can_group_name = "upper",
+                          sobol_indices = "1st",
+                          y_axis = "First-order Indices",
+                          plot_title = "Rattlesnake: First-order Indices"
 )
 
 # total, upper canopy
-process_sens_ts(stand_age = stand_age_rs,
-                output_path = OUTPUT_DIR_2,
-                watershed = "RS",
-                response_can_group = "Upper Canopy",
-                response_can_group_name = "upper",
-                sobol_indices = "total",
-                y_axis = "Total-order Indices",
-                plot_title = "Rattlesnake: Total-order Indices"
+x_rs_total <- process_sens_ts(stand_age = stand_age_rs,
+                              output_path = OUTPUT_DIR_2,
+                              watershed = "RS",
+                              response_can_group = "Upper Canopy",
+                              response_can_group_name = "upper",
+                              sobol_indices = "total",
+                              y_axis = "Total-order Indices",
+                              plot_title = "Rattlesnake: Total-order Indices"
 )
 
 
@@ -249,66 +260,71 @@ process_sens_ts(stand_age = stand_age_rs,
 # SF
 
 # 1st order, upper canopy
-process_sens_ts(stand_age = stand_age_sf,
-                output_path = OUTPUT_DIR_2,
-                watershed = "SF",
-                response_can_group = "Upper Canopy",
-                response_can_group_name = "upper",
-                sobol_indices = "1st",
-                y_axis = "First-order Indices",
-                plot_title = "Santa Fe: First-order Indices for Upper Canopy"
+x_sf_upper_1 <- process_sens_ts(stand_age = stand_age_sf,
+                                output_path = OUTPUT_DIR_2,
+                                watershed = "SF",
+                                response_can_group = "Upper Canopy",
+                                response_can_group_name = "upper",
+                                sobol_indices = "1st",
+                                y_axis = "First-order Indices",
+                                plot_title = "Santa Fe: First-order Indices for Upper Canopy"
 )
 
 # 1st order, lower canopy
-process_sens_ts(stand_age = stand_age_sf,
-                output_path = OUTPUT_DIR_2,
-                watershed = "SF",
-                response_can_group = "Lower Canopy",
-                response_can_group_name = "lower",
-                sobol_indices = "1st",
-                y_axis = "First-order Indices",
-                plot_title = "Santa Fe: First-order Indices for Lower Canopy"
+x_sf_lower_1 <- process_sens_ts(stand_age = stand_age_sf,
+                                output_path = OUTPUT_DIR_2,
+                                watershed = "SF",
+                                response_can_group = "Lower Canopy",
+                                response_can_group_name = "lower",
+                                sobol_indices = "1st",
+                                y_axis = "First-order Indices",
+                                plot_title = "Santa Fe: First-order Indices for Lower Canopy"
 )
 
 
 # total, upper canopy
-process_sens_ts(stand_age = stand_age_sf,
-                output_path = OUTPUT_DIR_2,
-                watershed = "SF",
-                response_can_group = "Upper Canopy",
-                response_can_group_name = "upper",
-                sobol_indices = "total",
-                y_axis = "Total-order Indices",
-                plot_title = "Santa Fe: Total-order Indices for Upper Canopy"
+x_sf_upper_total <- process_sens_ts(stand_age = stand_age_sf,
+                                    output_path = OUTPUT_DIR_2,
+                                    watershed = "SF",
+                                    response_can_group = "Upper Canopy",
+                                    response_can_group_name = "upper",
+                                    sobol_indices = "total",
+                                    y_axis = "Total-order Indices",
+                                    plot_title = "Santa Fe: Total-order Indices for Upper Canopy"
 )
 
 # total, lower canopy
-process_sens_ts(stand_age = stand_age_sf,
-                output_path = OUTPUT_DIR_2,
-                watershed = "SF",
-                response_can_group = "Lower Canopy",
-                response_can_group_name = "lower",
-                sobol_indices = "total",
-                y_axis = "Total-order Indices",
-                plot_title = "Santa Fe: Total-order Indices for Lower Canopy"
+x_sf_lower_total <- process_sens_ts(stand_age = stand_age_sf,
+                                    output_path = OUTPUT_DIR_2,
+                                    watershed = "SF",
+                                    response_can_group = "Lower Canopy",
+                                    response_can_group_name = "lower",
+                                    sobol_indices = "total",
+                                    y_axis = "Total-order Indices",
+                                    plot_title = "Santa Fe: Total-order Indices for Lower Canopy"
 )
-
-
-
 
 
 
 # --------------------------------------------------------------
+# Cow Plot P300 and HJA
+
+# Combine figures for Cowplot
+sens_2by1 <- cowplot::plot_grid(x_p300_upper_1,
+                                x_hja_upper_1,
+                                labels=c("a","b"),
+                                nrow=2,
+                                label_size = 16)
+
+#plot(sens_2by1)
+cowplot::save_plot(file.path(OUTPUT_DIR_2, "sens_2by1.pdf"),
+                   sens_2by1,
+                   ncol=1,
+                   nrow=2,
+                   base_height=6,
+                   base_width=8)
 
 
-# Should I be plotting response variables or parameters???
 
-# Variants
-# 4 Watersheds
-# 2 sobol parameters (first and total)
-# 8 response variables (4 for RS) (4 variables/2 canopies)
-# 7 facet panes (parameters)
-
-# 64 (7 pane figures)
 
 

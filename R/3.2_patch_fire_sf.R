@@ -30,8 +30,8 @@ input_rhessys$tec_file <- "ws_sf/tecfiles/sf_patch_fire.tec"
 input_rhessys$world_file <- "assigned below"
 input_rhessys$world_hdr_prefix <- "3.2_sf"
 input_rhessys$flow_file <- "ws_sf/flowtables/sf_patch_2777.flow"
-input_rhessys$start_date <- "1941 10 1 1"
-input_rhessys$end_date <- "1941 10 15 1"
+input_rhessys$start_date <- "1955 10 1 1"
+input_rhessys$end_date <- "1955 10 15 1"
 input_rhessys$output_folder <- "ws_sf/out/3.2_sf"
 input_rhessys$output_filename <- "patch_fire"
 input_rhessys$command_options <- c("-b -g -c -p -f")
@@ -134,8 +134,8 @@ input_dated_seq_list = list()
 # Make tec-file
 #input_tec_data <- NULL
 input_tec_data <- data.frame(year=integer(),month=integer(),day=integer(),hour=integer(),name=character(),stringsAsFactors=FALSE)
-input_tec_data[1,] <- data.frame(1941, 10, 1, 1, "print_daily_on", stringsAsFactors=FALSE)
-input_tec_data[2,] <- data.frame(1941, 10, 1, 2, "print_daily_growth_on", stringsAsFactors=FALSE)
+input_tec_data[1,] <- data.frame(1955, 10, 1, 1, "print_daily_on", stringsAsFactors=FALSE)
+input_tec_data[2,] <- data.frame(1955, 10, 1, 2, "print_daily_growth_on", stringsAsFactors=FALSE)
 
 
 # Data frame containing variable of interest, location/name of awk file (relative to output
@@ -199,7 +199,7 @@ system.time(
     
     # ----
     input_dated_seq_list = list()
-    input_dated_seq_list[[1]] <- data.frame(name="snoelktr50",type="pspread",year=1941,month=10,day=7,hour=1,value=world_pspread_par$pspread_levels[aa],stringsAsFactors=FALSE)
+    input_dated_seq_list[[1]] <- data.frame(name="snoelktr50",type="pspread",year=1955,month=10,day=7,hour=1,value=world_pspread_par$pspread_levels[aa],stringsAsFactors=FALSE)
     
     
     run_rhessys(parameter_method = parameter_method,

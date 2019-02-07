@@ -20,8 +20,8 @@ input_rhessys$tec_file <- "ws_sf/tecfiles/sf_patch_simulation.tec"
 input_rhessys$world_file <- "ws_sf/worldfiles/sf_2can_patch_2777.world"
 input_rhessys$world_hdr_prefix <- "1.3"
 input_rhessys$flow_file <- "ws_sf/flowtables/sf_patch_2777.flow"
-input_rhessys$start_date <- "1941 10 1 1"
-input_rhessys$end_date <- "2041 10 1 1"
+input_rhessys$start_date <- "1955 10 1 1"
+input_rhessys$end_date <- "2055 10 1 1"
 input_rhessys$output_folder <- "ws_sf/out/1.3_sf_patch_simulation"
 input_rhessys$output_filename <- "patch_sim"
 input_rhessys$command_options <- c("-b -g -c -p -tchange 0 0")
@@ -84,21 +84,21 @@ input_clim_base_list[[1]][[5]][2,] <- data.frame(c1=0, c2="number_non_critical_h
 # Make a list of dated sequence data.frames (file name, year, month, day, hour, value)
 # input_dated_seq_list <- NULL
 input_dated_seq_list = list()
-input_dated_seq_list[[1]] <- data.frame(name="snoelktr50",type="pspread",year=1941,month=10,day=7,hour=1,value=0.95,stringsAsFactors=FALSE)
+input_dated_seq_list[[1]] <- data.frame(name="snoelktr50",type="pspread",year=1955,month=10,day=7,hour=1,value=0.95,stringsAsFactors=FALSE)
 
 
 # Make tec-file
 #input_tec_data <- NULL
 input_tec_data <- data.frame(year=integer(),month=integer(),day=integer(),hour=integer(),name=character(),stringsAsFactors=FALSE)
-input_tec_data[1,] <- data.frame(1941, 10, 1, 1, "print_daily_on", stringsAsFactors=FALSE)
-input_tec_data[2,] <- data.frame(1941, 10, 1, 2, "print_daily_growth_on", stringsAsFactors=FALSE)
-input_tec_data[3,] <- data.frame(1947, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-input_tec_data[4,] <- data.frame(1954, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-input_tec_data[5,] <- data.frame(1962, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-input_tec_data[6,] <- data.frame(1972, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-input_tec_data[7,] <- data.frame(1982, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-input_tec_data[8,] <- data.frame(2002, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
-input_tec_data[9,] <- data.frame(2022, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+input_tec_data[1,] <- data.frame(1955, 10, 1, 1, "print_daily_on", stringsAsFactors=FALSE)
+input_tec_data[2,] <- data.frame(1955, 10, 1, 2, "print_daily_growth_on", stringsAsFactors=FALSE)
+input_tec_data[3,] <- data.frame(1961, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+input_tec_data[4,] <- data.frame(1968, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+input_tec_data[5,] <- data.frame(1976, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+input_tec_data[6,] <- data.frame(1986, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+input_tec_data[7,] <- data.frame(1996, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+input_tec_data[8,] <- data.frame(2016, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
+input_tec_data[9,] <- data.frame(2036, 10, 1, 1, "output_current_state", stringsAsFactors=FALSE)
 
 
 # List of lists containing variable of interest, location/name of awk file (relative to output
@@ -110,6 +110,7 @@ output_variables <- NULL
 
 system.time(
   run_rhessys(parameter_method = parameter_method,
+              output_method = "awk",
               input_rhessys = input_rhessys,
               input_hdr_list = input_hdr_list,
               input_preexisting_table = input_preexisting_table,

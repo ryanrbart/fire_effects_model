@@ -32,11 +32,17 @@ patch_sens_sobol_eval <- function(num_canopies,
                                           parameter_file = parameter_file,
                                           num_canopies = num_canopies)
   
-  if (watershed == "P300" | watershed == "SF"){
+  if (watershed == "P300"){
     patch_fire_diff <- patch_fire %>%
       dplyr::filter(dates == ('1941-10-11')) %>%
       spread(dates, value) %>%
       mutate(relative_change = as.double(`1941-10-11`)*100)
+  }
+  if (watershed == "SF"){
+    patch_fire_diff <- patch_fire %>%
+      dplyr::filter(dates == ('1955-10-11')) %>%
+      spread(dates, value) %>%
+      mutate(relative_change = as.double(`1955-10-11`)*100)
   }
   if (watershed == "HJA"){
     patch_fire_diff <- patch_fire %>%
@@ -140,10 +146,30 @@ patch_sens_sobol_eval <- function(num_canopies,
                              prop_mort_consumed_low = sobol_lower_canopy_mort_consumed_rel$S$original,
                              prop_c_consumed_low = sobol_lower_canopy_c_consumed_rel$S$original,
                              prop_c_remain_low = sobol_lower_canopy_c_remain_rel$S$original,
+                             
+                             prop_c_mort_up_se = sobol_upper_canopy_mort_rel$S$`std. error`,
+                             prop_mort_consumed_up_se = sobol_upper_canopy_mort_consumed_rel$S$`std. error`,
+                             prop_c_consumed_up_se = sobol_upper_canopy_c_consumed_rel$S$`std. error`,
+                             prop_c_remain_up_se = sobol_upper_canopy_c_remain_rel$S$`std. error`,
+                             prop_c_mort_low_se = sobol_lower_canopy_mort_rel$S$`std. error`,
+                             prop_mort_consumed_low_se = sobol_lower_canopy_mort_consumed_rel$S$`std. error`,
+                             prop_c_consumed_low_se = sobol_lower_canopy_c_consumed_rel$S$`std. error`,
+                             prop_c_remain_low_se = sobol_lower_canopy_c_remain_rel$S$`std. error`,
+                             
                              parameter=parameter_initial,
                              parameter_canopy_group=parameter_canopy_group)
-    sobol_fire_1st <- sobol_fire_1st %>% 
+    
+    # Code to gather both sensitivity and se values
+    a <- sobol_fire_1st %>% 
       tidyr::gather(response_variable, sensitivity_value, 1:8) %>% 
+      dplyr::select(-(1:8))
+    b <-sobol_fire_1st %>% 
+      tidyr::gather(response_variable, se_value, 9:16) %>% 
+      dplyr::select(-(1:8))
+    b_mod <- dplyr::mutate(b, response_variable = stringr::str_sub(b$response_variable, start = 1L, end = -4L))
+    sobol_fire_1st <- dplyr::full_join(a,b_mod, by=c("parameter", "parameter_canopy_group", "response_variable"))
+    
+    sobol_fire_1st <- sobol_fire_1st %>% 
       # Add canopy group variable
       mutate(response_canopy_group = if_else(response_variable %in% c("prop_c_mort_up",
                                                                       "prop_mort_consumed_up",
@@ -177,10 +203,30 @@ patch_sens_sobol_eval <- function(num_canopies,
                                prop_mort_consumed_low = sobol_lower_canopy_mort_consumed_rel$T$original,
                                prop_c_consumed_low = sobol_lower_canopy_c_consumed_rel$T$original,
                                prop_c_remain_low = sobol_lower_canopy_c_remain_rel$T$original,
+                               
+                               prop_c_mort_up_se = sobol_upper_canopy_mort_rel$T$`std. error`,
+                               prop_mort_consumed_up_se = sobol_upper_canopy_mort_consumed_rel$T$`std. error`,
+                               prop_c_consumed_up_se = sobol_upper_canopy_c_consumed_rel$T$`std. error`,
+                               prop_c_remain_up_se = sobol_upper_canopy_c_remain_rel$T$`std. error`,
+                               prop_c_mort_low_se = sobol_lower_canopy_mort_rel$T$`std. error`,
+                               prop_mort_consumed_low_se = sobol_lower_canopy_mort_consumed_rel$T$`std. error`,
+                               prop_c_consumed_low_se = sobol_lower_canopy_c_consumed_rel$T$`std. error`,
+                               prop_c_remain_low_se = sobol_lower_canopy_c_remain_rel$T$`std. error`,
+                               
                                parameter=parameter_initial,
                                parameter_canopy_group=parameter_canopy_group)
-    sobol_fire_total <- sobol_fire_total %>% 
+    
+    # Code to gather both sensitivity and se values
+    a <- sobol_fire_total %>% 
       tidyr::gather(response_variable, sensitivity_value, 1:8) %>% 
+      dplyr::select(-(1:8))
+    b <-sobol_fire_total %>% 
+      tidyr::gather(response_variable, se_value, 9:16) %>% 
+      dplyr::select(-(1:8))
+    b_mod <- dplyr::mutate(b, response_variable = stringr::str_sub(b$response_variable, start = 1L, end = -4L))
+    sobol_fire_total <- dplyr::full_join(a,b_mod, by=c("parameter", "parameter_canopy_group", "response_variable"))
+    
+    sobol_fire_total <- sobol_fire_total %>% 
       # Add canopy group variable
       mutate(response_canopy_group = if_else(response_variable %in% c("prop_c_mort_up",
                                                                       "prop_mort_consumed_up",
@@ -211,18 +257,45 @@ patch_sens_sobol_eval <- function(num_canopies,
                                prop_mort_consumed = sobol_upper_canopy_mort_consumed_rel$S$original,
                                prop_c_consumed = sobol_upper_canopy_c_consumed_rel$S$original,
                                prop_c_remain = sobol_upper_canopy_c_remain_rel$S$original,
+                               
+                               prop_c_mort_se = sobol_upper_canopy_mort_rel$S$`std. error`,
+                               prop_mort_consumed_se = sobol_upper_canopy_mort_consumed_rel$S$`std. error`,
+                               prop_c_consumed_se = sobol_upper_canopy_c_consumed_rel$S$`std. error`,
+                               prop_c_remain_se = sobol_upper_canopy_c_remain_rel$S$`std. error`,
+                               
                                parameter=parameter)
       response_variable_limits_1st <- names(sobol_fire_1st[1:4])
-      sobol_fire_1st <- tidyr::gather(sobol_fire_1st, response_variable, sensitivity_value, 1:4)
+      a <- sobol_fire_1st %>% 
+        tidyr::gather(response_variable, sensitivity_value, 1:4) %>% 
+        dplyr::select(-(1:4))
+      b <- sobol_fire_1st %>% 
+        tidyr::gather(response_variable, se_value, 5:8) %>% 
+        dplyr::select(-(1:4))
+      b_mod <- dplyr::mutate(b, response_variable = stringr::str_sub(b$response_variable, start = 1L, end = -4L))
+      sobol_fire_1st <- dplyr::full_join(a,b_mod, by=c("parameter", "response_variable"))
+      
       
       # Total indices
       sobol_fire_total <- tibble(prop_c_mort = sobol_upper_canopy_mort_rel$T$original,
                                  prop_mort_consumed = sobol_upper_canopy_mort_consumed_rel$T$original,
                                  prop_c_consumed = sobol_upper_canopy_c_consumed_rel$T$original,
                                  prop_c_remain = sobol_upper_canopy_c_remain_rel$T$original,
+                                 
+                                 prop_c_mort_se = sobol_upper_canopy_mort_rel$T$`std. error`,
+                                 prop_mort_consumed_se = sobol_upper_canopy_mort_consumed_rel$T$`std. error`,
+                                 prop_c_consumed_se = sobol_upper_canopy_c_consumed_rel$T$`std. error`,
+                                 prop_c_remain_se = sobol_upper_canopy_c_remain_rel$T$`std. error`,
+                                 
                                  parameter=parameter)
       response_variable_limits_total <- names(sobol_fire_total[1:4])
-      sobol_fire_total <- tidyr::gather(sobol_fire_total, response_variable, sensitivity_value, 1:4)
+      a <- sobol_fire_total %>% 
+        tidyr::gather(response_variable, sensitivity_value, 1:4) %>% 
+        dplyr::select(-(1:4))
+      b <- sobol_fire_total %>% 
+        tidyr::gather(response_variable, se_value, 5:8) %>% 
+        dplyr::select(-(1:4))
+      b_mod <- dplyr::mutate(b, response_variable = stringr::str_sub(b$response_variable, start = 1L, end = -4L))
+      sobol_fire_total <- dplyr::full_join(a,b_mod, by=c("parameter", "response_variable"))
   }
   
   # Output sobol final results
@@ -459,9 +532,9 @@ for (aa in seq_along(allsim_2.5_sf)){
   
   patch_sens_sobol_eval(num_canopies = 2,
                         allsim_path = allsim_2.5_sf[aa],
-                        initial_date = ymd("1941-10-01"),
+                        initial_date = ymd("1955-10-01"),
                         parameter_file = RHESSYS_PAR_SOBOL_2.1_SF,
-                        stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
+                        stand_age_vect = c(1961,1968,1976,1986,1996,2016,2036),
                         watershed = "SF",
                         stand_age = stand_age_sf[aa],
                         sobol_model_input = RHESSYS_PAR_SOBOL_MODEL_2007_2.1_SF,

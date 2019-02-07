@@ -16,6 +16,7 @@ patch_simulation_eval <- function(num_canopies,
                                   stand_age_vect,
                                   top_par_output,
                                   watershed,
+                                  watershed_label,
                                   output_path){
   
   # Import parameter set file
@@ -151,21 +152,28 @@ patch_simulation_eval <- function(num_canopies,
   # ----
   
   # Height plot
-  x <- ggplot() +
+  height_plot <- ggplot() +
     geom_line(data=dplyr::filter(patch_height_sum, canopy_layer==1),
-              aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "gray70") +
+              aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "navajowhite2") +
     geom_line(data=dplyr::filter(patch_height_sum, canopy_layer==2),
-              aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "gray80") +
+              aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "navajowhite1") +
+    #geom_line(data=dplyr::filter(patch_height_sum, run==this_one),
+    #          aes(x=wy,y=avg_value, group=as.factor(canopy_layer)),size = 1.2) +
     geom_line(data=dplyr::filter(patch_height_sum, run==this_one),
-              aes(x=wy,y=avg_value, group=as.factor(canopy_layer)), color="black",size = 1.2) +
+              aes(x=wy,y=avg_value, color=as.factor(canopy_layer), 
+                  linetype=as.factor(canopy_layer),
+                  group=as.factor(canopy_layer)),size = 1.2) +
     geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
-    geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
-    labs(title = paste("Height - ", watershed, sep=""), x = "Wateryear", y = "Height (meters)") +
-    scale_color_brewer(palette = "Set2", name="Canopy", labels = c("Upper Canopy","Lower Canopy")) +
-    theme(legend.position = "bottom")
-  plot(x)  
+    #geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
+    labs(title = paste(watershed_label, ": Canopy Height", sep=""), x = "Wateryear", y = "Height (m)") +
+    scale_color_manual(values = c("navajowhite4","navajowhite4"), name="Canopy", labels = c("Upper","Lower")) +
+    scale_linetype(name="Canopy", labels = c("Upper","Lower")) +
+    theme_bw(base_size = 18) +
+    theme(legend.position = "right") +
+    NULL
+  plot(height_plot)  
   ggsave(paste("ts_height_",watershed,".pdf",sep=""),
-         plot = x,
+         plot = height_plot,
          path = output_path,
          width = 6,
          height = 4)
@@ -179,7 +187,8 @@ patch_simulation_eval <- function(num_canopies,
     geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
     geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
     labs(title = paste("Height - Understory - ", watershed, sep=""), x = "Wateryear", y = "Height (meters)") +
-    theme(legend.position = "bottom")
+    theme(legend.position = "bottom") +
+    NULL
   plot(x)  
   ggsave(paste("ts_height_understory_",watershed,".pdf",sep=""),
          plot = x,
@@ -190,22 +199,27 @@ patch_simulation_eval <- function(num_canopies,
   # ----
   
   # Litter  plot
-  x <- ggplot() +
+  litter_plot <- ggplot() +
     geom_line(data=patch_ground_sum,
-              aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "gray80") +
+              aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "navajowhite2") +
     geom_line(data=dplyr::filter(patch_ground_sum, run==this_one),
-              aes(x=wy,y=avg_value, group=1), color="black",size = 1.2) +
+              aes(x=wy,y=avg_value, group=1), color="navajowhite4",size = 1.2) +
     geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
-    labs(title = paste("Litter Store - ", watershed, sep=""), x = "Wateryear", y = "Carbon (g/m2)")
-  plot(x)
+    labs(title = paste(watershed_label, ": Litter", sep=""), x = "Wateryear", y = "Carbon (g/m2)") +
+    theme_bw(base_size = 18) +
+    NULL
+  plot(litter_plot)
   ggsave(paste("ts_litter_",watershed,".pdf",sep=""),
-         plot = x,
+         plot = litter_plot,
          path = output_path,
          width = 6,
          height = 4)
   
   # ---
   beep()
+  
+  out_figures <- list(height_plot,litter_plot)
+  return(out_figures)
 }
 
 
@@ -216,43 +230,74 @@ patch_simulation_eval <- function(num_canopies,
 
 
 # HJA
-patch_simulation_eval(num_canopies = 2,
+out_hja <- patch_simulation_eval(num_canopies = 2,
                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_HJA,
                       initial_date = "1957-10-01",
                       parameter_file = RHESSYS_PAR_FILE_1.1_HJA,
                       stand_age_vect = c(1963,1970,1978,1998,2028,2058,2098),
                       top_par_output = OUTPUT_DIR_1_HJA_TOP_PS,
                       watershed = "HJA",
+                      watershed_label = "H.J. Andrews",
                       output_path = OUTPUT_DIR_1)
 
 # P300
-patch_simulation_eval(num_canopies = 2,
+out_p300 <- patch_simulation_eval(num_canopies = 2,
                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_P300,
                       initial_date = "1941-10-01",
                       parameter_file = RHESSYS_PAR_FILE_1.1_P300,
                       stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
                       top_par_output = OUTPUT_DIR_1_P300_TOP_PS,
                       watershed = "P300",
+                      watershed_label = "P301",
                       output_path = OUTPUT_DIR_1)
 
 # RS
-patch_simulation_eval(num_canopies = 1,
+out_rs <- patch_simulation_eval(num_canopies = 1,
                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_RS,
                       initial_date = "1988-10-01",
                       parameter_file = RHESSYS_PAR_FILE_1.1_RS,
                       stand_age_vect = c(1994,2001,2009,2019,2029,2049,2069),
                       top_par_output = OUTPUT_DIR_1_RS_TOP_PS,
                       watershed = "RS",
+                      watershed_label = "Rattlesnake",
                       output_path = OUTPUT_DIR_1)
 
 # SF
-patch_simulation_eval(num_canopies = 2,
+out_sf <- patch_simulation_eval(num_canopies = 2,
                       allsim_path = RHESSYS_ALLSIM_DIR_1.1_SF,
-                      initial_date = "1941-10-01",
+                      initial_date = "1955-10-01",
                       parameter_file = RHESSYS_PAR_FILE_1.1_SF,
-                      stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
+                      stand_age_vect = c(1961,1968,1976,1986,1996,2016,2036),
                       top_par_output = OUTPUT_DIR_1_SF_TOP_PS,
                       watershed = "SF", 
+                      watershed_label = "Santa Fe",
                       output_path = OUTPUT_DIR_1)
 
+
+
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# Cowplot tuning figures
+
+
+# Combine figures for Cowplot
+tuning_4by2 <- cowplot::plot_grid(out_rs[[1]],out_rs[[2]],
+                                  out_p300[[1]],out_p300[[2]],
+                                  out_sf[[1]],out_sf[[2]],
+                                  out_hja[[1]],out_hja[[2]],
+                             labels=c("a","b","c","d","e","f","g","h"),
+                             nrow=4,
+                             align="h",
+                             label_size = 16)
+
+
+#plot(tuning_4by2)
+cowplot::save_plot(file.path(OUTPUT_DIR_1, paste("4by2_tuning.pdf",sep="")),
+                   tuning_4by2,
+                   ncol=2,
+                   nrow=4,
+                   base_aspect_ratio=2)
+
+beep()
 

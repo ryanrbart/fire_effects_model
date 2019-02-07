@@ -10,13 +10,13 @@ source("R/2.2_sobol_rhessys_setup_sf.R")
 # SF
 
 # Set worldfile at various stand ages 
-world_ages_sf <- c("ws_sf/worldfiles/sf_2can_patch_2777.world.Y1947M10D1H1.state",
-                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1954M10D1H1.state",
-                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1962M10D1H1.state",
-                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1972M10D1H1.state",
-                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1982M10D1H1.state",
-                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y2002M10D1H1.state",
-                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y2022M10D1H1.state")
+world_ages_sf <- c("ws_sf/worldfiles/sf_2can_patch_2777.world.Y1961M10D1H1.state",
+                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1968M10D1H1.state",
+                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1976M10D1H1.state",
+                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1986M10D1H1.state",
+                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1996M10D1H1.state",
+                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y2016M10D1H1.state",
+                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y2036M10D1H1.state")
 
 output_2.3 <- c(RHESSYS_OUT_DIR_2.3_SF_STAND1,
                 RHESSYS_OUT_DIR_2.3_SF_STAND2,

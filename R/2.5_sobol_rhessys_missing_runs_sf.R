@@ -47,13 +47,13 @@ for (aa in seq_along(allsim_2.3_sf)){
 
 
 # Set worldfile at various stand ages (Copy from 2.3)
-world_ages_sf <- c("ws_sf/worldfiles/sf_2can_patch_2777.world.Y1947M10D1H1.state",
-                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1954M10D1H1.state",
-                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1962M10D1H1.state",
-                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1972M10D1H1.state",
-                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1982M10D1H1.state",
-                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y2002M10D1H1.state",
-                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y2022M10D1H1.state")
+world_ages_sf <- c("ws_sf/worldfiles/sf_2can_patch_2777.world.Y1961M10D1H1.state",
+                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1968M10D1H1.state",
+                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1976M10D1H1.state",
+                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1986M10D1H1.state",
+                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1996M10D1H1.state",
+                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y2016M10D1H1.state",
+                   "ws_sf/worldfiles/sf_2can_patch_2777.world.Y2036M10D1H1.state")
 
 hdr_sf <- c("2.5_sf_stand1",
             "2.5_sf_stand2",

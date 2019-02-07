@@ -15,12 +15,13 @@ parameter_method <- "lhc"
 # RHESSys Inputs
 input_rhessys <- list()
 input_rhessys$rhessys_version <- "bin/rhessys5.20.1"
+#input_rhessys$rhessys_version <- "bin/rhessys6.0"
 input_rhessys$tec_file <- "ws_sf/tecfiles/sf_patch_simulation.tec"
 input_rhessys$world_file <- "ws_sf/worldfiles/sf_2can_patch_2777.world"
 input_rhessys$world_hdr_prefix <- "1.1"
 input_rhessys$flow_file <- "ws_sf/flowtables/sf_patch_2777.flow"
-input_rhessys$start_date <- "1941 10 1 1"
-input_rhessys$end_date <- "2041 10 1 1"
+input_rhessys$start_date <- "1955 10 1 1"
+input_rhessys$end_date <- "2055 10 1 1"
 input_rhessys$output_folder <- "ws_sf/out/1.1_sf_patch_simulation"
 input_rhessys$output_filename <- "patch_sim"
 input_rhessys$command_options <- c("-b -g -c -p -tchange 0 0")
@@ -47,18 +48,18 @@ n_sim = 250
 #input_def_list <- NULL
 input_def_list <- list(
   # Patch parameters
-  list(input_hdr_list$soil_def, "soil_depth", c(1.0, 3.0, n_sim)),
+  list(input_hdr_list$soil_def, "soil_depth", c(2.0, 4.0, n_sim)),
   
   # -----
   # Upper canopy parameters
   list(input_hdr_list$stratum_def[1], "epc.alloc_frootc_leafc", c(1.2, 1.2, n_sim)),
   list(input_hdr_list$stratum_def[1], "epc.alloc_crootc_stemc", c(0.25, 0.35, n_sim)),
-  list(input_hdr_list$stratum_def[1], "epc.alloc_stemc_leafc", c(0.8, 0.8, n_sim)),
+  list(input_hdr_list$stratum_def[1], "epc.alloc_stemc_leafc", c(0.5, 0.5, n_sim)),
   list(input_hdr_list$stratum_def[1], "epc.alloc_livewoodc_woodc", c(0.1, 0.4, n_sim)),
   list(input_hdr_list$stratum_def[1], "epc.leaf_turnover", c(0.15, 0.25, n_sim)),
   list(input_hdr_list$stratum_def[1], "epc.livewood_turnover", c(0.4, 0.6, n_sim)),
   list(input_hdr_list$stratum_def[1], "epc.branch_turnover", c(0.001, 0.003, n_sim)),
-  list(input_hdr_list$stratum_def[1], "epc.height_to_stem_coef", c(10, 12, n_sim)),
+  list(input_hdr_list$stratum_def[1], "epc.height_to_stem_coef", c(13, 15, n_sim)),
   
   # -----
   # Lower canopy parameters
@@ -67,7 +68,7 @@ input_def_list <- list(
   list(input_hdr_list$stratum_def[2], "epc.alloc_stemc_leafc", c(0.2, 0.2, n_sim)),
   list(input_hdr_list$stratum_def[2], "epc.alloc_livewoodc_woodc", c(0.8, 0.95, n_sim)),
   list(input_hdr_list$stratum_def[2], "epc.leaf_turnover", c(0.35, 0.45, n_sim)),
-  list(input_hdr_list$stratum_def[2], "epc.livewood_turnover", c(0.15, 0.3, n_sim)),
+  list(input_hdr_list$stratum_def[2], "epc.livewood_turnover", c(0.25, 0.4, n_sim)),
   list(input_hdr_list$stratum_def[2], "epc.branch_turnover", c(0.008, 0.02, n_sim)),
   list(input_hdr_list$stratum_def[2], "epc.height_to_stem_coef", c(3.0, 4.0, n_sim))
 )
@@ -119,14 +120,14 @@ input_clim_base_list[[1]][[5]][2,] <- data.frame(c1=0, c2="number_non_critical_h
 # Make a list of dated sequence data.frames (file name, year, month, day, hour, value)
 # input_dated_seq_list <- NULL
 input_dated_seq_list = list()
-input_dated_seq_list[[1]] <- data.frame(name="snoelktr50",type="pspread",year=1941,month=10,day=7,hour=1,value=0.95,stringsAsFactors=FALSE)
+input_dated_seq_list[[1]] <- data.frame(name="snoelktr50",type="pspread",year=1955,month=10,day=7,hour=1,value=0.95,stringsAsFactors=FALSE)
 
 
 # Make tec-file
 #input_tec_data <- NULL
 input_tec_data <- data.frame(year=integer(),month=integer(),day=integer(),hour=integer(),name=character(),stringsAsFactors=FALSE)
-input_tec_data[1,] <- data.frame(1941, 10, 1, 1, "print_daily_on", stringsAsFactors=FALSE)
-input_tec_data[2,] <- data.frame(1941, 10, 1, 2, "print_daily_growth_on", stringsAsFactors=FALSE)
+input_tec_data[1,] <- data.frame(1955, 10, 1, 1, "print_daily_on", stringsAsFactors=FALSE)
+input_tec_data[2,] <- data.frame(1955, 10, 1, 2, "print_daily_growth_on", stringsAsFactors=FALSE)
 
 
 # Data frame containing variable of interest, location/name of awk file (relative to output
@@ -142,6 +143,7 @@ output_variables[2,] <- data.frame("height", "awks/output_var_cd_height.awk","pa
 
 system.time(
   run_rhessys(parameter_method = parameter_method,
+              output_method = "awk",
               input_rhessys = input_rhessys,
               input_hdr_list = input_hdr_list,
               input_preexisting_table = input_preexisting_table,

@@ -9,13 +9,13 @@ source("R/0.1_utilities.R")
 # ---------------------------------------------------------------------
 
 # Cross world files and dated_seq (pspread) options
-world <- c("ws_sf/worldfiles/sf_2can_patch_2777.world.Y1947M10D1H1.state",
-           "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1954M10D1H1.state",
-           "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1962M10D1H1.state",
-           "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1972M10D1H1.state",
-           "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1982M10D1H1.state",
-           "ws_sf/worldfiles/sf_2can_patch_2777.world.Y2002M10D1H1.state",
-           "ws_sf/worldfiles/sf_2can_patch_2777.world.Y2022M10D1H1.state")
+world <- c("ws_sf/worldfiles/sf_2can_patch_2777.world.Y1961M10D1H1.state",
+           "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1968M10D1H1.state",
+           "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1976M10D1H1.state",
+           "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1986M10D1H1.state",
+           "ws_sf/worldfiles/sf_2can_patch_2777.world.Y1996M10D1H1.state",
+           "ws_sf/worldfiles/sf_2can_patch_2777.world.Y2016M10D1H1.state",
+           "ws_sf/worldfiles/sf_2can_patch_2777.world.Y2036M10D1H1.state")
 
 pspread_levels <- seq(0.1,1.0,by=0.1)
 
@@ -46,7 +46,7 @@ tmp6 <- setNames(data.frame(runif(n_sim, min=1,max=1)), "ws_sf/defs/veg_sf_under
 tmp7 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_sf/defs/veg_sf_1ponderosapine.def:understory_mort")
 tmp8 <- setNames(data.frame(rlunif(n_sim, min=0.01,max=100)), "ws_sf/defs/veg_sf_1ponderosapine.def:consumption")
 tmp9 <- setNames(data.frame(runif(n_sim, min=-20,max=-1)), "ws_sf/defs/veg_sf_1ponderosapine.def:overstory_mort_k1")
-tmp10 <- setNames(data.frame(runif(n_sim, min=0.2,max=0.9)), "ws_sf/defs/veg_sf_1ponderosapine.def:overstory_mort_k2")
+tmp10 <- setNames(data.frame(runif(n_sim, min=0.4,max=1.1)), "ws_sf/defs/veg_sf_1ponderosapine.def:overstory_mort_k2")
 
 out <- bind_cols(tmp1,tmp2,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,tmp9,tmp10)
 
