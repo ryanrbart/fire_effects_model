@@ -37,7 +37,9 @@ patch_simulation_eval <- function(num_canopies,
   patch_ground$wy <- y_to_wy(lubridate::year(patch_ground$dates),lubridate::month(patch_ground$dates))
   patch_ground_sum <- patch_ground %>%
     group_by(wy, run, var_type) %>%
-    summarize(avg_value = mean(value)*1000)     # Ground stores are originally in Kg/m2
+    summarize(avg_value = mean(value)*1000) %>%      # Ground stores are originally in Kg/m2
+    dplyr::group_by() %>%                            # This is needed so min can be used with mutate
+    dplyr::mutate(stand_wy = wy - min(wy) + 1)   # This is for plotting stand age as x-axis
   rm(patch_ground)
   
   
@@ -49,7 +51,9 @@ patch_simulation_eval <- function(num_canopies,
   patch_height$wy <- y_to_wy(lubridate::year(patch_height$dates),lubridate::month(patch_height$dates))
   patch_height_sum <- patch_height %>%
     group_by(wy, canopy_layer, run, var_type) %>%
-    summarize(avg_value = mean(as.numeric(value)))
+    summarize(avg_value = mean(as.numeric(value))) %>%
+    dplyr::group_by() %>%                            # This is needed so min can be used with mutate
+    dplyr::mutate(stand_wy = wy - min(wy) + 1)   # This is for plotting stand age as x-axis
   rm(patch_height)
   
   # ---------------------------------------------------------------------
@@ -143,6 +147,14 @@ patch_simulation_eval <- function(num_canopies,
   write.csv(ps_selected_1, top_par_output, row.names = FALSE, quote=FALSE)
   
   
+  # For changing the x-axis to stand age instead of actual wy
+  if (watershed != "HJA"){
+    stand_age_wy <- c(5,12,20,30,40,60,80)
+  } else {
+    stand_age_wy = c(5,12,20,40,70,100,140)
+  }
+  
+  
   # ---------------------------------------------------------------------
   # Figures: Time-series for Height and Litter
   
@@ -154,16 +166,16 @@ patch_simulation_eval <- function(num_canopies,
   # Height plot
   height_plot <- ggplot() +
     geom_line(data=dplyr::filter(patch_height_sum, canopy_layer==1),
-              aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "navajowhite2") +
+              aes(x=stand_wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "navajowhite2") +
     geom_line(data=dplyr::filter(patch_height_sum, canopy_layer==2),
-              aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "navajowhite1") +
+              aes(x=stand_wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "navajowhite1") +
     #geom_line(data=dplyr::filter(patch_height_sum, run==this_one),
-    #          aes(x=wy,y=avg_value, group=as.factor(canopy_layer)),size = 1.2) +
+    #          aes(x=stand_wy,y=avg_value, group=as.factor(canopy_layer)),size = 1.2) +
     geom_line(data=dplyr::filter(patch_height_sum, run==this_one),
-              aes(x=wy,y=avg_value, color=as.factor(canopy_layer), 
+              aes(x=stand_wy,y=avg_value, color=as.factor(canopy_layer), 
                   linetype=as.factor(canopy_layer),
                   group=as.factor(canopy_layer)),size = 1.2) +
-    geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
+    geom_vline(xintercept = stand_age_wy, linetype=2, size=.4) +
     #geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
     labs(title = paste(watershed_label, ": Canopy Height", sep=""), x = "Wateryear", y = "Height (m)") +
     scale_color_manual(values = c("navajowhite4","navajowhite4"), name="Canopy", labels = c("Upper","Lower")) +
@@ -181,10 +193,10 @@ patch_simulation_eval <- function(num_canopies,
   # Height - understory plot
   x <- ggplot() +
     geom_line(data=dplyr::filter(patch_height_sum, canopy_layer==2),
-              aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "gray80") +
+              aes(x=stand_wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "gray80") +
     geom_line(data=dplyr::filter(patch_height_sum, run==this_one, canopy_layer==2),
-              aes(x=wy,y=avg_value, group=as.factor(canopy_layer)), color="black",size = 1.2) +
-    geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
+              aes(x=stand_wy,y=avg_value, group=as.factor(canopy_layer)), color="black",size = 1.2) +
+    geom_vline(xintercept = stand_age_wy, linetype=2, size=.4) +
     geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
     labs(title = paste("Height - Understory - ", watershed, sep=""), x = "Wateryear", y = "Height (meters)") +
     theme(legend.position = "bottom") +
@@ -201,10 +213,10 @@ patch_simulation_eval <- function(num_canopies,
   # Litter  plot
   litter_plot <- ggplot() +
     geom_line(data=patch_ground_sum,
-              aes(x=wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "navajowhite2") +
+              aes(x=stand_wy,y=avg_value, group=as.factor(run)), size = 1.2, color = "navajowhite2") +
     geom_line(data=dplyr::filter(patch_ground_sum, run==this_one),
-              aes(x=wy,y=avg_value, group=1), color="navajowhite4",size = 1.2) +
-    geom_vline(xintercept = stand_age_vect, linetype=2, size=.4) +
+              aes(x=stand_wy,y=avg_value, group=1), color="navajowhite4",size = 1.2) +
+    geom_vline(xintercept = stand_age_wy, linetype=2, size=.4) +
     labs(title = paste(watershed_label, ": Litter", sep=""), x = "Wateryear", y = "Carbon (g/m2)") +
     theme_bw(base_size = 18) +
     NULL
@@ -231,47 +243,47 @@ patch_simulation_eval <- function(num_canopies,
 
 # HJA
 out_hja <- patch_simulation_eval(num_canopies = 2,
-                      allsim_path = RHESSYS_ALLSIM_DIR_1.1_HJA,
-                      initial_date = "1957-10-01",
-                      parameter_file = RHESSYS_PAR_FILE_1.1_HJA,
-                      stand_age_vect = c(1963,1970,1978,1998,2028,2058,2098),
-                      top_par_output = OUTPUT_DIR_1_HJA_TOP_PS,
-                      watershed = "HJA",
-                      watershed_label = "H.J. Andrews",
-                      output_path = OUTPUT_DIR_1)
+                                 allsim_path = RHESSYS_ALLSIM_DIR_1.1_HJA,
+                                 initial_date = "1957-10-01",
+                                 parameter_file = RHESSYS_PAR_FILE_1.1_HJA,
+                                 stand_age_vect = c(1963,1970,1978,1998,2028,2058,2098),
+                                 top_par_output = OUTPUT_DIR_1_HJA_TOP_PS,
+                                 watershed = "HJA",
+                                 watershed_label = "H.J. Andrews",
+                                 output_path = OUTPUT_DIR_1)
 
 # P300
 out_p300 <- patch_simulation_eval(num_canopies = 2,
-                      allsim_path = RHESSYS_ALLSIM_DIR_1.1_P300,
-                      initial_date = "1941-10-01",
-                      parameter_file = RHESSYS_PAR_FILE_1.1_P300,
-                      stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
-                      top_par_output = OUTPUT_DIR_1_P300_TOP_PS,
-                      watershed = "P300",
-                      watershed_label = "P301",
-                      output_path = OUTPUT_DIR_1)
+                                  allsim_path = RHESSYS_ALLSIM_DIR_1.1_P300,
+                                  initial_date = "1941-10-01",
+                                  parameter_file = RHESSYS_PAR_FILE_1.1_P300,
+                                  stand_age_vect = c(1947,1954,1962,1972,1982,2002,2022),
+                                  top_par_output = OUTPUT_DIR_1_P300_TOP_PS,
+                                  watershed = "P300",
+                                  watershed_label = "P301",
+                                  output_path = OUTPUT_DIR_1)
 
 # RS
 out_rs <- patch_simulation_eval(num_canopies = 1,
-                      allsim_path = RHESSYS_ALLSIM_DIR_1.1_RS,
-                      initial_date = "1988-10-01",
-                      parameter_file = RHESSYS_PAR_FILE_1.1_RS,
-                      stand_age_vect = c(1994,2001,2009,2019,2029,2049,2069),
-                      top_par_output = OUTPUT_DIR_1_RS_TOP_PS,
-                      watershed = "RS",
-                      watershed_label = "Rattlesnake",
-                      output_path = OUTPUT_DIR_1)
+                                allsim_path = RHESSYS_ALLSIM_DIR_1.1_RS,
+                                initial_date = "1988-10-01",
+                                parameter_file = RHESSYS_PAR_FILE_1.1_RS,
+                                stand_age_vect = c(1994,2001,2009,2019,2029,2049,2069),
+                                top_par_output = OUTPUT_DIR_1_RS_TOP_PS,
+                                watershed = "RS",
+                                watershed_label = "Rattlesnake",
+                                output_path = OUTPUT_DIR_1)
 
 # SF
 out_sf <- patch_simulation_eval(num_canopies = 2,
-                      allsim_path = RHESSYS_ALLSIM_DIR_1.1_SF,
-                      initial_date = "1955-10-01",
-                      parameter_file = RHESSYS_PAR_FILE_1.1_SF,
-                      stand_age_vect = c(1961,1968,1976,1986,1996,2016,2036),
-                      top_par_output = OUTPUT_DIR_1_SF_TOP_PS,
-                      watershed = "SF", 
-                      watershed_label = "Santa Fe",
-                      output_path = OUTPUT_DIR_1)
+                                allsim_path = RHESSYS_ALLSIM_DIR_1.1_SF,
+                                initial_date = "1955-10-01",
+                                parameter_file = RHESSYS_PAR_FILE_1.1_SF,
+                                stand_age_vect = c(1961,1968,1976,1986,1996,2016,2036),
+                                top_par_output = OUTPUT_DIR_1_SF_TOP_PS,
+                                watershed = "SF", 
+                                watershed_label = "Santa Fe",
+                                output_path = OUTPUT_DIR_1)
 
 
 
