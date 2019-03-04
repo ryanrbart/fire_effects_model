@@ -39,7 +39,7 @@ consumption_figure = function(consumption_parameter, title_name){
   x <- ggplot(data = happy) +
     geom_line(aes(x=percent_canopy_mortality_rep, y=percent_mortality, linetype = consumption_parameter_rep, color = consumption_parameter_rep), size=1.2) +
     #theme_bw(base_size=21) +
-    labs(title = title_name, x = "Proportion Mortality", y = "Proportion of Mortality Consumed") +
+    labs(title = title_name, x = "Proportion of Carbon Mortality", y = "Proportion of Mortality Consumed") +
     #scale_linetype(name = "Consumption\nParameter\n(k_consumption)") +
     #scale_color_brewer(palette = "Dark2", name = "Consumption\nParameter\n(k_consumption)") +
     scale_linetype(name = "Consumption\nParameter") +

@@ -324,7 +324,7 @@ patch_fire_eval <- function(num_canopies,
                      color="black", 
                      outlier.shape = NA) +
         facet_grid(.~world, labeller = labeller(world = world_file_yr)) +
-        labs(title = fig_title_1[aa], x = "Intensity (I')", y = y_label[aa]) +
+        labs(title = fig_title_1[aa], x = "Intensity (I'u)", y = y_label[aa]) +    # Note that using an expression for I'u is challenging because of the '. Probably not worth the time to change.
         scale_x_continuous(breaks = c(0.2, 0.8)) +
         NULL
     
@@ -350,7 +350,7 @@ patch_fire_eval <- function(num_canopies,
                        color="black", 
                        outlier.shape = NA) +
           facet_grid(.~world, labeller = labeller(world = world_file_yr)) +
-          labs(title = fig_title_1[aa], x = "Intensity (I')", y = y_label[aa]) +
+          labs(title = fig_title_1[aa], x = "Intensity (I'u)", y = y_label[aa]) +
           scale_x_continuous(breaks = c(0.2, 0.8)) +
           NULL
         #plot(x)
@@ -376,7 +376,7 @@ patch_fire_eval <- function(num_canopies,
                        color="black", 
                        outlier.shape = NA) +
           facet_grid(canopy_layer~world, labeller = labeller(world = world_file_yr, canopy_layer = canopy)) +
-          labs(title = fig_title_1[aa], x = "Intensity (I')", y = y_label[aa]) +
+          labs(title = fig_title_1[aa], x = "Intensity (I'u)", y = y_label[aa]) +
           scale_x_continuous(breaks = c(0.2, 0.8)) +
           theme_bw(base_size = 11) +
           theme(legend.position = "none") +
@@ -393,7 +393,7 @@ patch_fire_eval <- function(num_canopies,
                        color="black", 
                        outlier.shape = NA) +
           facet_grid(.~world, labeller = labeller(world = world_file_yr)) +
-          labs(title = fig_title_2[aa], x = "Intensity (I')", y = y_label[aa]) +
+          labs(title = fig_title_2[aa], x = "Intensity (I'u)", y = y_label[aa]) +
           scale_x_continuous(breaks = c(0.2, 0.8)) +
           theme_bw(base_size = 16) +
           theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
