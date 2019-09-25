@@ -1,6 +1,6 @@
 # R
 
-This folder contains the code for testing and analyzing the fire effects model in RHESSys. The code is run in sequential order, with location specific scripts denoted as RS (Rattlesnake, Santa Barbara, CA), P300 (Southern Sierra CZO, CA), SF (Santa Fe, NM) and HJA (HJ Andrews, OR).
+This folder contains the code for testing and analyzing the fire effects model in RHESSys. The code is designed to run in sequential order, with location specific scripts denoted with a *** referring to RS (Rattlesnake, Santa Barbara, CA), P300 (Southern Sierra CZO, CA), SF (Santa Fe, NM) and HJA (HJ Andrews, OR).
 
 ---
 * `0.0_misc_setup_scripts.R` Misc. scripts for setting up datasets 
@@ -24,12 +24,11 @@ This folder contains the code for testing and analyzing the fire effects model i
 
 ---
 
-* `3.1_patch_fire_p300.R` Fire simulated at each stand age.
-* `3.2_patch_fire_eval_p300.R` 
-* Repeat for HJA, Rattlesnake and Santa Fe.
+* `3.1_patch_setup_***.R` Setup of parameter sets for rhessys simulation.
+* `3.2_patch_fire_***.R` Simulates patch-level fire effects using RHESSys
+* `3.3_patch_fire_eval.R` Contains scripts for evaluating patch-level fire effects.
 
 ---
 
-* `4.1_synthesis.R` Prepares data from all watersheds for manuscript figures and tables
-* `4.2_plots_tables.R` Figures and tables for manuscript
+* `display_graphics.R` Contains scripts for producing graphics in Figure 1.
 
