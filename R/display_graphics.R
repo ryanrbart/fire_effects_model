@@ -17,10 +17,10 @@ consumption_figure = function(consumption_parameter, title_name){
   
   tmp_func = function (percent_canopy_mortality, consumption_parameter){
     if(consumption_parameter == 1){
-      percent_mortality <- percent_canopy_mortality*100
+      percent_mortality <- percent_canopy_mortality*1
     }
     else {
-      percent_mortality <-  (((consumption_parameter^percent_canopy_mortality) - 1)/(consumption_parameter-1)*100)
+      percent_mortality <-  (((consumption_parameter^percent_canopy_mortality) - 1)/(consumption_parameter-1)*1)
     }
   }
   
@@ -44,15 +44,181 @@ consumption_figure = function(consumption_parameter, title_name){
     #scale_color_brewer(palette = "Dark2", name = "Consumption\nParameter\n(k_consumption)") +
     scale_linetype(name = "Consumption\nParameter") +
     scale_color_brewer(palette = "Dark2", name = "Consumption\nParameter") +
+    theme(legend.position = "right", axis.text = element_text(size=18)) +
+    NULL
+  #plot(x)
+  return(x)
+}
+
+fig_consumption = consumption_figure(consumption_parameter = c(0.01, 1, 100),
+                                     title_name = "Vegetation Consumption")
+ggsave("display_consumption.pdf", plot = fig_consumption, path = DISPLAY_FIGURES_DIR,
+       width = 7.5, height = 4.5)
+
+
+
+# ---------------------------------------------------------------------
+# Understory Mortality Figure
+# Relation between pspread and percent mortality
+
+
+understory_figure = function(pspread_mortality_parameter, title_name){
+  
+  pspread <- seq(from=0,to=1,length.out=101)
+  
+  tmp_func = function (pspread, pspread_mortality_parameter){
+    if(pspread_mortality_parameter == 1){
+      percent_mortality <- pspread*1
+    }
+    else {
+      percent_mortality <-  (((pspread_mortality_parameter^pspread) - 1)/(pspread_mortality_parameter-1)*1)
+    }
+  }
+  
+  pspread_rep <- rep(pspread, length(pspread_mortality_parameter))
+  pspread_mortality_parameter_rep <- rep(pspread_mortality_parameter, each=length(pspread))
+
+  happy <- pspread_rep %>%
+    cbind(pspread_rep = ., pspread_mortality_parameter_rep) %>%
+    as.data.frame()
+  
+  percent_mortality <- mapply(tmp_func,happy$pspread_rep, happy$pspread_mortality_parameter_rep)
+  happy <- cbind(happy, percent_mortality)
+  happy$pspread_mortality_parameter_rep <- as.factor(happy$pspread_mortality_parameter_rep)
+  
+  
+  x <- ggplot(data = happy) +
+    geom_line(aes(x=pspread_rep, y=percent_mortality, linetype = pspread_mortality_parameter_rep, color = pspread_mortality_parameter_rep), size=1.2) +
+    #theme_bw(base_size=16) +
+    # labs(title = title_name, x = "Pspread", y = "Understory Carbon Mortality (%)") +
+    # labs(title = title_name, x = expression(Intensity~(`I'`[u])), y = "Proportion of Carbon Mortality") +
+    labs(title = title_name, x = "Fire Intensity Index (FII)", y = "Proportion of Carbon Mortality") +
+    #scale_linetype(name = "Understory\nMortality\nParameter\n(k_mort_u)") +
+    #scale_linetype(name = expression(Understory~\nMortality~\nParameter~\n(k[consumption]))) +
+    #scale_linetype(name = bquote(atop("Understory Mortality", Parameter~(k[consumption])))) +  # Note that adding expression plus multiple lines is not really supported in plotmath. https://stackoverflow.com/questions/13317428/
+    #scale_color_brewer(palette = "Dark2", name = "Understory\nMortality\nParameter\n(k_mort_u)") +
+    scale_linetype(name = "Understory\nMortality\nParameter") +
+    scale_color_brewer(palette = "Dark2", name = "Understory\nMortality\nParameter") +
     theme(axis.text = element_text(size=18)) +
     NULL
   #plot(x)
   return(x)
 }
 
-fig_consumption = consumption_figure(consumption_parameter = c(0.01, 1, 100), title_name = "Consumption")
-ggsave("display_consumption.pdf", plot = fig_consumption, path = DISPLAY_FIGURES_DIR,
+
+fig_under = understory_figure(pspread_mortality_parameter = c(0.01, 1, 100),
+                              title_name = "Understory Mortality")
+ggsave("display_understory.pdf", plot = fig_under, path = DISPLAY_FIGURES_DIR,
        width = 7.5, height = 4.5)
+
+
+
+# ---------------------------------------------------------------------
+# Overstory Mortality Figure
+# Relation between understory biomass mortality and overstory mortality
+
+
+overstory_figure = function(k1, k2, title_name){
+  
+  understory_biomass_mortality <- seq(from=0,to=2000, length.out = 201)   # gC/m2
+  
+  tmp_func = function (understory_biomass_mortality, k1, k2){
+    overstory_percent_mortality <- (1-1/(1+exp(-(k1*(understory_biomass_mortality-k2))))*1)+0
+    return(overstory_percent_mortality)
+  }
+  
+  happy <- expand.grid(understory_biomass_mortality,k1,k2)
+  happy <- dplyr::rename(happy, understory_biomass_mortality_rep = Var1, k1_rep = Var2, k2_rep = Var3)
+
+  overstory_percent_mortality <- mapply(tmp_func, happy$understory_biomass_mortality_rep, happy$k1_rep, happy$k2_rep)
+
+  happy <- cbind(happy, overstory_percent_mortality)
+  happy$k1_rep <- as.factor(happy$k1_rep)
+  happy$k2_rep <- as.factor(happy$k2_rep)
+
+  x <- ggplot(data = happy) +
+    geom_line(aes(x=understory_biomass_mortality_rep, y=overstory_percent_mortality, linetype = k1_rep, color = k2_rep), size=1.2) +
+    #theme_bw(base_size=16) +
+    labs(title = title_name, x = expression(Understory~"&"~Litter~Consumption~(gC/m^2)), y = "Proportion of Carbon Mortality") +
+    #scale_linetype(name = "Slope\nParameter\n(k_1_mort_o)") +
+    #scale_color_brewer(palette = "Dark2", name = "Scale\nParameter\n(k_2_mort_o)") +
+    scale_linetype(name = "Slope\nParameter") +
+    scale_color_brewer(palette = "Dark2", name = "Scale\nParameter") +
+    theme(axis.text = element_text(size=18)) +
+    NULL
+  #plot(x)
+  return(x)
+}
+
+fig_over <- overstory_figure(k1 = c(-0.005, -0.01, -0.05), k2 = c(500, 1500),
+                             title_name = "Overstory Mortality")
+ggsave("display_overstory.pdf", plot = fig_over, path = DISPLAY_FIGURES_DIR,
+       width = 7.5, height = 4.5)
+
+
+
+# ---------------------------------------------------------------------
+# Surface Fuel Consumption Figure
+# Relation between surface fuel carbon and surface fuel consumption 
+
+
+surface_figure = function(title_name){
+  
+  happy <- tibble(initial_carbon = seq(from=0,to=2000, length.out = 201))  # gC/m2
+  happy <- happy %>% 
+    dplyr::mutate(L1 = initial_carbon*1,
+                  L2 = initial_carbon*1,
+                  L3 = initial_carbon*0.85,
+                  L4 = initial_carbon*0.71,
+                  S1 = initial_carbon*0.71,
+                  CWD = initial_carbon*0.34) %>% 
+    tidyr::gather(key="store", value="consumed_carbon", -initial_carbon)
+  happy$store <- factor(happy$store, levels = c("L1","L2","L3","L4","S1","CWD"))
+  
+  x <- ggplot(data = happy) +
+    geom_line(aes(x=initial_carbon, y=consumed_carbon, linetype = store, color = store), size=1.2) +
+    #theme_bw(base_size=16) +
+    labs(title = title_name,
+         x = expression('Pre-Fire'~Surface~Carbon~Stores~(gC/m^2)),
+         y = expression(Surface~Carbon~Consumed~(gC/m^2))) +
+    scale_linetype(name = "Carbon\nStore") +
+    scale_color_brewer(palette = "Dark2", name = "Carbon\nStore") +
+    theme_classic(base_size = 18) +
+    theme(axis.text = element_text(size=18)) +
+    NULL
+  #plot(x)
+  return(x)
+}
+
+fig_surface <- surface_figure(title_name = "Surface Carbon Consumption")
+ggsave("display_surface.pdf", plot = fig_surface, path = DISPLAY_FIGURES_DIR,
+       width = 7.5, height = 4.5)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# Old figures
 
 
 # ---------------------------------------------------------------------
@@ -60,7 +226,7 @@ ggsave("display_consumption.pdf", plot = fig_consumption, path = DISPLAY_FIGURES
 
 
 consumption_output_figure = function(consumption_parameter, title_name){
-
+  
   percent_mortality <- seq(from=0,to=1,length.out=101)
   percent_consumed <- vector()
   
@@ -74,7 +240,7 @@ consumption_output_figure = function(consumption_parameter, title_name){
   }
   
   percent_litter <- percent_mortality - percent_consumed
-
+  
   happy = percent_mortality %>%
     cbind(percent_consumed, percent_litter) %>%
     `*`(100) %>%
@@ -98,102 +264,6 @@ consumption_output_figure = function(consumption_parameter, title_name){
 # x = consumption_output_figure(consumption_parameter = 100, title_name = "Low Consumption")
 # ggsave("consumption_low.pdf", plot = x, path = DISPLAY_FIGURES_DIR)
 
-
-
-# ---------------------------------------------------------------------
-# Understory Mortality Figure
-# Relation between pspread and percent mortality
-
-
-understory_figure = function(pspread_mortality_parameter, title_name){
-  
-  pspread <- seq(from=0,to=1,length.out=101)
-  
-  tmp_func = function (pspread, pspread_mortality_parameter){
-    if(pspread_mortality_parameter == 1){
-      percent_mortality <- pspread*100
-    }
-    else {
-      percent_mortality <-  (((pspread_mortality_parameter^pspread) - 1)/(pspread_mortality_parameter-1)*100)
-    }
-  }
-  
-  pspread_rep <- rep(pspread, length(pspread_mortality_parameter))
-  pspread_mortality_parameter_rep <- rep(pspread_mortality_parameter, each=length(pspread))
-
-  happy <- pspread_rep %>%
-    cbind(pspread_rep = ., pspread_mortality_parameter_rep) %>%
-    as.data.frame()
-  
-  percent_mortality <- mapply(tmp_func,happy$pspread_rep, happy$pspread_mortality_parameter_rep)
-  happy <- cbind(happy, percent_mortality)
-  happy$pspread_mortality_parameter_rep <- as.factor(happy$pspread_mortality_parameter_rep)
-  
-  
-  x <- ggplot(data = happy) +
-    geom_line(aes(x=pspread_rep, y=percent_mortality, linetype = pspread_mortality_parameter_rep, color = pspread_mortality_parameter_rep), size=1.2) +
-    #theme_bw(base_size=16) +
-    # labs(title = title_name, x = "Pspread", y = "Understory Carbon Mortality (%)") +
-    labs(title = title_name, x = expression(Intensity~(`I'`[u])), y = "Proportion of Carbon Mortality") +
-    #scale_linetype(name = "Understory\nMortality\nParameter\n(k_mort_u)") +
-    #scale_linetype(name = expression(Understory~\nMortality~\nParameter~\n(k[consumption]))) +
-    #scale_linetype(name = bquote(atop("Understory Mortality", Parameter~(k[consumption])))) +  # Note that adding expression plus multiple lines is not really supported in plotmath. https://stackoverflow.com/questions/13317428/
-    #scale_color_brewer(palette = "Dark2", name = "Understory\nMortality\nParameter\n(k_mort_u)") +
-    scale_linetype(name = "Understory\nMortality\nParameter") +
-    scale_color_brewer(palette = "Dark2", name = "Understory\nMortality\nParameter") +
-    theme(axis.text = element_text(size=18)) +
-    NULL
-  #plot(x)
-  return(x)
-}
-
-
-fig_under = understory_figure(pspread_mortality_parameter = c(0.01, 1, 100), title_name = "Understory Mortality")
-ggsave("display_understory.pdf", plot = fig_under, path = DISPLAY_FIGURES_DIR,
-       width = 7.5, height = 4.5)
-
-
-
-# ---------------------------------------------------------------------
-# Overstory Mortality Figure
-# Relation between understory biomass mortality and overstory mortality
-
-
-overstory_figure = function(k1, k2, title_name){
-  
-  understory_biomass_mortality <- seq(from=0,to=2000, length.out = 201)   # gC/m2
-  
-  tmp_func = function (understory_biomass_mortality, k1, k2){
-    overstory_percent_mortality <- (1-1/(1+exp(-(k1*(understory_biomass_mortality-k2))))*100)+100
-    return(overstory_percent_mortality)
-  }
-  
-  happy <- expand.grid(understory_biomass_mortality,k1,k2)
-  happy <- dplyr::rename(happy, understory_biomass_mortality_rep = Var1, k1_rep = Var2, k2_rep = Var3)
-
-  overstory_percent_mortality <- mapply(tmp_func, happy$understory_biomass_mortality_rep, happy$k1_rep, happy$k2_rep)
-
-  happy <- cbind(happy, overstory_percent_mortality)
-  happy$k1_rep <- as.factor(happy$k1_rep)
-  happy$k2_rep <- as.factor(happy$k2_rep)
-
-  x <- ggplot(data = happy) +
-    geom_line(aes(x=understory_biomass_mortality_rep, y=overstory_percent_mortality, linetype = k1_rep, color = k2_rep), size=1.2) +
-    #theme_bw(base_size=16) +
-    labs(title = title_name, x = expression(Understory~"&"~Litter~Consumption~(gC/m^2)), y = "Proportion of Carbon Mortality") +
-    #scale_linetype(name = "Slope\nParameter\n(k_1_mort_o)") +
-    #scale_color_brewer(palette = "Dark2", name = "Centerpoint\nParameter\n(k_2_mort_o)") +
-    scale_linetype(name = "Slope\nParameter") +
-    scale_color_brewer(palette = "Dark2", name = "Centerpoint\nParameter") +
-    theme(axis.text = element_text(size=18)) +
-    NULL
-  #plot(x)
-  return(x)
-}
-
-fig_over <- overstory_figure(k1 = c(-0.005, -0.01, -0.05), k2 = c(500, 1500), title_name = "Overstory Mortality")
-ggsave("display_overstory.pdf", plot = fig_over, path = DISPLAY_FIGURES_DIR,
-       width = 7.5, height = 4.5)
 
 
 

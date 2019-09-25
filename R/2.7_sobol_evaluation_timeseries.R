@@ -52,21 +52,28 @@ process_sens_ts <- function(stand_age,
                  "k_consumption", "k1_mort_o",
                  "k2_mort_o", "I'")
   
-  parameter_names <- c(expression('h'[overstory]), expression('h'[understory]), 
-                       expression('k'[mort_u]), expression('k'[consumption]), 
-                       expression('k'['1_mort_o']), expression('k'['2_mort_o']),   
-                       "I'")
+  parameter_names <- c(expression('h'[o]), expression('h'[u]), 
+                       expression('k'[u_mort]), expression('k'[cons]), 
+                       expression('k'['o_mort_1']), expression('k'['o_mort_2']),   
+                       "FII")
   
-  response_variable_lab <- c("prop_c_mort" = "prop_c_\nmort",
-                             "prop_mort_consumed" = "prop_mort_\nconsumed",
-                             "prop_c_consumed" = "prop_c_\nconsumed",
-                             "prop_c_residual" = "prop_c_\nresidual")
-  
-  # ------
+  # Not used anymore.
+  # response_variable_lab <- c("prop_c_mort" = expression('V'[pMort]),
+  #                            "prop_mort_consumed" = expression('V'[pCons]),
+  #                            "prop_c_consumed" = expression('V'[Cons]),
+  #                            "prop_c_residual" = expression('V'[Resid]))
+
+  # # ------
   # Figures
   
-  if (watershed == "RS"){
+  if (watershed == "RS" || response_can_group == "Lower Canopy"){
     # Prints a consolidated figure for RS
+    
+    levels(sens_results_by_stand_age$response_variable) <- c(expression('V'[pMort]),
+                                                             expression('V'[pCons]),
+                                                             expression('V'[Cons]),
+                                                             expression('V'[Resid]))
+    
     x <- sens_results_by_stand_age %>% 
       dplyr::filter(response_canopy_group == response_can_group) %>%
       dplyr::group_by(parameter,response_variable,response_canopy_group) %>% 
@@ -76,12 +83,12 @@ process_sens_ts <- function(stand_age,
                color="black", fill = "Navajowhite2", width = .8) +
       geom_errorbar(aes(x=parameter, ymax=sensitivity_value+se_value,ymin =sensitivity_value-se_value),
                     color="black", width=0.4) +
-      labs(title = plot_title, x = "Parameter", y = y_axis) +
+      labs(title = plot_title, x = "Parameters/ Input Variable", y = y_axis) +
       scale_color_discrete(name="Parameter") +
       scale_linetype_discrete(name="Parameter") +
       scale_x_discrete(labels = c(parameter_names),
                        limits=c(parameter_var)) +
-      facet_grid(response_variable~., labeller = labeller(response_variable = response_variable_lab)) +
+      facet_grid(response_variable~., labeller = labeller(response_variable = label_parsed)) +
       theme_bw(base_size = 16) +
       theme(axis.text.x = element_text(angle = 300, hjust=0, vjust=0.6)) +
       NULL
@@ -94,10 +101,15 @@ process_sens_ts <- function(stand_age,
     dplyr::filter(response_canopy_group == response_can_group)
   
   # Needed to add levels to get expressions to properly work https://stackoverflow.com/questions/37089052/
-  levels(x$parameter) <- c(expression('h'[overstory]), expression('h'[understory]), 
-                           expression('k'[mort_u]), expression('k'[consumption]), 
-                           expression('k'['1_mort_o']), expression('k'['2_mort_o']),   
-                           quote("`I\'`"))     # Needed to add backticks to get ' to work. https://stackoverflow.com/questions/17639325/
+  levels(x$parameter) <- c(expression('h'[o]), expression('h'[u]), 
+                           expression('k'[u_mort]), expression('k'[cons]), 
+                           expression('k'['o_mort_1']), expression('k'['o_mort_2']),   
+                           "FII")     # Needed to add backticks to get ' to work. https://stackoverflow.com/questions/17639325/
+  
+  levels(x$response_variable) <- c(expression('V'[pMort]),
+                                   expression('V'[pCons]),
+                                   expression('V'[Cons]),
+                                   expression('V'[Resid]))
   
   x <- ggplot(x) +
     geom_col(aes(x=stand_num, y=sensitivity_value, group = parameter), 
@@ -108,7 +120,7 @@ process_sens_ts <- function(stand_age,
     scale_color_discrete(name="Parameter") +
     scale_linetype_discrete(name="Parameter") +
     scale_x_discrete(labels = c(stand_age)) +
-    facet_grid(response_variable~parameter, labeller = labeller(.cols = label_parsed, .rows = response_variable_lab)) +
+    facet_grid(response_variable~parameter, labeller = labeller(.cols = label_parsed, .rows = label_parsed)) +
     theme_bw(base_size = 14) +
     theme(axis.text.x = element_text(angle = 270, hjust=0, vjust=0.6)) +
     NULL
@@ -142,8 +154,8 @@ x_hja_upper_1 <- process_sens_ts(stand_age = stand_age_hja,
                                  response_can_group = "Upper Canopy",
                                  response_can_group_name = "upper",
                                  sobol_indices = "1st",
-                                 y_axis = "First-order Indices",
-                                 plot_title = "H.J. Andrews: First-order Indices for Upper Canopy"
+                                 y_axis = "First-Order Indices",
+                                 plot_title = "H.J. Andrews: First-Order Indices for Primary Canopy"
 )
 
 # 1st order, lower canopy
@@ -153,8 +165,8 @@ x_hja_lower_1 <- process_sens_ts(stand_age = stand_age_hja,
                                  response_can_group = "Lower Canopy",
                                  response_can_group_name = "lower",
                                  sobol_indices = "1st",
-                                 y_axis = "First-order Indices",
-                                 plot_title = "H.J. Andrews: First-order Indices for Lower Canopy"
+                                 y_axis = "First-Order Indices",
+                                 plot_title = "H.J. Andrews: First-Order Indices\nfor Secondary Canopy"
 )
 
 
@@ -165,8 +177,8 @@ x_hja_upper_total <- process_sens_ts(stand_age = stand_age_hja,
                                      response_can_group = "Upper Canopy",
                                      response_can_group_name = "upper",
                                      sobol_indices = "total",
-                                     y_axis = "Total-order Indices",
-                                     plot_title = "H.J. Andrews: Total-order Indices for Upper Canopy"
+                                     y_axis = "Total-Order Indices",
+                                     plot_title = "H.J. Andrews: Total-Order Indices for Primary Canopy"
 )
 
 # total, lower canopy
@@ -176,8 +188,8 @@ x_hja_lower_total <- process_sens_ts(stand_age = stand_age_hja,
                                      response_can_group = "Lower Canopy",
                                      response_can_group_name = "lower",
                                      sobol_indices = "total",
-                                     y_axis = "Total-order Indices",
-                                     plot_title = "H.J. Andrews: Total-order Indices for Lower Canopy"
+                                     y_axis = "Total-Order Indices",
+                                     plot_title = "H.J. Andrews: Total-Order Indices for Secondary Canopy"
 )
 
 
@@ -191,8 +203,8 @@ x_p300_upper_1 <- process_sens_ts(stand_age = stand_age_p300,
                                   response_can_group = "Upper Canopy",
                                   response_can_group_name = "upper",
                                   sobol_indices = "1st",
-                                  y_axis = "First-order Indices",
-                                  plot_title = "P301: First-order Indices for Upper Canopy"
+                                  y_axis = "First-Order Indices",
+                                  plot_title = "P301: First-Order Indices for Primary Canopy"
 )
 
 # 1st order, lower canopy
@@ -202,8 +214,8 @@ x_p300_lower_1 <- process_sens_ts(stand_age = stand_age_p300,
                                   response_can_group = "Lower Canopy",
                                   response_can_group_name = "lower",
                                   sobol_indices = "1st",
-                                  y_axis = "First-order Indices",
-                                  plot_title = "P301: First-order Indices for Lower Canopy"
+                                  y_axis = "First-Order Indices",
+                                  plot_title = "P301: First-Order Indices\nfor Secondary Canopy"
 )
 
 
@@ -214,8 +226,8 @@ x_p300_upper_total <- process_sens_ts(stand_age = stand_age_p300,
                                       response_can_group = "Upper Canopy",
                                       response_can_group_name = "upper",
                                       sobol_indices = "total",
-                                      y_axis = "Total-order Indices",
-                                      plot_title = "P301: Total-order Indices for Upper Canopy"
+                                      y_axis = "Total-Order Indices",
+                                      plot_title = "P301: Total-Order Indices for Primary Canopy"
 )
 
 # total, lower canopy
@@ -225,8 +237,8 @@ x_p300_lower_total <- process_sens_ts(stand_age = stand_age_p300,
                                       response_can_group = "Lower Canopy",
                                       response_can_group_name = "lower",
                                       sobol_indices = "total",
-                                      y_axis = "Total-order Indices",
-                                      plot_title = "P301: Total-order Indices for Lower Canopy"
+                                      y_axis = "Total-Order Indices",
+                                      plot_title = "P301: Total-Order Indices for Secondary Canopy"
 )
 
 
@@ -240,8 +252,8 @@ x_rs_1 <- process_sens_ts(stand_age = stand_age_rs,
                           response_can_group = "Upper Canopy",
                           response_can_group_name = "upper",
                           sobol_indices = "1st",
-                          y_axis = "First-order Indices",
-                          plot_title = "Rattlesnake: First-order Indices"
+                          y_axis = "First-Order Indices",
+                          plot_title = "Rattlesnake: First-Order Indices"
 )
 
 # total, upper canopy
@@ -251,8 +263,8 @@ x_rs_total <- process_sens_ts(stand_age = stand_age_rs,
                               response_can_group = "Upper Canopy",
                               response_can_group_name = "upper",
                               sobol_indices = "total",
-                              y_axis = "Total-order Indices",
-                              plot_title = "Rattlesnake: Total-order Indices"
+                              y_axis = "Total-Order Indices",
+                              plot_title = "Rattlesnake: Total-Order Indices"
 )
 
 
@@ -266,8 +278,8 @@ x_sf_upper_1 <- process_sens_ts(stand_age = stand_age_sf,
                                 response_can_group = "Upper Canopy",
                                 response_can_group_name = "upper",
                                 sobol_indices = "1st",
-                                y_axis = "First-order Indices",
-                                plot_title = "Santa Fe: First-order Indices for Upper Canopy"
+                                y_axis = "First-Order Indices",
+                                plot_title = "Santa Fe: First-Order Indices for Primary Canopy"
 )
 
 # 1st order, lower canopy
@@ -277,8 +289,8 @@ x_sf_lower_1 <- process_sens_ts(stand_age = stand_age_sf,
                                 response_can_group = "Lower Canopy",
                                 response_can_group_name = "lower",
                                 sobol_indices = "1st",
-                                y_axis = "First-order Indices",
-                                plot_title = "Santa Fe: First-order Indices for Lower Canopy"
+                                y_axis = "First-Order Indices",
+                                plot_title = "Santa Fe: First-Order Indices\nfor Secondary Canopy"
 )
 
 
@@ -289,8 +301,8 @@ x_sf_upper_total <- process_sens_ts(stand_age = stand_age_sf,
                                     response_can_group = "Upper Canopy",
                                     response_can_group_name = "upper",
                                     sobol_indices = "total",
-                                    y_axis = "Total-order Indices",
-                                    plot_title = "Santa Fe: Total-order Indices for Upper Canopy"
+                                    y_axis = "Total-Order Indices",
+                                    plot_title = "Santa Fe: Total-Order Indices for Primary Canopy"
 )
 
 # total, lower canopy
@@ -300,8 +312,8 @@ x_sf_lower_total <- process_sens_ts(stand_age = stand_age_sf,
                                     response_can_group = "Lower Canopy",
                                     response_can_group_name = "lower",
                                     sobol_indices = "total",
-                                    y_axis = "Total-order Indices",
-                                    plot_title = "Santa Fe: Total-order Indices for Lower Canopy"
+                                    y_axis = "Total-Order Indices",
+                                    plot_title = "Santa Fe: Total-Order Indices for Secondary Canopy"
 )
 
 
@@ -310,18 +322,19 @@ x_sf_lower_total <- process_sens_ts(stand_age = stand_age_sf,
 # Cow Plot P300 and HJA
 
 # Combine figures for Cowplot
-sens_2by1 <- cowplot::plot_grid(x_p300_upper_1,
+sens_3by1 <- cowplot::plot_grid(x_rs_1,
+                                x_p300_upper_1,
                                 x_hja_upper_1,
-                                labels=c("a","b"),
-                                nrow=2,
+                                labels=c("a","b","c"),
+                                nrow=3,
                                 label_size = 16)
 
-#plot(sens_2by1)
-cowplot::save_plot(file.path(OUTPUT_DIR_2, "sens_2by1.pdf"),
-                   sens_2by1,
+#plot(sens_3by1)
+cowplot::save_plot(file.path(OUTPUT_DIR_2, "sens_3by1.pdf"),
+                   sens_3by1,
                    ncol=1,
-                   nrow=2,
-                   base_height=6,
+                   nrow=3,
+                   base_height=4.5,
                    base_width=8)
 
 

@@ -281,15 +281,15 @@ patch_fire_eval <- function(num_canopies,
   single_canopy <- c("litrc","soil1c","cwdc")
   
   fig_title_1 <- c("Leaf Carbon", "Stem Carbon", "Height", "Litter Carbon", "Soil Carbon", 
-                   "Canopy Mortality", "Consumption", "Canopy Consumption", "Canopy Remaining as Litter")
+                   "Canopy Mortality", "Consumption", "Canopy Consumption", "Canopy That Becomes Litter")
   
-  fig_title_2 <- c("Upper Canopy Leaf Carbon", "Upper Canopy Stem Carbon", "Upper Canopy Height", "Litter Carbon", "Soil Carbon", 
-                   "Upper Canopy Mortality", "Consumption", "Upper Canopy Consumption", "Upper Canopy Remaining as Litter")
+  fig_title_2 <- c("Primary Canopy Leaf Carbon", "Primary Canopy Stem Carbon", "Primary Canopy Height", "Litter Carbon", "Soil Carbon", 
+                   "Primary Canopy Mortality", "Consumption", "Primary Canopy Consumption", "Primary Canopy That Becomes Litter")
   
   y_label <- c("Change in Leaf Carbon (%)", "Change in Stem Carbon (%)", "Change in Height (%)",
                "Change in Litter Carbon (%)", "Change in Soil Carbon (%)", "Mortality (%)", 
                "Proportion of Mortality Consumed (%)", "Carbon Consumed (%)",
-               "Carbon Remaining as Litter (%)")
+               "Carbon That Becomes Litter (%)")
   
   # Processing cwd is super slow. Option to ignore it when processing
   if (cwdc_yes == TRUE){
@@ -324,7 +324,7 @@ patch_fire_eval <- function(num_canopies,
                      color="black", 
                      outlier.shape = NA) +
         facet_grid(.~world, labeller = labeller(world = world_file_yr)) +
-        labs(title = fig_title_1[aa], x = "Intensity (I'u)", y = y_label[aa]) +    # Note that using an expression for I'u is challenging because of the '. Probably not worth the time to change.
+        labs(title = fig_title_1[aa], x = "Fire Intensity Index (FII)", y = y_label[aa]) +
         scale_x_continuous(breaks = c(0.2, 0.8)) +
         NULL
     
@@ -350,7 +350,7 @@ patch_fire_eval <- function(num_canopies,
                        color="black", 
                        outlier.shape = NA) +
           facet_grid(.~world, labeller = labeller(world = world_file_yr)) +
-          labs(title = fig_title_1[aa], x = "Intensity (I'u)", y = y_label[aa]) +
+          labs(title = fig_title_1[aa], x = "Fire Intensity Index (FII)", y = y_label[aa]) +
           scale_x_continuous(breaks = c(0.2, 0.8)) +
           NULL
         #plot(x)
@@ -376,7 +376,7 @@ patch_fire_eval <- function(num_canopies,
                        color="black", 
                        outlier.shape = NA) +
           facet_grid(canopy_layer~world, labeller = labeller(world = world_file_yr, canopy_layer = canopy)) +
-          labs(title = fig_title_1[aa], x = "Intensity (I'u)", y = y_label[aa]) +
+          labs(title = fig_title_1[aa], x = "Fire Intensity Index (FII)", y = y_label[aa]) +
           scale_x_continuous(breaks = c(0.2, 0.8)) +
           theme_bw(base_size = 11) +
           theme(legend.position = "none") +
@@ -393,7 +393,7 @@ patch_fire_eval <- function(num_canopies,
                        color="black", 
                        outlier.shape = NA) +
           facet_grid(.~world, labeller = labeller(world = world_file_yr)) +
-          labs(title = fig_title_2[aa], x = "Intensity (I'u)", y = y_label[aa]) +
+          labs(title = fig_title_2[aa], x = "Fire Intensity Index (FII)", y = y_label[aa]) +
           scale_x_continuous(breaks = c(0.2, 0.8)) +
           theme_bw(base_size = 16) +
           theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
@@ -444,17 +444,17 @@ patch_fire_eval <- function(num_canopies,
     geom_line(data=stores_final, aes(x=wy,y=c_aboveground, group=as.factor(store), color=store, linetype=store), size = 1.2) +
     geom_vline(xintercept = stand_age, linetype=2, size=.4) +
     #geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "Navajowhite2") +
-    labs(title = "", x = "Stand Age - Wateryear", y = expression('Carbon (g/m'^2*')')) +
+    labs(title = "", x = "Stand Age (Water Year)", y = expression('Carbon (g/m'^2*')')) +
     theme_bw(base_size = 16) + 
     theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5)) +
     NULL
   
   if (watershed == "RS"){
-    x_stores <- x_stores + scale_linetype_discrete(name="Abovegraound Carbon Stores", labels = c("Litter","Canopy")) +
-      scale_color_brewer(palette = "Set2", name="Abovegraound Carbon Stores", labels = c("Litter","Canopy"))
+    x_stores <- x_stores + scale_linetype_discrete(name="Aboveground Carbon Stores", labels = c("Litter","Canopy")) +
+      scale_color_brewer(palette = "Set2", name="Aboveground Carbon Stores", labels = c("Litter","Canopy"))
   } else {
-    x_stores <- x_stores + scale_linetype_discrete(name="Abovegraound Carbon Stores", labels = c("Litter","Lower\nCanopy","Upper\nCanopy")) +
-      scale_color_brewer(palette = "Set2", name="Abovegraound Carbon Stores", labels = c("Litter","Lower\nCanopy","Upper\nCanopy"))
+    x_stores <- x_stores + scale_linetype_discrete(name="Aboveground Carbon Stores", labels = c("Litter","Secondary\nCanopy","Primary\nCanopy")) +
+      scale_color_brewer(palette = "Set2", name="Aboveground Carbon Stores", labels = c("Litter","Secondary\nCanopy","Primary\nCanopy"))
   }
       
   #plot(x_stores)
@@ -592,6 +592,15 @@ cowplot::save_plot(file.path(OUTPUT_DIR_3, "sim_sf_hja.pdf"),
                    nrow=1,
                    base_height=16,
                    base_width=8)
+
+
+
+
+
+
+
+
+
 
 
 

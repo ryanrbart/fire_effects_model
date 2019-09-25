@@ -177,9 +177,9 @@ patch_simulation_eval <- function(num_canopies,
                   group=as.factor(canopy_layer)),size = 1.2) +
     geom_vline(xintercept = stand_age_wy, linetype=2, size=.4) +
     #geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
-    labs(title = paste(watershed_label, ": Canopy Height", sep=""), x = "Wateryear", y = "Height (m)") +
-    scale_color_manual(values = c("navajowhite4","navajowhite4"), name="Canopy", labels = c("Upper","Lower")) +
-    scale_linetype(name="Canopy", labels = c("Upper","Lower")) +
+    labs(title = paste(watershed_label, ": Canopy Height", sep=""), x = "Stand Age (Water Year)", y = "Height (m)") +
+    scale_color_manual(values = c("navajowhite4","navajowhite4"), name="Canopy", labels = c("Primary","Secondary")) +
+    scale_linetype(name="Canopy", labels = c("Primary","Secondary")) +
     theme_bw(base_size = 18) +
     theme(legend.position = "right") +
     NULL
@@ -198,7 +198,7 @@ patch_simulation_eval <- function(num_canopies,
               aes(x=stand_wy,y=avg_value, group=as.factor(canopy_layer)), color="black",size = 1.2) +
     geom_vline(xintercept = stand_age_wy, linetype=2, size=.4) +
     geom_hline(yintercept = c(4,7), linetype=1, size=.4, color = "olivedrab3") +
-    labs(title = paste("Height - Understory - ", watershed, sep=""), x = "Wateryear", y = "Height (meters)") +
+    labs(title = paste("Height - Understory - ", watershed, sep=""), x = "Stand Age (Water Year)", y = "Height (meters)") +
     theme(legend.position = "bottom") +
     NULL
   plot(x)  
@@ -217,7 +217,7 @@ patch_simulation_eval <- function(num_canopies,
     geom_line(data=dplyr::filter(patch_ground_sum, run==this_one),
               aes(x=stand_wy,y=avg_value, group=1), color="navajowhite4",size = 1.2) +
     geom_vline(xintercept = stand_age_wy, linetype=2, size=.4) +
-    labs(title = paste(watershed_label, ": Litter", sep=""), x = "Wateryear", y = "Carbon (g/m2)") +
+    labs(title = paste(watershed_label, ": Litter", sep=""), x = "Stand Age (Water Year)", y = "Carbon (g/m2)") +
     theme_bw(base_size = 18) +
     NULL
   plot(litter_plot)
