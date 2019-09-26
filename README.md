@@ -23,9 +23,9 @@ Versions
 
 To replicate the analysis, the following versions of RHESSys and RHESSysIOinR were used.
 
-RHESSys version: https://github.com/RHESSys/RHESSys/tree/e31bc67
+RHESSys version: https://github.com/RHESSys/RHESSys/tree/e31bc67. 
 Code for specific to the fire-effects model is located in the compute_fire_effects.c file. 
 
-RHESSysIOinR version: https://github.com/RHESSys/RHESSysIOinR/tree/9e43310
+RHESSysIOinR version: https://github.com/RHESSys/RHESSysIOinR/tree/9e43310. 
 RHESSysIOinR is an R package used to organize RHESSys inputs and outputs. The package can be downloaded from the above link.
 
